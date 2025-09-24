@@ -1,40 +1,37 @@
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import make_url
 
+from src.utils.column_serialization import serialize_column
+
 
 def extract_db_info(urls: str) -> dict:
     infos = []
-    for u in urls:
-        u = add_url_driver(u)
+    for url in urls:
+        url = add_url_driver(url)
 
-        engine = create_engine(u)
-        url = make_url(u)
+        engine = create_engine(url)
 
-        driver = url.drivername.split("+")
-        inspector = inspect(engine)
+        db = make_url(url)
+        dialect = engine.dialect
+        insp = inspect(engine)
 
-        tables_infos = {}
-        tables = inspector.get_table_names()
-        for table in tables:
-            table_columns = []
-            columns = inspector.get_columns(table)
-            for column in columns:
-                table_columns.append(column)
+        payload = {
+            "dialect": db.get_backend_name(),
+            "drivername": (
+                db.drivername.split("+")[1] if "+" in db.drivername else db.drivername
+            ),
+            "username": db.username,
+            "password": db.password,
+            "host": db.host,
+            "port": db.port,
+            "database": db.database,
+            "tables": {},
+        }
 
-            tables_infos[table] = table_columns
+        for table in insp.get_table_names():
+            cols = [serialize_column(col) for col in insp.get_columns(table)]
 
-        infos.append(
-            {
-                "dialect": driver[0],
-                "drivername": driver[1] if len(driver) > 1 else None,
-                "username": url.username,
-                "password": url.password,
-                "host": url.host,
-                "port": url.port,
-                "database": url.database,
-                "tables": tables_infos,
-            }
-        )
+            payload["tables"][table] = cols
 
     return infos
 
