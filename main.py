@@ -1,4 +1,7 @@
-import argparse
+import typer
+import json
+from typing import List
+from pathlib import Path
 
 from src.utils.metadata_extraction import extract_db_info
 
@@ -7,9 +10,26 @@ from src.utils.metadata_extraction import extract_db_info
 # mysql://user:password@host:3306/dbname
 # mssql://user:password@host:1433/dbname
 
-p = argparse.ArgumentParser()
-p.add_argument("db_urls", nargs="+", type=str, help="Database URL")
-args = p.parse_args().db_urls
+app = typer.Typer()
 
-info = extract_db_info(args)
-print(info)
+
+@app.command("extract_metadata")
+def extract_metadata(
+    db_urls: List[str] = typer.Argument(..., help="List of database URLs"),
+    output_path: str = typer.Option("./metadata.json", help="Path to save the extracted metadata"),
+):
+    info = extract_db_info(db_urls)
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w") as f:
+        json.dump(info, f, indent=4, ensure_ascii=False)
+
+
+@app.command("translate")
+def translate(
+    query: str = typer.Argument(..., help="Natural language query to translate")
+):
+    print("Translating query:", query)
+
+
+if __name__ == "__main__":
+    app()
