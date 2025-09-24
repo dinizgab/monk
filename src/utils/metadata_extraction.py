@@ -5,6 +5,8 @@ from sqlalchemy.engine import make_url
 def extract_db_info(urls: str) -> dict:
     infos = []
     for u in urls:
+        u = add_url_driver(u)
+
         engine = create_engine(u)
         url = make_url(u)
 
@@ -35,3 +37,19 @@ def extract_db_info(urls: str) -> dict:
         )
 
     return infos
+
+
+def add_url_driver(url: str) -> str:
+    drivers = {
+        "oracle": "cx_oracle",
+        "postgresql": "psycopg",
+        "mysql": "pymysql",
+        "mssql": "pyodbc",
+    }
+    dialect = url.split("://")[0]
+
+    if "+" in dialect:
+        return url
+
+    if dialect in drivers:
+        return url.replace(dialect, f"{dialect}+{drivers[dialect]}")
