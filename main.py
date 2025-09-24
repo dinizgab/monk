@@ -23,6 +23,8 @@ def extract_metadata(
     with open(output_path, "w") as f:
         json.dump(info, f, indent=4, ensure_ascii=False)
 
+    print(f"Databases metadata extracted and saved to {output_path}")
+
 
 @app.command("translate")
 def translate(
