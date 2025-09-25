@@ -4,6 +4,7 @@ from typing import List
 from pathlib import Path
 
 from src.utils.metadata_extraction import extract_db_info
+from src.query_translation import translate_query
 
 # oracle://user:password@host:1521/dbname
 # postgresql://user:password@host:5432/dbname
@@ -16,7 +17,9 @@ app = typer.Typer()
 @app.command("extract_metadata")
 def extract_metadata(
     db_urls: List[str] = typer.Argument(..., help="List of database URLs"),
-    output_path: str = typer.Option("./metadata.json", help="Path to save the extracted metadata"),
+    output_path: str = typer.Option(
+        "./metadata.json", help="Path to save the extracted metadata"
+    ),
 ):
     info = extract_db_info(db_urls)
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
@@ -28,13 +31,13 @@ def extract_metadata(
 
 @app.command("translate")
 def translate(
-    metadata_path: str = typer.Option("./metadata.json", help="Path to the metadata JSON file"),
-    query: str = typer.Argument(..., help="Natural language query to translate")
+    metadata_path: str = typer.Option(
+        "./metadata.json", help="Path to the metadata JSON file"
+    ),
+    query: str = typer.Argument(..., help="Natural language query to translate"),
 ):
-    with open(metadata_path, "r") as f:
-        metadata = json.load(f)
 
-    print("Translating query:", query)
+    print(translate_query(metadata_path, query))
 
 
 if __name__ == "__main__":
