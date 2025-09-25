@@ -29,9 +29,11 @@ def extract_db_info(urls: str) -> dict:
         }
 
         for table in insp.get_table_names():
-            cols = [serialize_column(col) for col in insp.get_columns(table)]
+            cols = [serialize_column(col, dialect) for col in insp.get_columns(table)]
 
             payload["tables"][table] = cols
+
+        infos.append(payload)
 
     return infos
 
