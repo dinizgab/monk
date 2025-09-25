@@ -28,8 +28,12 @@ def extract_metadata(
 
 @app.command("translate")
 def translate(
+    metadata_path: str = typer.Option("./metadata.json", help="Path to the metadata JSON file"),
     query: str = typer.Argument(..., help="Natural language query to translate")
 ):
+    with open(metadata_path, "r") as f:
+        metadata = json.load(f)
+
     print("Translating query:", query)
 
 
