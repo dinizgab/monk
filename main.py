@@ -6,7 +6,7 @@ from pathlib import Path
 
 from src.utils.sort import sort_execution_plan
 from src.utils.metadata_extraction import extract_db_info
-from src.query_translation import TranslationReturn, translate_query
+from src.query_translation import translate_query
 from src.plan_execution import execute_plan
 
 # oracle://user:password@host:1521/dbname
@@ -53,7 +53,7 @@ def translate(
     print("Execution Plan Steps:")
     for step in data.execution_plan:
         print(f" - {step.id}: {step.description}")
-
+    
     print("-" * 40)
     out = Path(output_path)
     out.write_text(
@@ -61,19 +61,12 @@ def translate(
     )
     print(f"Execution plan saved to {out.resolve()}")
     print("-" * 40)
-    data = TranslationReturn(
-        **json.loads(
-            Path(
-                "/home/gabriel/www/monk/execution_plan_20250929-150027.json"
-            ).read_text(encoding="utf-8")
-        )
-    )
 
     print(f"Executing plan...")
     result_df = execute_plan(data)
 
     result_df.to_csv("result.csv", index=False)
-    print("✅ Final result saved to result.csv")
+    print("Final result saved to result.csv")
     print(result_df.head())
     print("-" * 40)
 
