@@ -1,3 +1,4 @@
+from datetime import datetime
 import typer
 import json
 from typing import List
@@ -35,9 +36,19 @@ def translate(
         "./metadata.json", help="Path to the metadata JSON file"
     ),
     query: str = typer.Argument(..., help="Natural language query to translate"),
+    output_path: str = typer.Option(None, help="Onde salvar o plano (padrão: execution_plan-YYYYmmdd-HHMMSS.json)"),
 ):
 
-    print(translate_query(metadata_path, query))
+    data = translate_query(metadata_path, query)
+
+    if not output_path:
+        ts = datetime.now().strftime("%Y%m%d-%H%M%S")
+        output_path = f"execution_plan-{ts}.json"
+
+    out = Path(output_path)
+    out.write_text(json.dumps(data, indent=4, ensure_ascii=False), encoding="utf-8")
+
+    print(f"Execution plan saved to {out.resolve()}")
 
 
 if __name__ == "__main__":
