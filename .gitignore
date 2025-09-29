@@ -2,3 +2,4 @@
 __pycache__/
 .env
 metadata.json
+execution_plan-*.json
