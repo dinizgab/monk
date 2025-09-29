@@ -1,8 +1,9 @@
+from openai import OpenAI
 from pydantic import BaseModel
-from google import genai
 from dotenv import load_dotenv
 
 from src.models.execution_plan import ExecutionPlan
+from src.utils import extract_json
 
 
 load_dotenv()
@@ -16,7 +17,6 @@ def prompt(query: str):
     All the databases necessary informations should be found in the metadata file.
     Return ONLY a JSON structure with the following format:
 
-    json
     {{
     "execution_plan": [
         {{
@@ -36,6 +36,7 @@ def prompt(query: str):
     ],
     "final_output_columns": ["<string: the list of columns to be displayed in the final result>"]
     }}
+
     Additional Instructions:
     - If a query depends on the results of another, use a placeholder in the format $stepID.columnName in the WHERE clause. For example: WHERE id IN ($step1.user_id).
     - The join_info field is only necessary for steps that have dependencies and need to be aggregated. For the first step or independent steps, it can be omitted.
@@ -51,16 +52,32 @@ def translate_query(
     metadata_file_path: str,
     query: str,
 ) -> str:
-    client = genai.Client()
-    db_metadata = client.files.upload(file=metadata_file_path)
+    client = OpenAI()
+    storage = client.vector_stores.create(name="database_metadata_storage")
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=[
-            db_metadata,
-            "\n\n",
-            prompt(query),
+    with open(metadata_file_path, "rb") as f:
+        client.vector_stores.file_batches.upload_and_poll(
+            vector_store_id=storage.id,
+            files=[f],
+        )
+
+    response = client.responses.create(
+        model="gpt-5",
+        input=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": prompt(query),
+                    },
+                ],
+            }
         ],
+        tools=[{"type": "file_search", "vector_store_ids": [storage.id]}],
     )
 
-    return response.text
+    data = extract_json(response.output_text)
+    TranslationReturn(**data)
+
+    return data
