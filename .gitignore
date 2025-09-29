@@ -3,3 +3,4 @@ __pycache__/
 .env
 metadata.json
 execution_plan_*.json
+result.csv
