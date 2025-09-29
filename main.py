@@ -46,7 +46,7 @@ def translate(
         output_path = f"execution_plan-{ts}.json"
 
     out = Path(output_path)
-    out.write_text(json.dumps(data, indent=4, ensure_ascii=False), encoding="utf-8")
+    out.write_text(json.dumps(data.model_dump(), indent=4, ensure_ascii=False), encoding="utf-8")
 
     print(f"Execution plan saved to {out.resolve()}")
 
