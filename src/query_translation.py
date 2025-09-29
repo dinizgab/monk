@@ -25,7 +25,7 @@ def prompt(query: str, metadata: str) -> str:
     {{
     "execution_plan": [
         {{
-        "step_id": <int>,
+        "id": <int>,
         "description": "<string: a natural language description of what this query does>",
         "database": "<string: the database URL>",
         "query": "<string: the SQL query>",
@@ -67,14 +67,14 @@ def prompt(query: str, metadata: str) -> str:
     {{
       "execution_plan": [
         {{
-          "step_id": 1,
+          "id": 1,
           "description": "Get IDs of all customers from Brazil.",
           "database": "postgres://.../crmdb",
           "query": "SELECT id FROM customers WHERE country = 'Brazil';",
           "depends_on": []
         }},
         {{
-          "step_id": 2,
+          "id": 2,
           "description": "Get order dates for the customers found in step 1.",
           "database": "mysql://.../salesdb",
           "query": "SELECT customer_id, order_date FROM orders WHERE customer_id IN ($step1.id);",
@@ -118,12 +118,7 @@ def translate_query(
         input=[
             {
                 "role": "user",
-                "content": [
-                    {
-                        "type": "input_text",
-                        "text": prompt(query, metadata),
-                    },
-                ],
+                "content": prompt(query, metadata),
             }
         ],
     )

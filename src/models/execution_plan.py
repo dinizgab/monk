@@ -7,7 +7,7 @@ class JoinInfo(BaseModel):
 
 
 class ExecutionPlan(BaseModel):
-    step_id: int
+    id: int
     description: str
     database: str
     query: str
