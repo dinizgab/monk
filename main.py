@@ -4,7 +4,7 @@ import json
 from typing import List
 from pathlib import Path
 
-from src.utils import sort_execution_plan
+from src.utils.sort import sort_execution_plan
 from src.utils.metadata_extraction import extract_db_info
 from src.query_translation import translate_query
 
