@@ -6,7 +6,8 @@ from pathlib import Path
 
 from src.utils.sort import sort_execution_plan
 from src.utils.metadata_extraction import extract_db_info
-from src.query_translation import translate_query
+from src.query_translation import TranslationReturn, translate_query
+from src.plan_execution import execute_plan
 
 # oracle://user:password@host:1521/dbname
 # postgresql://user:password@host:5432/dbname
@@ -38,27 +39,43 @@ def translate(
     ),
     query: str = typer.Argument(..., help="Natural language query to translate"),
     output_path: str = typer.Option(
-        None, help="Onde salvar o plano (padrão: execution_plan-YYYYmmdd-HHMMSS.json)"
+        None, help="Onde salvar o plano (padrão: execution_plan_YYYYmmdd-HHMMSS.json)"
     ),
 ):
-
     data = translate_query(metadata_path, query)
 
     if not output_path:
         ts = datetime.now().strftime("%Y%m%d-%H%M%S")
         output_path = f"execution_plan_{ts}.json"
 
+    print("-" * 40)
+    data.execution_plan = sort_execution_plan(data.execution_plan)
+    print("Execution Plan Steps:")
+    for step in data.execution_plan:
+        print(f" - {step.id}: {step.description}")
+
+    print("-" * 40)
     out = Path(output_path)
     out.write_text(
         json.dumps(data.model_dump(), indent=4, ensure_ascii=False), encoding="utf-8"
     )
-
     print(f"Execution plan saved to {out.resolve()}")
     print("-" * 40)
-    sorted_steps = sort_execution_plan(data.execution_plan)
-    print("Execution Plan Steps:")
-    for step in sorted_steps:
-        print(f" - {step.id}: {step.description}")
+    data = TranslationReturn(
+        **json.loads(
+            Path(
+                "/home/gabriel/www/monk/execution_plan_20250929-150027.json"
+            ).read_text(encoding="utf-8")
+        )
+    )
+
+    print(f"Executing plan...")
+    result_df = execute_plan(data)
+
+    result_df.to_csv("result.csv", index=False)
+    print("✅ Final result saved to result.csv")
+    print(result_df.head())
+    print("-" * 40)
 
 
 if __name__ == "__main__":
