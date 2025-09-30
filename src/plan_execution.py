@@ -1,8 +1,9 @@
 import re
 import pandas as pd
+from sqlalchemy import create_engine, text
 
 from src.models.execution_plan import ExecutionPlan
-from sqlalchemy import create_engine, text
+from src.utils.metadata_extraction import add_url_driver
 
 
 def execute_plan(plan: ExecutionPlan) -> None:
@@ -15,7 +16,7 @@ def execute_plan(plan: ExecutionPlan) -> None:
 
         query = _replace_placeholders(step.query, partial_results)
 
-        db_url = step.database
+        db_url =  add_url_driver(step.database)
         if db_url not in db_engines:
             db_engines[db_url] = create_engine(db_url)
 
