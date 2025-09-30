@@ -1,0 +1,52 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get distinct pairs of customer_id and product_id for all purchased order items by joining Orders and Order_Items (produces the set of buyer-product relations).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT DISTINCT o.customer_id, oi.product_id FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get first names for the customers identified in step 1.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, customer_first_name FROM customers WHERE customer_id IN ($step1.customer_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "customer_id",
+                    "dependency_step_column": "customer_id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Get product names for the products identified in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id, product_name FROM Products WHERE product_id IN ($step1.product_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "product_id",
+                    "dependency_step_column": "product_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "customer_first_name",
+        "product_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get the distinct order_ids that have already been shipped.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT DISTINCT order_id FROM shipments;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get invoice statuses for orders that are not in the shipped order list (i.e., unshipped orders). Matches invoices to orders by invoice_number = order_id.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.order_id, i.invoice_number, i.invoice_status_code FROM Orders o INNER JOIN Invoices i ON i.invoice_number = o.order_id WHERE o.order_id NOT IN ($step1.order_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "ANTI",
+                "on": {
+                    "current_step_column": "order_id",
+                    "dependency_step_column": "order_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "order_id",
+        "invoice_number",
+        "invoice_status_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

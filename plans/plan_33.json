@@ -1,0 +1,69 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get IDs of all customers whose gender denotes female (case-insensitive match for common values).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id FROM customers WHERE LOWER(gender_code) IN ('female','f');",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get order IDs for orders placed by the customers found in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_id, customer_id FROM Orders WHERE customer_id IN ($step1.customer_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "customer_id",
+                    "dependency_step_column": "customer_id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Get product IDs from order items for the orders found in step 2.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_item_id, order_id, product_id FROM Order_Items WHERE order_id IN ($step2.order_id);",
+            "depends_on": [
+                2
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "order_id",
+                    "dependency_step_column": "order_id"
+                }
+            }
+        },
+        {
+            "id": 4,
+            "description": "Retrieve distinct product name, price and description for products that appear in the order items found in step 3.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT DISTINCT product_id, product_name, product_price, product_description FROM Products WHERE product_id IN ($step3.product_id);",
+            "depends_on": [
+                3
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "product_id",
+                    "dependency_step_column": "product_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "product_name",
+        "product_price",
+        "product_description"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find invoice_numbers that have at least 2 shipments (count shipments per invoice).",
+            "database": "postgresql://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT invoice_number, COUNT(*) AS shipments_count FROM shipments GROUP BY invoice_number HAVING COUNT(*) >= 2;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve invoice dates for the invoice_numbers identified in step 1.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT invoice_number, invoice_date FROM Invoices WHERE invoice_number IN ($step1.invoice_number);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "invoice_number",
+                    "dependency_step_column": "invoice_number"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "invoice_number",
+        "invoice_date"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

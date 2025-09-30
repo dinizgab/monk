@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find orders that contain at least 2 distinct products and return the order id with the order date.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.order_id, o.date_order_placed FROM Orders o JOIN (SELECT order_id FROM Order_Items GROUP BY order_id HAVING COUNT(DISTINCT product_id) >= 2) oi ON o.order_id = oi.order_id;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "order_id",
+        "date_order_placed"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

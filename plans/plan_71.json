@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the count of orders grouped by their order_status_code from the Orders table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_status_code, COUNT(*) AS status_count FROM Orders GROUP BY order_status_code;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "order_status_code",
+        "status_count"
+    ],
+    "final_aggregation": {
+        "type": "MIN",
+        "column": "status_count"
+    }
+}

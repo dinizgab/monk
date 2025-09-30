@@ -1,0 +1,29 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the number of orders per customer (including only customers who have placed orders) from the Orders table.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT customer_id, COUNT(*) AS orders_count FROM Orders GROUP BY customer_id;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all customers with their gender, email address, city, and county from the users database (includes customers who have zero orders).",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, gender_code, email_address, town_city, county FROM customers;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "email_address",
+        "town_city",
+        "county"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "orders_count"
+    }
+}
