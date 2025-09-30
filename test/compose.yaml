@@ -1,0 +1,82 @@
+services:
+  mysql-products:
+    image: mysql:8.0
+    container_name: mysql_products
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: products_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - mysql_products_data:/var/lib/mysql
+      - ./schemas/mysql/products/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
+      - ./schemas/mysql/products/01_products_db.sql:/docker-entrypoint-initdb.d/01_products_db.sql:ro
+
+  mysql-orders:
+    image: mysql:8.0
+    container_name: mysql_orders
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: orders_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - mysql_orders_data:/var/lib/mysql
+      - ./schemas/mysql/orders/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
+      - ./schemas/mysql/orders/01_orders_db.sql:/docker-entrypoint-initdb.d/01_orders_db.sql:ro
+
+  pg-users:
+    image: postgres:16
+    container_name: pg_users
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: appuser
+      POSTGRES_DB: users_db
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d users_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - pg_users_data:/var/lib/postgresql/data
+      - ./schemas/postgres/users/00_user_db.sql:/docker-entrypoint-initdb.d/00_user_db.sql:ro
+
+  pg_shipments:
+    image: postgres:16
+    container_name: pg_shipments
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: appuser
+      POSTGRES_DB: shipments_db
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d shipments_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - pg_shipments_data:/var/lib/postgresql/data
+      - ./schemas/postgres/shipments/00_shipments_db.sql:/docker-entrypoint-initdb.d/00_shipments_db.sql:ro
+
+volumes:
+  mysql_products_data:
+  mysql_orders_data:
+  pg_users_data:
+  pg_shipments_data:
