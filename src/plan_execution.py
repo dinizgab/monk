@@ -77,11 +77,25 @@ def _replace_placeholders(query: str, partial_results: dict[int, pd.DataFrame]) 
         if col not in dep_df.columns:
             raise RuntimeError(f"Column '{col}' not found in results of step {dep_id}.")
 
-        values = tuple(map(int, dep_df[col].unique()))
-        if not values:
-            values_sql = "NULL"
+        values = dep_df[col].dropna().unique()
+        if len(values) == 0:
+            values_sql = "(NULL)"
         else:
-            values_sql = f"({', '.join(map(str, values))})"
+            dtype = dep_df[col].dtype
+            if pd.api.types.is_string_dtype(dtype):
+                values = [f"'{v}'" for v in values]
+            elif pd.api.types.is_datetime64_any_dtype(dtype):
+                values = [f"'{v}'" for v in values]
+            elif pd.api.types.is_bool_dtype(dtype):
+                values = [str(int(v)) for v in values]
+            elif pd.api.types.is_integer_dtype(dtype):
+                values = [str(int(v)) for v in values]
+            elif pd.api.types.is_float_dtype(dtype):
+                values = [str(float(v)) for v in values]
+            else:
+                values = [str(v) for v in values]
+
+            values_sql = ", ".join(values)
 
         query = query.replace(f"{step_id}.{col}", values_sql)
 
