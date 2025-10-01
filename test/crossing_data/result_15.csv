@@ -1,0 +1,2 @@
+order_id,sum(T2.product_price)
+7,104

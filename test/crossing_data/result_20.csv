@@ -1,0 +1,4 @@
+gender_code,count(*)
+Female,2
+Male,12
+Unknown,1

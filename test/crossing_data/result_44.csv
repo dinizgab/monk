@@ -1,0 +1,2 @@
+count(DISTINCT Payment_method_code)
+3

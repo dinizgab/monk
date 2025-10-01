@@ -1,0 +1,2 @@
+count(DISTINCT customer_id)
+11
