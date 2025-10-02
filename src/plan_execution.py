@@ -16,7 +16,7 @@ def execute_plan(plan: ExecutionPlan) -> None:
 
         query = _replace_placeholders(step.query, partial_results)
 
-        db_url =  add_url_driver(step.database)
+        db_url = add_url_driver(step.database)
         if db_url not in db_engines:
             db_engines[db_url] = create_engine(db_url)
 
@@ -29,7 +29,6 @@ def execute_plan(plan: ExecutionPlan) -> None:
         except Exception as e:
             print(e)
             raise RuntimeError(f"Failed to execute query into database {db_url}: {e}")
-
 
         final_step_df = current_df
         if step.depends_on and step.join_info:
@@ -55,7 +54,9 @@ def execute_plan(plan: ExecutionPlan) -> None:
     final_df = partial_results[last_step.id]
 
     if plan.final_aggregation:
-        final_df = _aggregate_results(final_df, plan.final_aggregation)
+        final_df = _aggregate_results(
+            final_df, plan.final_aggregation, plan.final_output_columns
+        )
 
     if plan.final_output_columns:
         existing_cols = [
@@ -77,56 +78,87 @@ def _replace_placeholders(query: str, partial_results: dict[int, pd.DataFrame]) 
         if col not in dep_df.columns:
             raise RuntimeError(f"Column '{col}' not found in results of step {dep_id}.")
 
+        dtype = dep_df[col].dtype
         values = dep_df[col].dropna().unique()
         if len(values) == 0:
-            values_sql = "(NULL)"
-        else:
-            dtype = dep_df[col].dtype
-            if pd.api.types.is_string_dtype(dtype):
-                values = [f"'{v}'" for v in values]
-            elif pd.api.types.is_datetime64_any_dtype(dtype):
-                values = [f"'{v}'" for v in values]
-            elif pd.api.types.is_bool_dtype(dtype):
-                values = [str(int(v)) for v in values]
-            elif pd.api.types.is_integer_dtype(dtype):
-                values = [str(int(v)) for v in values]
-            elif pd.api.types.is_float_dtype(dtype):
-                values = [str(float(v)) for v in values]
+            if pd.api.types.is_numeric_dtype(dtype):
+                values_sql = -1
             else:
-                values = [str(v) for v in values]
+                values_sql = "''"
+        else:
+            if pd.api.types.is_string_dtype(
+                dtype
+            ) or pd.api.types.is_datetime64_any_dtype(dtype):
+                values_list = [f"'{v}'" for v in values]
+            else:
+                values_list = [str(v) for v in values]
 
-            values_sql = ", ".join(values)
+            values_sql = f"{', '.join(values_list)}"
 
         query = query.replace(f"{step_id}.{col}", values_sql)
 
     return query
 
 
-def _aggregate_results(df: pd.DataFrame, aggregation: dict[str, str]) -> pd.DataFrame:
-    match aggregation["type"].upper():
-        case "COUNT":
-            return pd.DataFrame({"count": [len(df)]})
-        case "SUM":
-            col = aggregation.get("column")
-            if col not in df.columns:
-                raise RuntimeError(f"Column '{col}' not found for SUM aggregation.")
-            return pd.DataFrame({"sum": [df[col].sum()]})
-        case "AVG":
-            col = aggregation.get("column")
-            if col not in df.columns:
-                raise RuntimeError(f"Column '{col}' not found for AVG aggregation.")
-            return pd.DataFrame({"avg": [df[col].mean()]})
-        case "MAX":
-            col = aggregation.get("column")
-            if col not in df.columns:
-                raise RuntimeError(f"Column '{col}' not found for MAX aggregation.")
-            return pd.DataFrame({"max": [df[col].max()]})
-        case "MIN":
-            col = aggregation.get("column")
-            if col not in df.columns:
-                raise RuntimeError(f"Column '{col}' not found for MIN aggregation.")
-            return pd.DataFrame({"min": [df[col].min()]})
-        case "NONE":
-            return df
-        case _:
-            raise RuntimeError(f"Unsupported aggregation type: {aggregation['type']}")
+def _aggregate_results(
+    df: pd.DataFrame, aggregation_info: dict[str, str], final_output_columns: list[str]
+) -> pd.DataFrame:
+    agg_type = aggregation_info.get("type", "NONE").upper()
+    agg_column = aggregation_info.get("column")
+
+    if agg_type == "NONE":
+        return df
+
+    if not agg_column:
+        raise RuntimeError(f"Aggregation column not specified for type {agg_type}")
+    if agg_column not in df.columns:
+        if all(col in df.columns for col in final_output_columns):
+            return df[final_output_columns]
+        else:
+            raise RuntimeError(f"Aggregation column '{agg_column}' not found in DataFrame.")
+
+    group_by_cols = [
+        col for col in final_output_columns if col != agg_column and col in df.columns
+    ]
+    if not group_by_cols:
+        if agg_type == "COUNT":
+            result_val = df[agg_column].nunique()
+        elif agg_type == "SUM":
+            result_val = df[agg_column].sum()
+        elif agg_type == "AVG":
+            result_val = df[agg_column].mean()
+        elif agg_type == "MAX":
+            result_val = df[agg_column].max()
+        elif agg_type == "MIN":
+            result_val = df[agg_column].min()
+        else:
+            raise RuntimeError(f"Tipo de agregação global não suportado: {agg_type}")
+
+        if len(final_output_columns) == 1:
+            final_col_name = final_output_columns[0]
+        else:
+            final_col_name = f"{agg_column}_{agg_type.lower()}"
+
+        return pd.DataFrame({final_col_name: [result_val]})
+    else:
+
+        grouped_df = df.groupby(group_by_cols)
+        result_df = None
+
+        if agg_type == "SUM":
+            result_df = grouped_df[agg_column].sum().reset_index()
+        elif agg_type == "COUNT":
+            result_df = grouped_df[agg_column].nunique().reset_index()
+        elif agg_type == "AVG":
+            result_df = grouped_df[agg_column].mean().reset_index()
+        elif agg_type == "MAX":
+            result_df = grouped_df[agg_column].max().reset_index()
+        elif agg_type == "MIN":
+            result_df = grouped_df[agg_column].min().reset_index()
+        else:
+            raise RuntimeError(f"Tipo de agregação agrupada não suportado: {agg_type}")
+
+        if agg_column not in result_df.columns:
+            result_df.rename(columns={result_df.columns[-1]: agg_column}, inplace=True)
+
+        return result_df
