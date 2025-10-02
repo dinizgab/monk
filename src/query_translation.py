@@ -31,7 +31,7 @@ def prompt(query: str, metadata: str) -> str:
         "query": "<string: the SQL query>",
         "depends_on": [<int: a list of step_ids on which this step depends. Empty if there is no dependency>],
         "join_info": {{
-            "type": "<string: the type of join to be performed in the application, e.g., INNER, LEFT>",
+            "type": "<string: the type of join to be performed in the application, e.g., INNER, LEFT, RIGHT, FULL>",
             "on": {{
                 "current_step_column": "<string: the join column of this query>",
                 "dependency_step_column": "<string: the join column of the dependency query>"
@@ -49,7 +49,7 @@ def prompt(query: str, metadata: str) -> str:
 
     Additional Instructions:
     - If a query depends on the results of another, use a placeholder in the format $stepID.columnName in the WHERE clause. For example: WHERE id IN ($step1.user_id).
-    - The join_info field is only necessary for steps that have dependencies and need to be aggregated. For the first step or independent steps, it can be omitted.
+    - The join_info field is only necessary for steps that have dependencies and need to be aggregated. For the first step or independent steps, it can be omitted, use LEFT to reference ANTI.
     - `final_aggregation` describes the final operation performed by the application. If no aggregation is needed, use "NONE".
 
     [EXAMPLES]
