@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Compute number of orders per customer from the Orders table.",
+            "description": "Compute the number of orders per customer from the Orders table.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT customer_id, COUNT(*) AS orders_count FROM Orders GROUP BY customer_id;",
             "depends_on": [],
@@ -10,7 +10,7 @@
         },
         {
             "id": 2,
-            "description": "Fetch gender for customers who have orders (customer_ids obtained in step 1).",
+            "description": "Fetch customer gender for the customers returned in step 1.",
             "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
             "query": "SELECT customer_id, gender_code FROM customers WHERE customer_id IN ($step1.customer_id);",
             "depends_on": [
@@ -27,7 +27,7 @@
     ],
     "final_output_columns": [
         "gender_code",
-        "total_orders"
+        "orders_count"
     ],
     "final_aggregation": {
         "type": "SUM",

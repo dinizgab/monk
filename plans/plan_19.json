@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Compute number of products purchased (order items) per customer from the orders database.",
+            "description": "Compute the number of products purchased per customer by counting order items associated with each order and grouping by customer_id.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.customer_id, COUNT(oi.order_item_id) AS products_purchased FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.customer_id;",
+            "query": "SELECT o.customer_id, COUNT(oi.order_item_id) AS products_bought FROM Orders o INNER JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.customer_id;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve gender for each customer returned by step 1 from the users database.",
+            "description": "Get gender for the customers returned in step 1 (to allow aggregation of product counts by gender).",
             "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
             "query": "SELECT customer_id, gender_code FROM customers WHERE customer_id IN ($step1.customer_id);",
             "depends_on": [
@@ -27,10 +27,10 @@
     ],
     "final_output_columns": [
         "gender_code",
-        "total_products_purchased"
+        "total_products_bought"
     ],
     "final_aggregation": {
         "type": "SUM",
-        "column": "products_purchased"
+        "column": "products_bought"
     }
 }

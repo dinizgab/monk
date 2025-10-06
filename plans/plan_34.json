@@ -2,17 +2,17 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Get IDs of all female customers from the users database (match common feminine codes like 'f' or 'female').",
-            "database": "postgresql://appuser:root@localhost:5433/users_db",
-            "query": "SELECT customer_id FROM customers WHERE LOWER(gender_code) IN ('f', 'female');",
+            "description": "Find all female customers' IDs from the users database (gender_code values 'F' or 'Female', case-insensitive).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT DISTINCT customer_id FROM customers WHERE LOWER(gender_code) IN ('f','female');",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Get distinct product_ids for orders placed by the customers returned in step 1 by joining Orders and Order_Items in the orders database.",
-            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT DISTINCT oi.product_id FROM Orders o INNER JOIN Order_Items oi ON o.order_id = oi.order_id WHERE o.customer_id IN ($step1.customer_id);",
+            "description": "Find distinct product_ids purchased in orders placed by the customers returned in step 1. Join Orders and Order_Items in the orders database and filter by the customer_id list from step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT DISTINCT oi.product_id, o.customer_id FROM Order_Items oi JOIN Orders o ON oi.order_id = o.order_id WHERE o.customer_id IN ($step1.customer_id);",
             "depends_on": [
                 1
             ],
@@ -26,9 +26,9 @@
         },
         {
             "id": 3,
-            "description": "Retrieve product names, prices and descriptions for the product_ids returned in step 2 from the products database.",
-            "database": "mysql://appuser:apppass@localhost:3307/products_db",
-            "query": "SELECT DISTINCT product_id, product_name, product_price, product_description FROM Products WHERE product_id IN ($step2.product_id);",
+            "description": "Retrieve product name, price and description for the product_ids returned by step 2 from the products database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id, product_name, product_price, product_description FROM Products WHERE product_id IN ($step2.product_id);",
             "depends_on": [
                 2
             ],

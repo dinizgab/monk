@@ -2,31 +2,39 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Get the distinct order_ids that have already been shipped.",
+            "description": "Retrieve all order IDs from the Orders table (all orders in the system).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_id FROM Orders;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve distinct order IDs that have at least one shipment (orders that have been shipped).",
             "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
             "query": "SELECT DISTINCT order_id FROM shipments;",
             "depends_on": [],
             "join_info": null
         },
         {
-            "id": 2,
-            "description": "Get invoice statuses for orders that are not in the shipped order list (i.e., unshipped orders). Matches invoices to orders by invoice_number = order_id.",
+            "id": 3,
+            "description": "Get invoice numbers and their statuses for invoices whose invoice_number corresponds to an order_id from step 1 but excluding those order_ids that have shipments (i.e., orders not shipped yet). This assumes invoice_number can be compared to order_id to associate invoices with orders.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.order_id, i.invoice_number, i.invoice_status_code FROM Orders o INNER JOIN Invoices i ON i.invoice_number = o.order_id WHERE o.order_id NOT IN ($step1.order_id);",
+            "query": "SELECT invoice_number, invoice_status_code FROM Invoices WHERE invoice_number IN ($step1.order_id) AND invoice_number NOT IN ($step2.order_id);",
             "depends_on": [
-                1
+                1,
+                2
             ],
             "join_info": {
-                "type": "ANTI",
+                "type": "INNER",
                 "on": {
-                    "current_step_column": "order_id",
+                    "current_step_column": "invoice_number",
                     "dependency_step_column": "order_id"
                 }
             }
         }
     ],
     "final_output_columns": [
-        "order_id",
         "invoice_number",
         "invoice_status_code"
     ],

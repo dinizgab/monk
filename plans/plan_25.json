@@ -10,14 +10,14 @@
         },
         {
             "id": 2,
-            "description": "Retrieve shipment dates for invoices returned in step 1 from the shipments database.",
+            "description": "Retrieve shipment dates for invoices returned by step 1 from the shipments database.",
             "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
             "query": "SELECT invoice_number, shipment_date FROM shipments WHERE invoice_number IN ($step1.invoice_number);",
             "depends_on": [
                 1
             ],
             "join_info": {
-                "type": "LEFT",
+                "type": "INNER",
                 "on": {
                     "current_step_column": "invoice_number",
                     "dependency_step_column": "invoice_number"

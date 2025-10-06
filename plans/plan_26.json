@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all invoices with their status and invoice date from the orders database.",
+            "description": "Retrieve all invoices with their status codes and invoice dates.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT invoice_number, invoice_status_code, invoice_date FROM Invoices;",
             "depends_on": [],
@@ -10,7 +10,7 @@
         },
         {
             "id": 2,
-            "description": "Retrieve shipment dates for the invoices returned in step 1 from the shipments database.",
+            "description": "Retrieve shipment dates for invoices returned by step 1.",
             "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
             "query": "SELECT invoice_number, shipment_date FROM shipments WHERE invoice_number IN ($step1.invoice_number);",
             "depends_on": [

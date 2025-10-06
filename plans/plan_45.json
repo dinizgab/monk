@@ -2,9 +2,9 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve login names and passwords for customers whose phone_number starts with '+12'.",
+            "description": "Retrieve login names and passwords for customers whose phone number starts with the prefix '+12'.",
             "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
-            "query": "SELECT login_name, login_password FROM customers WHERE phone_number LIKE '+12%';",
+            "query": "SELECT customer_id, login_name, login_password, phone_number FROM customers WHERE phone_number LIKE '+12%';",
             "depends_on": [],
             "join_info": null
         }

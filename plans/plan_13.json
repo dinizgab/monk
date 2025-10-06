@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Count how many times each product_id appears in Order_Items (frequency a product is listed in orders).",
+            "description": "Compute how many times each product appears in order items (order frequency per product).",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT product_id, COUNT(*) AS order_count FROM Order_Items GROUP BY product_id;",
             "depends_on": [],
@@ -10,7 +10,7 @@
         },
         {
             "id": 2,
-            "description": "Retrieve product details (id, name, price) for the product_ids found in step 1.",
+            "description": "Retrieve product details (id, name, price) for products that appear in orders (results from step 1). The application will join these details with the order counts from step 1 and determine the most frequently ordered product.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_name, product_price FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [
@@ -32,7 +32,7 @@
         "order_count"
     ],
     "final_aggregation": {
-        "type": "MAX",
-        "column": "order_count"
+        "type": "NONE",
+        "column": ""
     }
 }

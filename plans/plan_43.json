@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve the distinct (non-null) payment method codes from customer payment methods.",
-            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
-            "query": "SELECT DISTINCT payment_method_code FROM customer_payment_methods WHERE payment_method_code IS NOT NULL;",
+            "description": "Retrieve the distinct payment method codes from customers' payment methods.",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT DISTINCT payment_method_code FROM customer_payment_methods;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
-        "distinct_payment_methods_count"
+        "payment_method_count"
     ],
     "final_aggregation": {
         "type": "COUNT",

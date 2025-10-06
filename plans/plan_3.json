@@ -2,9 +2,9 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all order-item rows for orders that have any products, returning the order id, order status, and the product id for each item. The application will aggregate these rows to count products per order.",
+            "description": "Retrieve each order that has at least one product by returning one row per order-item: order_id, order_status_code and the product_id. The application will aggregate these rows to count products per order.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.order_id, o.order_status_code, oi.product_id FROM Orders o INNER JOIN Order_Items oi ON oi.order_id = o.order_id;",
+            "query": "SELECT o.order_id, o.order_status_code, oi.product_id FROM Orders o INNER JOIN Order_Items oi ON o.order_id = oi.order_id;",
             "depends_on": [],
             "join_info": null
         }

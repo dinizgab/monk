@@ -2,17 +2,17 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Get the date of the earliest order from the Orders table.",
-            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "description": "Get the date of the earliest order across all orders.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT MIN(date_order_placed) AS earliest_date FROM Orders;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Get order IDs and dates for orders that have more than one item (orders with COUNT(order_item_id) > 1).",
-            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.order_id, o.date_order_placed FROM Orders o JOIN (SELECT order_id FROM Order_Items GROUP BY order_id HAVING COUNT(*) > 1) multi ON o.order_id = multi.order_id;",
+            "description": "Get order IDs and their order dates for orders that have more than 1 item.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.order_id, o.date_order_placed FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.date_order_placed HAVING COUNT(oi.order_item_id) > 1;",
             "depends_on": [],
             "join_info": null
         }

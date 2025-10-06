@@ -2,18 +2,18 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Count customers that do not have any associated payment method.",
-            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
-            "query": "SELECT COUNT(*) AS missing_payment_methods FROM customers c WHERE NOT EXISTS (SELECT 1 FROM customer_payment_methods m WHERE m.customer_id = c.customer_id);",
+            "description": "Retrieve IDs of customers who do not have any payment methods listed (left join customers to customer_payment_methods and keep those with no match).",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT c.customer_id FROM customers c LEFT JOIN customer_payment_methods pm ON c.customer_id = pm.customer_id WHERE pm.customer_id IS NULL;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
-        "missing_payment_methods"
+        "customer_id"
     ],
     "final_aggregation": {
-        "type": "NONE",
-        "column": ""
+        "type": "COUNT",
+        "column": "customer_id"
     }
 }

@@ -2,19 +2,19 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve the count of orders grouped by their order_status_code from the Orders table.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT order_status_code, COUNT(*) AS status_count FROM Orders GROUP BY order_status_code;",
+            "description": "Compute the order status value(s) that have the smallest number of orders (i.e., the most uncommon order status). Returns each status and its count; includes all statuses tied for the minimum count.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT t.order_status_code, t.cnt FROM (SELECT order_status_code, COUNT(*) AS cnt FROM Orders GROUP BY order_status_code) t JOIN (SELECT MIN(cnt) AS min_cnt FROM (SELECT COUNT(*) AS cnt FROM Orders GROUP BY order_status_code) x) m ON t.cnt = m.min_cnt;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
         "order_status_code",
-        "status_count"
+        "cnt"
     ],
     "final_aggregation": {
-        "type": "MIN",
-        "column": "status_count"
+        "type": "NONE",
+        "column": ""
     }
 }

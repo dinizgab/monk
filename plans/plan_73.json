@@ -2,9 +2,9 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Find product_ids that were sold more than 3 times by counting occurrences in Order_Items.",
+            "description": "Compute how many times each product_id appears in order items (sales count) and return product_ids sold more than 3 times.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT product_id, COUNT(*) AS cnt FROM Order_Items GROUP BY product_id HAVING COUNT(*) > 3;",
+            "query": "SELECT product_id, COUNT(*) AS qty_sold FROM Order_Items GROUP BY product_id HAVING COUNT(*) > 3;",
             "depends_on": [],
             "join_info": null
         },

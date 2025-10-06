@@ -2,16 +2,16 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Get the distinct order_item_id values for all items that have been shipped (from shipment_items).",
-            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "description": "Get all distinct order_item_id values that have been shipped from the shipments database.",
+            "database": "postgresql://appuser:root@localhost:5434/shipments_db",
             "query": "SELECT DISTINCT order_item_id FROM shipment_items;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Find the product_id values for the shipped order items obtained in step 1.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "description": "Find the product_id values for the shipped order items by looking up Order_Items in the orders database.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT DISTINCT product_id, order_item_id FROM Order_Items WHERE order_item_id IN ($step1.order_item_id);",
             "depends_on": [
                 1
@@ -26,8 +26,8 @@
         },
         {
             "id": 3,
-            "description": "Retrieve product names and colors for the product_ids discovered in step 2.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "description": "Retrieve product names and colors from the products database for the product_ids identified in step 2.",
+            "database": "mysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT DISTINCT product_id, product_name, product_color FROM Products WHERE product_id IN ($step2.product_id);",
             "depends_on": [
                 2

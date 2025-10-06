@@ -81,8 +81,8 @@ def _replace_placeholders(query: str, partial_results: dict[int, pd.DataFrame]) 
         dtype = dep_df[col].dtype
         values = dep_df[col].dropna().unique()
         if len(values) == 0:
-            if pd.api.types.is_numeric_dtype(dtype):
-                values_sql = -1
+            if pd.api.types.is_numeric_dtype(dtype) or dtype == "object":
+                values_sql = '-1'
             else:
                 values_sql = "''"
         else:

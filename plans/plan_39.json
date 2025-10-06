@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve the distinct customer IDs that have at least one order (from the Orders table).",
+            "description": "Get the distinct customer IDs that have placed orders from the Orders table.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT DISTINCT customer_id FROM Orders;",
             "depends_on": [],
@@ -10,9 +10,9 @@
         },
         {
             "id": 2,
-            "description": "Fetch customer records for the customer IDs returned by step 1 to ensure they are valid customers.",
+            "description": "Filter customers in the users database to those who exist in the set of customer IDs that placed orders (returned by step 1). This ensures we count actual customers present in the customers table.",
             "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
-            "query": "SELECT customer_id, customer_first_name, customer_last_name, email_address FROM customers WHERE customer_id IN ($step1.customer_id);",
+            "query": "SELECT customer_id FROM customers WHERE customer_id IN ($step1.customer_id);",
             "depends_on": [
                 1
             ],

@@ -2,8 +2,8 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all shipment tracking numbers and shipment dates from the shipments table.",
-            "database": "postgresql://appuser:root@localhost:5434/shipments_db",
+            "description": "Retrieve all shipment tracking numbers and their shipment dates from the shipments table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
             "query": "SELECT shipment_tracking_number, shipment_date FROM shipments;",
             "depends_on": [],
             "join_info": null

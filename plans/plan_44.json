@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Count distinct payment method codes available to customers from the customer_payment_methods table.",
+            "description": "Retrieve all distinct payment_method_code values from the customer_payment_methods table.",
             "database": "postgresql://appuser:root@localhost:5433/users_db",
-            "query": "SELECT COUNT(DISTINCT payment_method_code) AS payment_method_count FROM customer_payment_methods;",
+            "query": "SELECT DISTINCT payment_method_code FROM customer_payment_methods;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
-        "payment_method_count"
+        "distinct_payment_method_count"
     ],
     "final_aggregation": {
         "type": "COUNT",

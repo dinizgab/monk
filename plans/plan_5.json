@@ -2,14 +2,31 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve distinct order dates for orders that were placed at the earliest date OR belong to orders having more than one item.",
+            "description": "Find order_ids that have more than 1 item (orders with item count > 1).",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT DISTINCT date_order_placed FROM Orders WHERE date_order_placed = (SELECT MIN(date_order_placed) FROM Orders) OR order_id IN (SELECT order_id FROM Order_Items GROUP BY order_id HAVING COUNT(*) > 1);",
+            "query": "SELECT order_id FROM Order_Items GROUP BY order_id HAVING COUNT(*) > 1;",
             "depends_on": [],
             "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve orders' IDs and their placement dates for orders placed at the earliest date or that have more than 1 item (using order_ids from step 1).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_id, date_order_placed FROM Orders WHERE date_order_placed = (SELECT MIN(date_order_placed) FROM Orders) OR order_id IN ($step1.order_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "order_id",
+                    "dependency_step_column": "order_id"
+                }
+            }
         }
     ],
     "final_output_columns": [
+        "order_id",
         "date_order_placed"
     ],
     "final_aggregation": {

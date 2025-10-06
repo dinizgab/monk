@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve usernames and passwords for customers whose phone number starts with '+12'.",
+            "description": "Select customer usernames and passwords for customers whose phone number starts with '+12'.",
             "database": "postgresql://appuser:root@localhost:5433/users_db",
             "query": "SELECT login_name, login_password FROM customers WHERE phone_number LIKE '+12%';",
             "depends_on": [],

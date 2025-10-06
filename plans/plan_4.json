@@ -2,9 +2,9 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "For every order, retrieve the order id, order status, and the number of distinct products included (include orders with zero items).",
+            "description": "For every order, count how many order items (products) it contains and return the order id and order status. Include orders with zero items.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.order_id, o.order_status_code, COALESCE(ci.product_count, 0) AS product_count\nFROM Orders o\nLEFT JOIN (\n  SELECT order_id, COUNT(DISTINCT product_id) AS product_count\n  FROM Order_Items\n  GROUP BY order_id\n) ci ON o.order_id = ci.order_id;",
+            "query": "SELECT o.order_id, o.order_status_code, COUNT(oi.order_item_id) AS product_count FROM Orders o LEFT JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.order_status_code;",
             "depends_on": [],
             "join_info": null
         }

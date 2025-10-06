@@ -2,18 +2,18 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Compute the average product price across all products.",
+            "description": "Retrieve all non-null product prices from the Products table so the application can compute the average.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
-            "query": "SELECT AVG(product_price) AS avg_price FROM Products;",
+            "query": "SELECT product_price FROM Products WHERE product_price IS NOT NULL;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
-        "avg_price"
+        "average_product_price"
     ],
     "final_aggregation": {
-        "type": "NONE",
-        "column": ""
+        "type": "AVG",
+        "column": "product_price"
     }
 }

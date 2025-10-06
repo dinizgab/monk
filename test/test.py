@@ -10,6 +10,11 @@ with open("test.json", "r") as f:
     failed = []
     engine = create_engine("sqlite:///schemas/sqlite/crossing_data_db.db")
 
+    #    for item in items:
+    #        #write item question in a questions.txt file
+    #        with open("questions.txt", "a") as qf:
+    #            qf.write(item["question"] + "\n")
+
     with engine.connect() as conn:
         for i, item in enumerate(items):
             print(f"Running query {i+1}/{len(items)} on sqlite_crossing_db")

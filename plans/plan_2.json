@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Compute per-customer number of distinct orders and total ordered items from the Orders and Order_Items tables; filter customers with more than 2 orders and at least 3 items.",
+            "description": "Identify customer_ids that have placed more than 2 orders and have a total of at least 3 purchased items across their orders. Aggregation is done per customer in the orders database.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.customer_id, COUNT(DISTINCT o.order_id) AS orders_count, COUNT(oi.order_item_id) AS items_count FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.customer_id HAVING COUNT(DISTINCT o.order_id) > 2 AND COUNT(oi.order_item_id) >= 3;",
+            "query": "SELECT o.customer_id, COUNT(DISTINCT o.order_id) AS orders_count, COUNT(oi.order_item_id) AS items_count FROM Orders o LEFT JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.customer_id HAVING COUNT(DISTINCT o.order_id) > 2 AND COUNT(oi.order_item_id) >= 3;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve customer id, first and last names for the customers identified in step 1.",
+            "description": "Retrieve customer id, first and last names for the customer_ids identified in step 1 from the users database.",
             "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
             "query": "SELECT customer_id, customer_first_name, customer_last_name FROM customers WHERE customer_id IN ($step1.customer_id);",
             "depends_on": [

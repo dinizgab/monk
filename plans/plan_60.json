@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Get distinct pairs of customer_id and product_id for all purchased order items by joining Orders and Order_Items (produces the set of buyer-product relations).",
+            "description": "Get all order -> customer -> product mappings by joining Orders with Order_Items (order_id, customer_id, product_id).",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT DISTINCT o.customer_id, oi.product_id FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id;",
+            "query": "SELECT o.order_id, o.customer_id, oi.product_id FROM Orders o INNER JOIN Order_Items oi ON o.order_id = oi.order_id;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Get first names for the customers identified in step 1.",
+            "description": "Retrieve first names for the customers referenced by the orders found in step 1.",
             "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
             "query": "SELECT customer_id, customer_first_name FROM customers WHERE customer_id IN ($step1.customer_id);",
             "depends_on": [
@@ -26,7 +26,7 @@
         },
         {
             "id": 3,
-            "description": "Get product names for the products identified in step 1.",
+            "description": "Retrieve product names for the product_ids referenced by the order items found in step 1.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_name FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [

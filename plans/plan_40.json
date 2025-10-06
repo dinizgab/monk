@@ -2,18 +2,18 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Count distinct customers who have at least one ordered item by joining Orders with Order_Items.",
+            "description": "Retrieve the distinct customer IDs from all orders (this yields the set of customers who have placed orders).",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT COUNT(DISTINCT o.customer_id) AS distinct_customers FROM Orders o INNER JOIN Order_Items oi ON o.order_id = oi.order_id;",
+            "query": "SELECT DISTINCT customer_id FROM Orders;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
-        "distinct_customers"
+        "customer_count"
     ],
     "final_aggregation": {
-        "type": "NONE",
-        "column": ""
+        "type": "COUNT",
+        "column": "customer_id"
     }
 }

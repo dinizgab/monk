@@ -49,7 +49,7 @@ def prompt(query: str, metadata: str) -> str:
 
     Additional Instructions:
     - If a query depends on the results of another, use a placeholder in the format $stepID.columnName in the WHERE clause. For example: WHERE id IN ($step1.user_id).
-    - The join_info field is only necessary for steps that have dependencies and need to be aggregated. For the first step or independent steps, it can be omitted, use LEFT to reference ANTI.
+    - The join_info field is only necessary for steps that have dependencies and need to be aggregated. For the first step or independent steps, it can be omitted, use only these words (LEFT, RIGHT, FULL and INNER).
     - `final_aggregation` describes the final operation performed by the application. If no aggregation is needed, use "NONE".
 
     [EXAMPLES]

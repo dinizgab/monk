@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve product IDs, names and sizes for all products whose name contains the word 'Dell'.",
+            "description": "Retrieve product id, name and size for all products whose name contains 'Dell'.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_name, product_size FROM Products WHERE product_name LIKE '%Dell%';",
             "depends_on": [],

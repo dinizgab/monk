@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Compute the number of order items per product (the frequency each product was ordered) from the orders database.",
+            "description": "Find product_id(s) that have the maximum number of orders (i.e., most frequently ordered products) and return their order counts.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT product_id, COUNT(*) AS order_item_count FROM Order_Items GROUP BY product_id;",
+            "query": "SELECT product_id, COUNT(*) AS order_count FROM Order_Items GROUP BY product_id HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM Order_Items GROUP BY product_id) AS derived);",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve product ids, names and prices for the products referenced in step 1.",
+            "description": "Retrieve ids, names and prices for the product(s) identified as most frequently ordered in step 1.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_name, product_price FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [
@@ -31,7 +31,7 @@
         "product_price"
     ],
     "final_aggregation": {
-        "type": "MAX",
-        "column": "order_item_count"
+        "type": "NONE",
+        "column": ""
     }
 }

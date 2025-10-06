@@ -2,17 +2,17 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all customers with their first name, middle initial and last name.",
-            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
-            "query": "SELECT customer_id, customer_first_name, customer_middle_initial, customer_last_name FROM customers;",
+            "description": "Retrieve all distinct customer_ids that have placed orders from the Orders table in the orders_db.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT DISTINCT customer_id FROM Orders;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve distinct customer_ids that have placed orders (limited to customers returned in step 1).",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT DISTINCT customer_id FROM Orders WHERE customer_id IN ($step1.customer_id);",
+            "description": "Select first name, middle initial and last name of customers from users_db whose customer_id is NOT in the set of customer_ids that have orders (anti-join).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_first_name, customer_middle_initial, customer_last_name FROM customers WHERE customer_id NOT IN ($step1.customer_id);",
             "depends_on": [
                 1
             ],

@@ -2,9 +2,9 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all distinct order status codes and their order placement dates from the Orders table.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT DISTINCT order_status_code, date_order_placed FROM Orders;",
+            "description": "Retrieve the order status codes and order dates for all orders.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_status_code, date_order_placed FROM Orders;",
             "depends_on": [],
             "join_info": null
         }

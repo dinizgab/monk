@@ -2,11 +2,27 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Find orders that contain at least 2 distinct products and return the order id with the order date.",
-            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.order_id, o.date_order_placed FROM Orders o JOIN (SELECT order_id FROM Order_Items GROUP BY order_id HAVING COUNT(DISTINCT product_id) >= 2) oi ON o.order_id = oi.order_id;",
+            "description": "Get the number of order items per order (order_id -> item_count) from the Order_Items table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_id, COUNT(*) AS item_count FROM Order_Items GROUP BY order_id;",
             "depends_on": [],
             "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch order dates for the orders returned by step 1. The application will filter step 1 results to keep only order_ids with item_count >= 2 and substitute them into the placeholder in this query.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_id, date_order_placed FROM Orders WHERE order_id IN ($step1.order_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "order_id",
+                    "dependency_step_column": "order_id"
+                }
+            }
         }
     ],
     "final_output_columns": [

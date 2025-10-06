@@ -10,18 +10,22 @@
         },
         {
             "id": 2,
-            "description": "Select product prices and sizes for products whose price is greater than the mean computed in step 1.",
+            "description": "Retrieve the prices and sizes of products whose price is greater than the mean price computed in step 1.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
-            "query": "SELECT product_id, product_name, product_price, product_size FROM Products WHERE product_price > $step1.mean_price;",
+            "query": "SELECT product_price, product_size FROM Products WHERE product_price > $step1.mean_price;",
             "depends_on": [
                 1
             ],
-            "join_info": null
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "product_price",
+                    "dependency_step_column": "mean_price"
+                }
+            }
         }
     ],
     "final_output_columns": [
-        "product_id",
-        "product_name",
         "product_price",
         "product_size"
     ],

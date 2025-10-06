@@ -2,9 +2,9 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve color, description and size for all products whose price is not the maximum price (includes products with NULL or lower prices).",
-            "database": "mysql://appuser:apppass@localhost:3307/products_db",
-            "query": "SELECT product_color, product_description, product_size FROM Products WHERE product_price < (SELECT MAX(product_price) FROM Products) OR product_price IS NULL;",
+            "description": "Select color, description, and size for all products whose price is less than the maximum product price (i.e., not at the maximum price).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_color, product_description, product_size FROM Products WHERE product_price < (SELECT MAX(product_price) FROM Products);",
             "depends_on": [],
             "join_info": null
         }

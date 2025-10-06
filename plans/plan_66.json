@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Get distinct product IDs for all products that have been ordered (from Order_Items).",
+            "description": "Retrieve the distinct product IDs that have been ordered (from order items).",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT DISTINCT product_id FROM Order_Items;",
             "depends_on": [],
@@ -10,7 +10,7 @@
         },
         {
             "id": 2,
-            "description": "Retrieve product prices for the product IDs returned by step 1 from the Products table.",
+            "description": "Fetch product prices for the ordered products identified in step 1.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_price FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [
@@ -26,8 +26,7 @@
         }
     ],
     "final_output_columns": [
-        "product_id",
-        "product_price"
+        "average_product_price"
     ],
     "final_aggregation": {
         "type": "AVG",

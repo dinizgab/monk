@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all customer IDs from users_db that do not have any payment method recorded.",
-            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
-            "query": "SELECT c.customer_id FROM customers c WHERE NOT EXISTS (SELECT 1 FROM customer_payment_methods pm WHERE pm.customer_id = c.customer_id);",
+            "description": "Retrieve IDs of all customers that have no payment method recorded.",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT c.customer_id FROM customers c LEFT JOIN customer_payment_methods pm ON c.customer_id = pm.customer_id WHERE pm.customer_id IS NULL;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
-        "customer_count"
+        "customer_id"
     ],
     "final_aggregation": {
         "type": "COUNT",

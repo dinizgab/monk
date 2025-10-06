@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all order items with their associated order_id and product_id from the orders database. This provides the membership of products per order so the application can compute order totals after obtaining product prices.",
+            "description": "Retrieve per-order, per-product item counts (quantity) from the Order_Items table. This gives, for each order_id and product_id, how many items of that product were ordered.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT order_id, product_id FROM Order_Items;",
+            "query": "SELECT order_id, product_id, COUNT(*) AS qty FROM Order_Items GROUP BY order_id, product_id;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve product prices for all products referenced by the order items returned in step 1 from the products database.",
+            "description": "Retrieve product prices for the products referenced in step 1 so the application can compute cost = qty * product_price for each order-item.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_price FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [

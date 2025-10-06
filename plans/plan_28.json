@@ -2,7 +2,7 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve shipped order item IDs together with their shipment dates from the shipments database.",
+            "description": "Retrieve all shipped order item IDs together with their shipment dates from the shipments system.",
             "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
             "query": "SELECT si.order_item_id, s.shipment_date FROM shipment_items si JOIN shipments s ON si.shipment_id = s.shipment_id;",
             "depends_on": [],
@@ -10,7 +10,7 @@
         },
         {
             "id": 2,
-            "description": "Map shipped order items to product IDs using the order items table in the orders database. Uses the order_item_id values returned by step 1.",
+            "description": "Map the shipped order items to product IDs using the order items table.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
             "query": "SELECT order_item_id, product_id FROM Order_Items WHERE order_item_id IN ($step1.order_item_id);",
             "depends_on": [
@@ -26,7 +26,7 @@
         },
         {
             "id": 3,
-            "description": "Retrieve product names for the product IDs returned by step 2 from the products database.",
+            "description": "Get product names for the product IDs associated with the shipped order items.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_name FROM Products WHERE product_id IN ($step2.product_id);",
             "depends_on": [

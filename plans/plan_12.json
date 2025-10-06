@@ -2,9 +2,9 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Find orders that contain at least two distinct products and return their IDs and order dates.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT o.order_id, o.date_order_placed FROM Orders o JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.date_order_placed HAVING COUNT(DISTINCT oi.product_id) >= 2;",
+            "description": "Find orders that contain at least two distinct products by aggregating Order_Items, and return those order IDs with their order dates from Orders.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.order_id, o.date_order_placed FROM Orders o JOIN (SELECT order_id FROM Order_Items GROUP BY order_id HAVING COUNT(DISTINCT product_id) >= 2) oi ON o.order_id = oi.order_id;",
             "depends_on": [],
             "join_info": null
         }

@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all order items along with their order id and order date (to allow grouping by order).",
+            "description": "Retrieve every order's id and order date together with the product_id for each order item (one row per order item).",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT oi.order_id, o.date_order_placed AS order_date, oi.product_id FROM Order_Items oi JOIN Orders o ON oi.order_id = o.order_id;",
+            "query": "SELECT o.order_id, o.date_order_placed, oi.product_id FROM Orders AS o INNER JOIN Order_Items AS oi ON o.order_id = oi.order_id;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Fetch product prices for all product_ids referenced by the order items returned in step 1.",
+            "description": "Fetch prices for all products referenced by the order items returned in step 1.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_price FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [
@@ -27,7 +27,7 @@
     ],
     "final_output_columns": [
         "order_id",
-        "order_date",
+        "date_order_placed",
         "total_cost"
     ],
     "final_aggregation": {

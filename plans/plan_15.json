@@ -2,17 +2,17 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve each product's id and price from the products database.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
-            "query": "SELECT product_id, product_price FROM Products WHERE product_price IS NOT NULL;",
+            "description": "Retrieve all order-item mappings (order_id -> product_id) from the orders database. This provides the product references for every order so the application can compute order totals after obtaining product prices.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_id, product_id FROM Order_Items;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve order items (order_id and product_id) for products found in step 1.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT order_id, product_id FROM Order_Items WHERE product_id IN ($step1.product_id);",
+            "description": "Retrieve prices for all products referenced by order items returned in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id, product_price FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [
                 1
             ],
@@ -27,10 +27,10 @@
     ],
     "final_output_columns": [
         "order_id",
-        "order_total"
+        "order_sum"
     ],
     "final_aggregation": {
-        "type": "SUM",
-        "column": "product_price"
+        "type": "MIN",
+        "column": "order_sum"
     }
 }

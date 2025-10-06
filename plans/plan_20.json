@@ -2,17 +2,17 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve all customers with their gender codes from the users database.",
-            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
-            "query": "SELECT customer_id, gender_code FROM customers;",
+            "description": "Compute the number of purchased products (order items) per customer by aggregating Order_Items joined to Orders.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.customer_id, COUNT(*) AS products_bought FROM Order_Items oi JOIN Orders o ON oi.order_id = o.order_id GROUP BY o.customer_id;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve all order items with their associated customer_id by joining Order_Items to Orders, but only for customers returned in step 1.",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT oi.order_item_id, oi.product_id, oi.order_id, o.customer_id FROM Order_Items oi JOIN Orders o ON oi.order_id = o.order_id WHERE o.customer_id IN ($step1.customer_id);",
+            "description": "Get customer gender for the customers returned in step 1 so we can aggregate purchases by gender at the application level.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, gender_code FROM customers WHERE customer_id IN ($step1.customer_id);",
             "depends_on": [
                 1
             ],
@@ -27,10 +27,10 @@
     ],
     "final_output_columns": [
         "gender_code",
-        "product_count"
+        "total_products_bought"
     ],
     "final_aggregation": {
-        "type": "COUNT",
-        "column": "order_item_id"
+        "type": "SUM",
+        "column": "products_bought"
     }
 }

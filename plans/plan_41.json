@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Retrieve the distinct order item status codes from the Order_Items table in the orders database.",
+            "description": "Count the number of distinct order item status codes across all order items.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT DISTINCT order_item_status_code FROM Order_Items;",
+            "query": "SELECT COUNT(DISTINCT order_item_status_code) AS order_item_status_count FROM Order_Items;",
             "depends_on": [],
             "join_info": null
         }
     ],
     "final_output_columns": [
-        "item_state_count"
+        "order_item_status_count"
     ],
     "final_aggregation": {
         "type": "COUNT",

@@ -2,15 +2,15 @@
     "execution_plan": [
         {
             "id": 1,
-            "description": "Get, from the orders database, the number of distinct orders each product appears in (product_id -> order_count). This returns one row per product that appears in Order_Items.",
+            "description": "Compute how many distinct orders include each product; keep only products listed in fewer than two orders.",
             "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
-            "query": "SELECT product_id, COUNT(DISTINCT order_id) AS order_count FROM Order_Items GROUP BY product_id;",
+            "query": "SELECT product_id, COUNT(DISTINCT order_id) AS order_count FROM Order_Items GROUP BY product_id HAVING COUNT(DISTINCT order_id) < 2;",
             "depends_on": [],
             "join_info": null
         },
         {
             "id": 2,
-            "description": "Retrieve product details from the products database for products that appear in orders (products whose ids are present in step 1). The application will use the order_count from step 1 to filter those with fewer than two orders.",
+            "description": "Fetch product id, name, price and color for products that appear in fewer than two orders (results from step 1).",
             "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
             "query": "SELECT product_id, product_name, product_price, product_color FROM Products WHERE product_id IN ($step1.product_id);",
             "depends_on": [
@@ -18,22 +18,6 @@
             ],
             "join_info": {
                 "type": "INNER",
-                "on": {
-                    "current_step_column": "product_id",
-                    "dependency_step_column": "product_id"
-                }
-            }
-        },
-        {
-            "id": 3,
-            "description": "Retrieve product details from the products database for products that do NOT appear in any Order_Items (these products have zero orders).",
-            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
-            "query": "SELECT product_id, product_name, product_price, product_color FROM Products WHERE product_id NOT IN ($step1.product_id);",
-            "depends_on": [
-                1
-            ],
-            "join_info": {
-                "type": "LEFT",
                 "on": {
                     "current_step_column": "product_id",
                     "dependency_step_column": "product_id"
