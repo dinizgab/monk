@@ -1,9 +1,7 @@
 CREATE TABLE `receipts` (
   `ReceiptNumber` INT PRIMARY KEY,
   `Date` DATE,
-  `CustomerId` INT,
-  CONSTRAINT `fk_receipts_customer`
-    FOREIGN KEY (`CustomerId`) REFERENCES `customers`(`Id`)
+  `CustomerId` INT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `receipts` (`ReceiptNumber`, `Date`, `CustomerId`) VALUES

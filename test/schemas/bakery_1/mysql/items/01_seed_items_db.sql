@@ -2,7 +2,7 @@ CREATE TABLE `items` (
   `Receipt` INT,
   `Ordinal` INT,
   `Item` VARCHAR(255),
-  PRIMARY KEY (`Receipt`, `Ordinal`),
+  PRIMARY KEY (`Receipt`, `Ordinal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `items` (`Receipt`, `Ordinal`, `Item`) VALUES
