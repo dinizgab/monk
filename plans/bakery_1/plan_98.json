@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count how many times each item was purchased and return the top 3 most frequently purchased items.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Item, COUNT(*) AS purchases FROM items WHERE Item IS NOT NULL GROUP BY Item ORDER BY purchases DESC LIMIT 3;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "Item",
+        "purchases"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

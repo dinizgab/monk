@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select IDs of goods that have flavor 'chocolate'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE flavor = 'chocolate';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count purchases per item (Item) from the items table for the goods IDs returned in step 1 and keep only those purchased at most 10 times.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Item AS id, COUNT(*) AS purchase_count FROM items WHERE Item IN ($step1.id) GROUP BY Item HAVING COUNT(*) <= 10;",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "Item",
+                    "dependency_step_column": "id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "purchase_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

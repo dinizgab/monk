@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the distinct cake flavors (types) sold by the bakery from the goods table. This returns one row per cake type for counting at the application level.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT flavor FROM goods WHERE food IS NOT NULL AND lower(food) LIKE '%cake%' AND flavor IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "flavor"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "flavor"
+    }
+}

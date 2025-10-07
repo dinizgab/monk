@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the ids of goods whose price is less than 3 dollars from the goods database.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE price < 3;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

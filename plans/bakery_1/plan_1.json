@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the id, flavor and price of the single most expensive item whose food type is 'cake' from the goods table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, flavor, price FROM goods WHERE LOWER(food) = 'cake' ORDER BY price DESC NULLS LAST LIMIT 1;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "flavor",
+        "price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the id and flavor of the cheapest item whose food type is 'cookie' from the goods table.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, flavor FROM goods WHERE LOWER(food) = 'cookie' AND price IS NOT NULL ORDER BY price ASC LIMIT 1;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "flavor"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve flavors and prices of goods (cakes) that cost more than 10 dollars from the goods database.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT flavor, price FROM goods WHERE price > 10;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "flavor",
+        "price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

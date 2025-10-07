@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve distinct flavors offered for food = 'Cake' that are not present among flavors offered for food = 'Tart'.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT flavor FROM goods WHERE food = 'Cake' AND flavor IS NOT NULL AND flavor NOT IN (SELECT flavor FROM goods WHERE food = 'Tart' AND flavor IS NOT NULL);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "flavor"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve goods ids, flavors, food types and prices from the goods table, ordered by price ascending.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, flavor, food, price FROM goods ORDER BY price ASC;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "flavor",
+        "food"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

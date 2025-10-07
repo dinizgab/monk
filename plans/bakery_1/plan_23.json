@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute average, maximum and minimum price for each food type from the goods table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT food, AVG(price) AS avg_price, MAX(price) AS max_price, MIN(price) AS min_price FROM goods GROUP BY food;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "food",
+        "avg_price",
+        "max_price",
+        "min_price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

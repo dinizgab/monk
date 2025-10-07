@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all food items with their prices from the goods database so the application can compute average, minimum and maximum prices per food.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT food, price FROM goods WHERE price IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "food",
+        "avg_price",
+        "min_price",
+        "max_price"
+    ],
+    "final_aggregation": {
+        "type": "AVG,MIN,MAX",
+        "column": "price"
+    }
+}

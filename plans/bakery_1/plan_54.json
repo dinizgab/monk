@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all customers' last names sorted alphabetically.",
+            "database": "postgresql://appuser:root@localhost:5435/customers_db",
+            "query": "SELECT lastname FROM customers ORDER BY lastname ASC;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "lastname"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

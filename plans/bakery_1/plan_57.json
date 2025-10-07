@@ -1,0 +1,53 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find IDs of goods that are apple-flavored pies.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE flavor = 'apple' AND food = 'pie';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find distinct receipt numbers that include any of the goods identified in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT DISTINCT Receipt FROM items WHERE Item IN ($step1.id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "Item",
+                    "dependency_step_column": "id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Retrieve receipts that either have a ReceiptNumber found in step 2 (i.e., bought an apple-flavor pie) or have CustomerId = 12.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber, Date, CustomerId FROM receipts WHERE ReceiptNumber IN ($step2.Receipt) OR CustomerId = 12;",
+            "depends_on": [
+                2
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "ReceiptNumber",
+                    "dependency_step_column": "Receipt"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "ReceiptNumber",
+        "Date",
+        "CustomerId"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

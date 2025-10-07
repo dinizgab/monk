@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count receipts per non-NULL date and return the three dates with the highest receipt counts.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT `Date`, COUNT(*) AS receipt_count FROM receipts WHERE `Date` IS NOT NULL GROUP BY `Date` ORDER BY receipt_count DESC LIMIT 3;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "Date",
+        "receipt_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

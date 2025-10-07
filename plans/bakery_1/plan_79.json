@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve distinct (date, customer) pairs from receipts so the application can count distinct customers per date.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT DISTINCT `Date`, `CustomerId` FROM `receipts` WHERE `Date` IS NOT NULL AND `CustomerId` IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "Date",
+        "distinct_customer_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "CustomerId"
+    }
+}

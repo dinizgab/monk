@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch distinct flavors and their food type for goods that are either Cake or Tart. The application will compute flavors present for Cake but not for Tart using these results.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT flavor, food FROM goods WHERE food IN ('Cake', 'Tart') AND flavor IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "flavor"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

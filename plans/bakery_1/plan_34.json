@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch each good's identifier and its food type from the goods database so the application can count goods per food type.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, food FROM goods;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "food",
+        "count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "id"
+    }
+}

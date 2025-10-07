@@ -1,0 +1,35 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all receipt numbers for customer with id 15 from the receipts database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber FROM receipts WHERE CustomerId = 15;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get distinct items from the items database for the receipts returned in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT DISTINCT Item FROM items WHERE Receipt IN ($step1.ReceiptNumber);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "Receipt",
+                    "dependency_step_column": "ReceiptNumber"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "Item"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

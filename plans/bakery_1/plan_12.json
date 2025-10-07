@@ -1,0 +1,52 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all sold items with their receipt numbers from the items database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT DISTINCT Receipt, Item FROM items;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get the customer IDs for the receipts returned in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber, CustomerId FROM receipts WHERE ReceiptNumber IN ($step1.Receipt);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "ReceiptNumber",
+                    "dependency_step_column": "Receipt"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Map item identifiers from step 1 to food names.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, food FROM goods WHERE id IN ($step1.Item);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "id",
+                    "dependency_step_column": "Item"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "food",
+        "customer_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "CustomerId (DISTINCT)"
+    }
+}

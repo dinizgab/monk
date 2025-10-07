@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find customer IDs that have 15 or more receipts by counting receipts per CustomerId in the receipts database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT CustomerId FROM receipts WHERE CustomerId IS NOT NULL GROUP BY CustomerId HAVING COUNT(*) >= 15;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "CustomerId"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

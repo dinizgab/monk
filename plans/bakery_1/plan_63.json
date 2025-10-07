@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve ids, food names and prices from the goods table for items 'Cookie' or 'Cake' whose price is between 3 and 7 dollars.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, food, price FROM goods WHERE food IN ('Cookie','Cake') AND price BETWEEN 3 AND 7;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "food",
+        "price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

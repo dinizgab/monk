@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve distinct product names from the goods catalog that are cakes.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT food AS cake_type FROM goods WHERE food IS NOT NULL AND food ILIKE '%cake%';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve distinct item names from the items table that are cakes.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT DISTINCT Item AS cake_type FROM items WHERE Item IS NOT NULL AND LOWER(Item) LIKE '%cake%';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "cake_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "cake_type"
+    }
+}

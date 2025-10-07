@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count the number of goods for each food type from the goods table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT food, COUNT(*) AS goods_count FROM goods GROUP BY food;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "food",
+        "goods_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "goods_count"
+    }
+}

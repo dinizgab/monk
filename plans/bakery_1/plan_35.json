@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve each item's food type and its price from the goods table so the application can compute the average price per food type.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT food, price FROM goods WHERE price IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "food",
+        "price"
+    ],
+    "final_aggregation": {
+        "type": "AVG",
+        "column": "price"
+    }
+}

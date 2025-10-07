@@ -1,0 +1,67 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find all goods ids that are classified as 'bakery'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE food = 'bakery';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "For receipts that contain bakery goods, get the receipt id and the number of bakery items on each receipt.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Receipt, COUNT(*) AS item_count FROM items WHERE Item IN ($step1.id) GROUP BY Receipt;",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "Item",
+                    "dependency_step_column": "id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Map each receipt (that has bakery items) to its customer id.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber, CustomerId FROM receipts WHERE ReceiptNumber IN ($step2.Receipt);",
+            "depends_on": [
+                2
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "ReceiptNumber",
+                    "dependency_step_column": "Receipt"
+                }
+            }
+        },
+        {
+            "id": 4,
+            "description": "Retrieve last names for all customers who appear on receipts that included bakery items. Application will aggregate counts per customer (using step 2 and step 3) and filter those with total > 10.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5435/customers_db",
+            "query": "SELECT id, lastname FROM customers WHERE id IN ($step3.CustomerId);",
+            "depends_on": [
+                3
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "id",
+                    "dependency_step_column": "CustomerId"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "lastname"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

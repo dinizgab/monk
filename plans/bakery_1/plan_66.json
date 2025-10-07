@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the earliest visit date and all customer IDs for receipts on that earliest date from the receipts database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT DISTINCT CustomerId, Date FROM receipts WHERE Date = (SELECT MIN(Date) FROM receipts);",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get the firstname and lastname for the customers identified in step 1 from the customers database.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5435/customers_db",
+            "query": "SELECT id, firstname, lastname FROM customers WHERE id IN ($step1.CustomerId);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "id",
+                    "dependency_step_column": "CustomerId"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "firstname",
+        "lastname",
+        "Date"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all goods that have flavor = 'chocolate' (get their ids and descriptive columns).",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, food, price, flavor FROM goods WHERE flavor = 'chocolate';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all purchase records from the items table that correspond to the chocolate goods found in step 1. These raw purchase rows will be aggregated at the application level to count purchases per item.",
+            "database": "mysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Receipt, Ordinal, Item FROM items WHERE Item IN ($step1.id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "Item",
+                    "dependency_step_column": "id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "food",
+        "price",
+        "purchase_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "Item"
+    }
+}
