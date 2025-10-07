@@ -5,10 +5,10 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 
 
-with open("test.json", "r") as f:
+with open("bakery_1_questions.json", "r") as f:
     items = json.load(f)
     failed = []
-    engine = create_engine("sqlite:///schemas/sqlite/crossing_data_db.db")
+    engine = create_engine("sqlite:///schemas/bakery_1/sqlite/bakery_1.sqlite")
 
     #    for item in items:
     #        #write item question in a questions.txt file
@@ -21,7 +21,7 @@ with open("test.json", "r") as f:
             print(f"Question: {item['question']}")
             try:
                 query = item["query"]
-                out_path = Path(f"./crossing_data/result_{i+1}.csv")
+                out_path = Path(f"./crossing_data/bakery_1/result_{i+1}.csv")
 
                 out_path.parent.mkdir(parents=True, exist_ok=True)
                 df = pd.read_sql(text(query), conn)
