@@ -77,10 +77,10 @@ services:
 
   bakery_1_mysql_receipts:
     image: mysql:8.0
-    container_name: bakery_1_mysql_receipts_demo
+    container_name: bakery_1_mysql_receipts
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: receipts_demo_db
+      MYSQL_DATABASE: receipts_db
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppass
     ports:
@@ -97,10 +97,10 @@ services:
 
   bakery_1_mysql_items:
     image: mysql:8.0
-    container_name: bakery_1_mysql_items_demo
+    container_name: bakery_1_mysql_item
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: items_demo_db
+      MYSQL_DATABASE: items_db
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppass
     ports:
@@ -117,15 +117,15 @@ services:
 
   bakery_1_pg_customers:
     image: postgres:16
-    container_name: bakery_1_pg_customers_demo
+    container_name: bakery_1_pg_customers
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: appuser
-      POSTGRES_DB: customers_demo_db
+      POSTGRES_DB: customers_db
     ports:
       - "5435:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U appuser -d customers_demo_db"]
+      test: ["CMD-SHELL", "pg_isready -U appuser -d customers_db"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -135,15 +135,15 @@ services:
 
   bakery_1_pg_goods:
     image: postgres:16
-    container_name: bakery_1_pg_goods_demo
+    container_name: bakery_1_pg_goods
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: appuser
-      POSTGRES_DB: goods_demo_db
+      POSTGRES_DB: goods_db
     ports:
       - "5436:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U appuser -d goods_demo_db"]
+      test: ["CMD-SHELL", "pg_isready -U appuser -d goods_db"]
       interval: 5s
       timeout: 3s
       retries: 20
