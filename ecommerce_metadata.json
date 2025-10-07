@@ -1,0 +1,382 @@
+[
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3307,
+        "database": "products_db",
+        "tables": {
+            "Products": [
+                {
+                    "name": "product_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "parent_product_id",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "product_name",
+                    "type": "VARCHAR(80) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "product_price",
+                    "type": "DECIMAL(19, 4)",
+                    "nullable": true,
+                    "default": "'0.0000'",
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "product_color",
+                    "type": "VARCHAR(50) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "product_size",
+                    "type": "VARCHAR(50) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "product_description",
+                    "type": "VARCHAR(255) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3308,
+        "database": "orders_db",
+        "tables": {
+            "Invoices": [
+                {
+                    "name": "invoice_number",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "invoice_status_code",
+                    "type": "VARCHAR(10) COLLATE utf8mb4_unicode_ci",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "invoice_date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ],
+            "Order_Items": [
+                {
+                    "name": "order_item_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "product_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "order_item_status_code",
+                    "type": "VARCHAR(20) COLLATE utf8mb4_unicode_ci",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ],
+            "Orders": [
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "order_status_code",
+                    "type": "VARCHAR(20) COLLATE utf8mb4_unicode_ci",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "date_order_placed",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5433,
+        "database": "users_db",
+        "tables": {
+            "customers": [
+                {
+                    "name": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "gender_code",
+                    "type": "VARCHAR(10)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "customer_first_name",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "customer_middle_initial",
+                    "type": "VARCHAR(1)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "customer_last_name",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "email_address",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "login_name",
+                    "type": "VARCHAR(80)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "login_password",
+                    "type": "VARCHAR(20)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "phone_number",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "address_line_1",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "town_city",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "county",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "country",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ],
+            "customer_payment_methods": [
+                {
+                    "name": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "payment_method_code",
+                    "type": "VARCHAR(50)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5434,
+        "database": "shipments_db",
+        "tables": {
+            "shipments": [
+                {
+                    "name": "shipment_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "invoice_number",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "shipment_tracking_number",
+                    "type": "VARCHAR(80)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "shipment_date",
+                    "type": "TIMESTAMP WITHOUT TIME ZONE",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ],
+            "shipment_items": [
+                {
+                    "name": "shipment_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "order_item_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    }
+]

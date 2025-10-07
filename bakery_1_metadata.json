@@ -1,0 +1,158 @@
+[
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3309,
+        "database": "receipts_db",
+        "tables": {
+            "receipts": [
+                {
+                    "name": "ReceiptNumber",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "Date",
+                    "type": "DATE",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "CustomerId",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3310,
+        "database": "items_db",
+        "tables": {
+            "items": [
+                {
+                    "name": "Receipt",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "Ordinal",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "Item",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5435,
+        "database": "customers_db",
+        "tables": {
+            "customers": [
+                {
+                    "name": "id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "nextval('customers_id_seq'::regclass)",
+                    "comment": null,
+                    "autoincrement": true
+                },
+                {
+                    "name": "lastname",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "firstname",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5436,
+        "database": "goods_db",
+        "tables": {
+            "goods": [
+                {
+                    "name": "id",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "flavor",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "food",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                },
+                {
+                    "name": "price",
+                    "type": "REAL",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false
+                }
+            ]
+        }
+    }
+]
