@@ -8,10 +8,12 @@ from typing import Dict, List, Tuple
 ID_RE_CROSS = re.compile(r"^result_(\d+)\.csv$", re.IGNORECASE)
 ID_RE_PLAN = re.compile(r"^result_plan_(\d+)\.csv$", re.IGNORECASE)
 
+
 def find_subdirs(base: Path) -> List[Path]:
     if not base.exists():
         return []
     return sorted([p for p in base.iterdir() if p.is_dir()])
+
 
 def list_ids_in_cross(cross_subdir: Path) -> Dict[str, Path]:
     out = {}
@@ -21,6 +23,7 @@ def list_ids_in_cross(cross_subdir: Path) -> Dict[str, Path]:
             out[m.group(1)] = p
     return out
 
+
 def list_plan_files(results_subdir: Path) -> Dict[str, Path]:
     out = {}
     for p in results_subdir.glob("*.csv"):
@@ -28,6 +31,7 @@ def list_plan_files(results_subdir: Path) -> Dict[str, Path]:
         if m:
             out[m.group(1)] = p
     return out
+
 
 def read_csv_normalized(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path)
@@ -38,6 +42,7 @@ def read_csv_normalized(path: Path) -> pd.DataFrame:
     except Exception:
         df = df.reset_index(drop=True)
     return df
+
 
 def equals_csv(a: Path, b: Path, strict: bool = False) -> bool:
     if strict:
@@ -51,7 +56,18 @@ def equals_csv(a: Path, b: Path, strict: bool = False) -> bool:
         return False
     return da.equals(db)
 
-def compare_subdir(cross_subdir: Path, results_subdir: Path, strict: bool=False) -> Dict:
+
+def is_csv_empty(path: Path) -> bool:
+    try:
+        df = pd.read_csv(path)
+        return df.empty
+    except Exception:
+        return path.stat().st_size == 0
+
+
+def compare_subdir(
+    cross_subdir: Path, results_subdir: Path, strict: bool = False
+) -> Dict:
     cross_ids = list_ids_in_cross(cross_subdir)
     plan_ids = list_plan_files(results_subdir)
     missing = []
@@ -68,6 +84,11 @@ def compare_subdir(cross_subdir: Path, results_subdir: Path, strict: bool=False)
         else:
             diffs.append(id_)
 
+    empty_plan_ids = sorted(
+        [pid for pid, ppath in plan_ids.items() if is_csv_empty(ppath)],
+        key=lambda x: int(x),
+    )
+
     return {
         "subdir": cross_subdir.name,
         "total_cross_files": len(cross_ids),
@@ -77,12 +98,26 @@ def compare_subdir(cross_subdir: Path, results_subdir: Path, strict: bool=False)
         "equal_ids": sorted(equals, key=lambda x: int(x)),
         "different_count": len(diffs),
         "different_ids": sorted(diffs, key=lambda x: int(x)),
+        "empty_in_results_count": len(empty_plan_ids),
+        "empty_in_results_ids": empty_plan_ids,
     }
 
+
 def main():
-    ap = argparse.ArgumentParser(description="Compare CSVs between crossing_data and results.")
-    ap.add_argument("--base", type=str, default=".", help="Base directory containing crossing_data/ and results/")
-    ap.add_argument("--strict", action="store_true", help="Use byte-for-byte comparison instead of CSV-normalized")
+    ap = argparse.ArgumentParser(
+        description="Compare CSVs between crossing_data and results."
+    )
+    ap.add_argument(
+        "--base",
+        type=str,
+        default=".",
+        help="Base directory containing crossing_data/ and results/",
+    )
+    ap.add_argument(
+        "--strict",
+        action="store_true",
+        help="Use byte-for-byte comparison instead of CSV-normalized",
+    )
     ap.add_argument("--outdir", type=str, default=".", help="Where to write reports")
     args = ap.parse_args()
 
@@ -112,7 +147,9 @@ def main():
                 "subdir": name,
                 "total_cross_files": len(cross_ids),
                 "missing_in_results_count": len(cross_ids),
-                "missing_in_results_ids": sorted(list(cross_ids.keys()), key=lambda x: int(x)),
+                "missing_in_results_ids": sorted(
+                    list(cross_ids.keys()), key=lambda x: int(x)
+                ),
                 "equal_count": 0,
                 "equal_ids": [],
                 "different_count": 0,
@@ -136,18 +173,27 @@ def main():
             rows.append({"id": int(id_), "status": "equal"})
         for id_ in rep["different_ids"]:
             rows.append({"id": int(id_), "status": "different"})
-        df = pd.DataFrame(rows).sort_values(by="id") if rows else pd.DataFrame(columns=["id", "status"])
+        df = (
+            pd.DataFrame(rows).sort_values(by="id")
+            if rows
+            else pd.DataFrame(columns=["id", "status"])
+        )
         df.to_csv(outdir / f"comparison_report_{sub}.csv", index=False)
 
-    (outdir / "comparison_summary.json").write_text(json.dumps(all_reports, indent=2, ensure_ascii=False))
+    (outdir / "comparison_summary.json").write_text(
+        json.dumps(all_reports, indent=2, ensure_ascii=False)
+    )
 
     # Print concise summary
     print("=== Comparison Summary ===")
     for rep in all_reports:
-        print(f"[{rep['subdir']}] total_cross={rep['total_cross_files']} missing={rep['missing_in_results_count']} equal={rep['equal_count']} different={rep['different_count']}")
+        print(
+            f"[{rep['subdir']}] total_cross={rep['total_cross_files']} missing={rep['missing_in_results_count']} equal={rep['equal_count']} different={rep['different_count']}"
+        )
     print(f"\nReports saved to: {outdir.resolve()}")
     print("- Per-subdir CSV: comparison_report_<subdir>.csv")
     print("- Combined JSON: comparison_summary.json")
+
 
 if __name__ == "__main__":
     main()
