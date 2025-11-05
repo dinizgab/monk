@@ -92,20 +92,36 @@ O módulo de execução substitui automaticamente placeholders como `$step1.cust
 O repositório acompanha três domínios de exemplo usados para validar as traduções: `ecommerce`, `bakery_1` e `sales`. Os metadados encontram-se em `*.json` na raiz e os esquemas completos em `test/schemas`.
 
 ### Domínio Ecommerce
-- **MySQL `products_db` – tabela `Products`:** catálogo de produtos com identificadores, atributos descritivos (cor, tamanho, descrição) e preço padrão.【F:ecommerce_metadata.json†L2-L67】
-- **MySQL `orders_db`:** tabelas `Invoices`, `Order_Items` e `Orders` armazenam notas fiscais, itens de pedido e cabeçalhos de pedidos, incluindo status, data e chaves de relacionamento com clientes e produtos.【F:ecommerce_metadata.json†L71-L174】
-- **PostgreSQL `users_db`:** tabela `customers` registra dados cadastrais (nome, email, endereço, país) e `customer_payment_methods` contém os métodos de pagamento associados.【F:ecommerce_metadata.json†L177-L308】
-- **PostgreSQL `shipments_db`:** tabelas `shipments` e `shipment_items` relacionam pedidos, notas fiscais e itens despachados, com informações de rastreamento e data de envio.【F:ecommerce_metadata.json†L311-L381】
+- **MySQL `products_db`:**
+  - `Products`: `product_id`, `parent_product_id`, `product_name`, `product_price`, `product_color`, `product_size`, `product_description`.【F:ecommerce_metadata.json†L2-L68】
+- **MySQL `orders_db`:**
+  - `Invoices`: `invoice_number`, `invoice_status_code`, `invoice_date`.
+  - `Order_Items`: `order_item_id`, `product_id`, `order_id`, `order_item_status_code`.
+  - `Orders`: `order_id`, `customer_id`, `order_status_code`, `date_order_placed`.【F:ecommerce_metadata.json†L71-L174】
+- **PostgreSQL `users_db`:**
+  - `customers`: `customer_id`, `gender_code`, `customer_first_name`, `customer_middle_initial`, `customer_last_name`, `email_address`, `login_name`, `login_password`, `phone_number`, `address_line_1`, `town_city`, `county`, `country`.
+  - `customer_payment_methods`: `customer_id`, `payment_method_code`.【F:ecommerce_metadata.json†L177-L308】
+- **PostgreSQL `shipments_db`:**
+  - `shipments`: `shipment_id`, `order_id`, `invoice_number`, `shipment_tracking_number`, `shipment_date`.
+  - `shipment_items`: `shipment_id`, `order_item_id`.【F:ecommerce_metadata.json†L311-L381】
 
 ### Domínio Bakery 1
-- **MySQL `receipts_db` – tabela `receipts`:** comprovantes emitidos pela padaria com número do recibo, data e referência ao cliente.【F:bakery_1_metadata.json†L1-L36】
-- **MySQL `items_db` – tabela `items`:** itens individuais de cada recibo, contendo ordinal e descrição do produto comprado.【F:bakery_1_metadata.json†L39-L73】
-- **PostgreSQL `customers_db` – tabela `customers`:** cadastro de clientes com identificador sequencial, nome e sobrenome.【F:bakery_1_metadata.json†L76-L110】
-- **PostgreSQL `goods_db` – tabela `goods`:** catálogo de produtos vendidos pela padaria (id textual, sabor, tipo de alimento e preço).【F:bakery_1_metadata.json†L113-L155】
+- **MySQL `receipts_db`:**
+  - `receipts`: `ReceiptNumber`, `Date`, `CustomerId`.
+- **MySQL `items_db`:**
+  - `items`: `Receipt`, `Ordinal`, `Item`.
+- **PostgreSQL `customers_db`:**
+  - `customers`: `id`, `lastname`, `firstname`.
+- **PostgreSQL `goods_db`:**
+  - `goods`: `id`, `flavor`, `food`, `price`.【F:bakery_1_metadata.json†L1-L156】
 
 ### Domínio Sales (EUA e Europa)
-- **PostgreSQL `sales_eu`:** tabela `customers` guarda dados de contato, país e opt-in de marketing; tabela `orders` registra pedidos com valor em euro e cupons aplicados.【F:test/schemas/sales/postgres/eu-sales/eu_sales_db.sql†L1-L48】
-- **PostgreSQL `sales_us`:** tabela `customers` inclui estado e consentimento para SMS; tabela `orders` acompanha pedidos com valores em dólar e cupons.【F:test/schemas/sales/postgres/us-sales/us_sales_db.sql†L1-L54】
+- **PostgreSQL `sales_eu`:**
+  - `customers`: `id`, `email`, `full_name`, `country`, `marketing_ok`, `updated_at`.
+  - `orders`: `id`, `customer_id`, `total_eur`, `updated_at`, `coupon_code`.【F:test/schemas/sales/postgres/eu-sales/eu_sales_db.sql†L3-L18】
+- **PostgreSQL `sales_us`:**
+  - `customers`: `id`, `email`, `full_name`, `state`, `sms_opt_in`, `updated_at`.
+  - `orders`: `id`, `customer_id`, `total_usd`, `coupon_code`, `updated_at`.【F:test/schemas/sales/postgres/us-sales/us_sales_db.sql†L3-L17】
 
 Esses esquemas cobrem cenários típicos de consultas federadas, permitindo avaliar como o LLM lida com junções entre bancos heterogêneos e agregações distribuídas.
 
