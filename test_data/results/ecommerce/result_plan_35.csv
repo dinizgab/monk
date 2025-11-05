@@ -1,4 +1,4 @@
-order_id,customer_id,order_status_code,date_order_placed,invoice_number,invoice_status_code,invoice_date
+order_id,invoice_number,invoice_status_code,invoice_date,customer_id,order_status_code,date_order_placed
 9,,,,,,
 15,,,,,,
 17,,,,,,

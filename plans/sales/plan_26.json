@@ -1,0 +1,23 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve EU customers whose email is NULL, empty, or does not match a basic valid email pattern from the sales_eu customers table.",
+            "database": "postgres://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id, full_name, email, country, updated_at FROM customers WHERE email IS NULL OR trim(email) = '' OR email !~ '^[^@[:space:]]+@[^@[:space:]]+\\.[^@[:space:]]+$';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "full_name",
+        "email",
+        "country",
+        "updated_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

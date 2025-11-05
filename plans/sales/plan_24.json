@@ -1,0 +1,31 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all EU orders together with the customer email and EU customer id. These rows will be used to identify customers (by email) who placed orders in the EUR region.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT o.id AS eu_order_id, o.customer_id AS eu_customer_id, c.email AS email FROM orders o JOIN customers c ON o.customer_id = c.id WHERE c.email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all US orders together with the customer email and US customer id. These rows will be used to identify customers (by email) who placed orders in the USD region.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT o.id AS us_order_id, o.customer_id AS us_customer_id, c.email AS email FROM orders o JOIN customers c ON o.customer_id = c.id WHERE c.email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "email",
+        "eu_customer_id",
+        "eu_order_id",
+        "us_customer_id",
+        "us_order_id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

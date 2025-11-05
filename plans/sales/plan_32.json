@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all US customers and their state-level location (stored in the 'county' column) to map customers to US states.",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, county FROM customers WHERE country IN ('US', 'USA', 'United States');",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get the number of orders per customer, restricted to customers found in step 1 (US customers).",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT customer_id, COUNT(*) AS order_count FROM Orders WHERE customer_id IN ($step1.customer_id) GROUP BY customer_id;",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "customer_id",
+                    "dependency_step_column": "customer_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "county",
+        "total_orders"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "order_count"
+    }
+}

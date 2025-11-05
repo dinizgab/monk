@@ -1,0 +1,11 @@
+customer_id,email,full_name,country,marketing_ok,updated_at,source_db
+20,eu_user_14@example.com,EU User 14,NL,True,2025-10-29 15:01:08.237480+00:00,sales_us
+14,eu_user_ 8@example.com,EU User  8,DE,True,2025-10-29 15:01:08.237480+00:00,sales_us
+15,eu_user_ 9@example.com,EU User  9,FR,False,2025-10-29 15:01:08.237480+00:00,sales_us
+16,eu_user_10@example.com,EU User 10,IT,True,2025-10-29 15:01:08.237480+00:00,sales_us
+17,eu_user_11@example.com,EU User 11,ES,False,2025-10-29 15:01:08.237480+00:00,sales_us
+18,eu_user_12@example.com,EU User 12,PT,True,2025-10-29 15:01:08.237480+00:00,sales_us
+19,eu_user_13@example.com,EU User 13,PL,False,2025-10-29 15:01:08.237480+00:00,sales_us
+7,eu_user_ 1@example.com,EU User  1,FR,False,2025-10-29 15:01:08.237480+00:00,sales_us
+8,eu_user_ 2@example.com,EU User  2,IT,True,2025-10-29 15:01:08.237480+00:00,sales_us
+9,eu_user_ 3@example.com,EU User  3,ES,False,2025-10-29 15:01:08.237480+00:00,sales_us

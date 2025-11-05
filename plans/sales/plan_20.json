@@ -1,0 +1,48 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all orders from the US region (orders table in sales_us). These will be tested to see if their customer exists in the other region (EU) but has no orders there.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS order_id, customer_id, total_eur, updated_at, coupon_code FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all customer IDs from the EU region (customers table in sales_eu). Used to check if a US-order's customer exists in EU.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS customer_id FROM customers;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Retrieve all orders from the EU region (orders table in sales_eu). Used to determine which EU customers actually have orders in EU.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS order_id, customer_id, total_eur, updated_at, coupon_code FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 4,
+            "description": "Retrieve all customer IDs from the US region (customers table in sales_us). Used to check if an EU-order's customer exists in US.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS customer_id FROM customers;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "order_id",
+        "customer_id",
+        "total_eur",
+        "updated_at",
+        "coupon_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

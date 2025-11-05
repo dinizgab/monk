@@ -1,0 +1,35 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all customers from the EU sales system with their IDs, full names and emails (exclude null names). The application will compute name similarity later.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS eu_id, full_name AS eu_full_name, email AS eu_email, country AS eu_country FROM customers WHERE full_name IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all customers from the US sales system with their IDs, full names and emails (exclude null names). The application will compute name similarity later and compare to EU results.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS us_id, full_name AS us_full_name, email AS us_email, country AS us_country FROM customers WHERE full_name IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "eu_id",
+        "eu_full_name",
+        "eu_email",
+        "eu_country",
+        "us_id",
+        "us_full_name",
+        "us_email",
+        "us_country",
+        "levenshtein_distance"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

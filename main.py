@@ -75,42 +75,44 @@ def translate(
 
 
 if __name__ == "__main__":
-    with open("./test/test.json", "r") as f:
-        items = json.load(f)
+    #with open("./test/sales_questions.json", "r") as f:
+    #    items = json.load(f)
+    #
+    #    Path("./plans").mkdir(parents=True, exist_ok=True)
+    #    for i, item in enumerate(items):
+    #        print(f"Running test {i+1}/{len(items)}")
+    #        print(f"Question: {item['question']}")
+    #        translate(
+    #            metadata_path="./metadata.json",
+    #            query=item["question"],
+    #            output_path=f"./plans/sales/plan_{i+1}.json",
+    #        )
+    #        print("=" * 80)
+
+    errors = {}
+    test_domains = ["bakery_1", "ecommerce", "sales"] 
+
+    for domain in test_domains:
+        for plan in Path(f"./plans/{domain}").glob("*.json"):
+            print(f"Executing plan {plan.name}...")
+            with open(plan, "r") as f:
+                data = json.load(f)
+                data = TranslationReturn(**data)
+                try:
+                    result_df = execute_plan(data)
+                except Exception as e:
+                    print(f"Error executing plan {domain}/{plan.name}: {e}")
+                    errors[f'{domain}/{plan.name}'] = str(e)
+                    continue
+
+                out_path = Path(f"./test_data/results/{domain}/result_{plan.stem}.csv")
+                out_path.parent.mkdir(parents=True, exist_ok=True)
+                result_df.to_csv(out_path, index=False)
+                print(f"Final result saved to {out_path.resolve()}")
     
-        Path("./plans").mkdir(parents=True, exist_ok=True)
-        for i, item in enumerate(items):
-            print(f"Running test {i+1}/{len(items)}")
-            print(f"Question: {item['question']}")
-            translate(
-                metadata_path="./metadata.json",
-                query=item["question"],
-                output_path=f"./plans/plan_{i+1}.json",
-            )
-            print("=" * 80)
-
-    #errors = {}
-
-    #for plan in Path("./plans").glob("*.json"):
-    #    print(f"Executing plan {plan.name}...")
-    #    with open(plan, "r") as f:
-    #        data = json.load(f)
-    #        data = TranslationReturn(**data)
-    #        try:
-    #            result_df = execute_plan(data)
-    #        except Exception as e:
-    #            print(f"Error executing plan {plan.name}: {e}")
-    #            errors[plan.name] = str(e)
-    #            continue
-
-    #        out_path = Path(f"./results/result_{plan.stem}.csv")
-    #        out_path.parent.mkdir(parents=True, exist_ok=True)
-    #        result_df.to_csv(out_path, index=False)
-    #        print(f"Final result saved to {out_path.resolve()}")
-    
-    #print("All plans executed.")
-    #print(f"total errors: {len(errors)}")
-    #for p, e in errors.items():
-    #    print(f"{p} : {e}")
+    print("All plans executed.")
+    print(f"total errors: {len(errors)}")
+    for p, e in errors.items():
+        print(f"{p} : {e}")
 
 #    app()

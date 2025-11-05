@@ -1,0 +1,12 @@
+order_id,order_status_code
+1,Cancelled
+3,Cancelled
+4,Delivered
+6,Delivered
+7,Part Completed
+8,Part Completed
+10,Part Completed
+17,Delivered
+18,Cancelled
+19,Part Completed
+20,Cancelled

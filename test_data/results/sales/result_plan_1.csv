@@ -1,0 +1,21 @@
+email,eu_id,eu_full_name,us_id,us_full_name,eu_country,us_country
+alice@example.com,1,Alice Braun,1,Alice Braun,DE,DE
+bob@example.com,2,Bob Martin,2,Bob Martin,FR,FR
+carla@sample.eu,3,Carla Schmidt,3,Carla Schmidt,DE,DE
+daniel@sample.eu,4,Daniel Rossi,4,Daniel Rossi,IT,IT
+eva@sample.eu,5,Eva Novak,5,Eva Novak,CZ,CZ
+giulia@sample.eu,6,Giulia Conti,6,Giulia Conti,IT,IT
+eu_user_ 1@example.com,7,EU User  1,7,EU User  1,FR,FR
+eu_user_ 2@example.com,8,EU User  2,8,EU User  2,IT,IT
+eu_user_ 3@example.com,9,EU User  3,9,EU User  3,ES,ES
+eu_user_ 4@example.com,10,EU User  4,10,EU User  4,PT,PT
+eu_user_ 5@example.com,11,EU User  5,11,EU User  5,PL,PL
+eu_user_ 6@example.com,12,EU User  6,12,EU User  6,NL,NL
+eu_user_ 7@example.com,13,EU User  7,13,EU User  7,AT,AT
+eu_user_ 8@example.com,14,EU User  8,14,EU User  8,DE,DE
+eu_user_ 9@example.com,15,EU User  9,15,EU User  9,FR,FR
+eu_user_10@example.com,16,EU User 10,16,EU User 10,IT,IT
+eu_user_11@example.com,17,EU User 11,17,EU User 11,ES,ES
+eu_user_12@example.com,18,EU User 12,18,EU User 12,PT,PT
+eu_user_13@example.com,19,EU User 13,19,EU User 13,PL,PL
+eu_user_14@example.com,20,EU User 14,20,EU User 14,NL,NL

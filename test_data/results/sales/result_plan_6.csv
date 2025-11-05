@@ -1,0 +1,21 @@
+email,full_name,region,customer_id
+alice@example.com,Alice Braun,US,1
+bob@example.com,Bob Martin,US,2
+carla@sample.eu,Carla Schmidt,US,3
+daniel@sample.eu,Daniel Rossi,US,4
+eva@sample.eu,Eva Novak,US,5
+giulia@sample.eu,Giulia Conti,US,6
+eu_user_ 1@example.com,EU User  1,US,7
+eu_user_ 2@example.com,EU User  2,US,8
+eu_user_ 3@example.com,EU User  3,US,9
+eu_user_ 4@example.com,EU User  4,US,10
+eu_user_ 5@example.com,EU User  5,US,11
+eu_user_ 6@example.com,EU User  6,US,12
+eu_user_ 7@example.com,EU User  7,US,13
+eu_user_ 8@example.com,EU User  8,US,14
+eu_user_ 9@example.com,EU User  9,US,15
+eu_user_10@example.com,EU User 10,US,16
+eu_user_11@example.com,EU User 11,US,17
+eu_user_12@example.com,EU User 12,US,18
+eu_user_13@example.com,EU User 13,US,19
+eu_user_14@example.com,EU User 14,US,20

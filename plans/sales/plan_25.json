@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all EU customers' ids and email addresses (exclude null emails). These are the candidate EU accounts to check for migration.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS eu_customer_id, email FROM customers WHERE email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find US customers whose email matches any email from the EU customers found in step 1.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS us_customer_id, email FROM customers WHERE email IN ($step1.email);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "email",
+                    "dependency_step_column": "email"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "email",
+        "eu_customer_id",
+        "us_customer_id"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "email"
+    }
+}

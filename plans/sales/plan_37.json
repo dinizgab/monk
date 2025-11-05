@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute total spend per customer in the EU region by summing orders.total_eur and attach customer metadata (email, name, country).",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT c.id AS customer_id, c.email, c.full_name, c.country, SUM(o.total_eur) AS total_spent_eur, 'EU' AS region FROM orders o JOIN customers c ON o.customer_id = c.id GROUP BY c.id, c.email, c.full_name, c.country;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute total spend per customer in the US region by summing orders.total_eur and attach customer metadata (email, name, country).",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT c.id AS customer_id, c.email, c.full_name, c.country, SUM(o.total_eur) AS total_spent_eur, 'US' AS region FROM orders o JOIN customers c ON o.customer_id = c.id GROUP BY c.id, c.email, c.full_name, c.country;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "customer_id",
+        "email",
+        "full_name",
+        "country",
+        "region",
+        "total_spent_eur"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

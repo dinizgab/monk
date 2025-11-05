@@ -1,0 +1,38 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Extract emails with their country and county (treated as state) from the users_db customers table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT email_address AS email, country, county AS state, customer_id AS customer_id, 'users_db' AS source FROM customers WHERE email_address IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Extract emails with their country from the sales_eu customers table (no state column available here).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT email AS email, country, NULL::text AS state, id AS customer_id, 'sales_eu' AS source FROM customers WHERE email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Extract emails with their country from the sales_us customers table (no state column available here).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT email AS email, country, NULL::text AS state, id AS customer_id, 'sales_us' AS source FROM customers WHERE email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "email",
+        "countries_found",
+        "states_found",
+        "sources"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

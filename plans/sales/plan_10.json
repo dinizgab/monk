@@ -1,0 +1,38 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve customer ids, full names and emails from the EU sales database.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS customer_id, full_name, email FROM customers;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve customer ids, full names and emails from the US sales database.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS customer_id, full_name, email FROM customers;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Construct full name and retrieve customer ids and emails from the users database (only rows with an email).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, CONCAT_WS(' ', customer_first_name, customer_middle_initial, customer_last_name) AS full_name, email_address AS email FROM customers WHERE email_address IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "full_name",
+        "customer_id",
+        "email",
+        "database"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "DISTINCT email"
+    }
+}

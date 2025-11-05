@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve each order's country and revenue (total_eur) by joining orders to customers in the EU region database. The application will aggregate revenue per country.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT c.country, o.total_eur, o.id AS order_id, o.customer_id FROM orders o JOIN customers c ON o.customer_id = c.id WHERE o.total_eur IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "country",
+        "total_revenue_eur"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "total_eur"
+    }
+}

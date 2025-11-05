@@ -1,0 +1,28 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute total revenue in EUR from the EU sales database (aggregate orders.total_eur).",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT 'EU' AS region, SUM(total_eur) AS revenue_eur FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute total revenue in EUR from the US sales database (aggregate orders.total_eur).",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT 'US' AS region, SUM(total_eur) AS revenue_eur FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "revenue_eur"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

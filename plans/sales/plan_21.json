@@ -1,0 +1,39 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all EU customers' ids, emails and full names (emails not null).",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS eu_id, email, full_name AS eu_full_name FROM customers WHERE email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve US customers' ids, emails and full names for emails that appear in the EU result set.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS us_id, email, full_name AS us_full_name FROM customers WHERE email IS NOT NULL AND email IN ($step1.email);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "email",
+                    "dependency_step_column": "email"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "email",
+        "eu_id",
+        "eu_full_name",
+        "us_id",
+        "us_full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

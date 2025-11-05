@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch the 20 most recently updated orders from the EU sales database. Include order id, customer id, total amount, update timestamp, coupon code, and a constant region tag.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS order_id, customer_id, total_eur, updated_at, coupon_code, 'EU' AS region FROM orders ORDER BY updated_at DESC LIMIT 20;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch the 20 most recently updated orders from the US sales database. Include order id, customer id, total amount, update timestamp, coupon code, and a constant region tag.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS order_id, customer_id, total_eur, updated_at, coupon_code, 'US' AS region FROM orders ORDER BY updated_at DESC LIMIT 20;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "order_id",
+        "customer_id",
+        "total_eur",
+        "updated_at",
+        "coupon_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

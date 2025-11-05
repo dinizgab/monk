@@ -1,0 +1,39 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Extract customers from the central users DB: customer id, email and country (only rows with an email).",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id AS customer_id, email_address AS email, country FROM customers WHERE email_address IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Extract customers from the EU sales DB: customer id, email and country (only rows with an email).",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS customer_id, email, country FROM customers WHERE email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Extract customers from the US sales DB: customer id, email and country (only rows with an email).",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS customer_id, email, country FROM customers WHERE email IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "email",
+        "country",
+        "account_count",
+        "customer_ids",
+        "source_databases"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "customer_id"
+    }
+}

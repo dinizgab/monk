@@ -1,0 +1,30 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute total revenue per customer in the EU region and return customer identifiers and contact info alongside summed revenue.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT c.id AS customer_id, c.email, c.full_name, c.country, SUM(o.total_eur) AS revenue_eur\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nGROUP BY c.id, c.email, c.full_name, c.country;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute total revenue per customer in the US region and return customer identifiers and contact info alongside summed revenue.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT c.id AS customer_id, c.email, c.full_name, c.country, SUM(o.total_eur) AS revenue_eur\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nGROUP BY c.id, c.email, c.full_name, c.country;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "email",
+        "full_name",
+        "country",
+        "total_revenue_eur"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "revenue_eur"
+    }
+}

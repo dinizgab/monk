@@ -1,0 +1,162 @@
+[
+    {
+        "id": 1,
+        "question": "List all customers that exist in both EU and US systems with the same email."
+    },
+    {
+        "id": 2,
+        "question": "Show EU customers who updated their profile in the last 30 days."
+    },
+    {
+        "id": 3,
+        "question": "Which US customers have SMS opt-in enabled?"
+    },
+    {
+        "id": 4,
+        "question": "Find customers in Germany who have placed at least one order."
+    },
+    {
+        "id": 5,
+        "question": "How many customers does each region have?"
+    },
+    {
+        "id": 6,
+        "question": "Which customers appear in only one region?"
+    },
+    {
+        "id": 7,
+        "question": "Give me the top 10 customers by last update timestamp across all regions."
+    },
+    {
+        "id": 8,
+        "question": "Find customers who never placed any orders, in EU and US separately."
+    },
+    {
+        "id": 9,
+        "question": "Show all customers who consented to marketing in EU or SMS in US."
+    },
+    {
+        "id": 10,
+        "question": "Which customers share the same full name but have different emails?"
+    },
+    {
+        "id": 11,
+        "question": "Compare the number of orders placed in the last 7 days between EU and US."
+    },
+    {
+        "id": 12,
+        "question": "List all US orders that used a coupon."
+    },
+    {
+        "id": 13,
+        "question": "Show the total revenue in EUR equivalent for each region."
+    },
+    {
+        "id": 14,
+        "question": "Give me the average order value per region."
+    },
+    {
+        "id": 15,
+        "question": "Which region has more orders from customers who updated recently?"
+    },
+    {
+        "id": 16,
+        "question": "Find all EU orders over 100 EUR from the last month."
+    },
+    {
+        "id": 17,
+        "question": "Show the 20 most recent orders across all regions sorted by update time."
+    },
+    {
+        "id": 18,
+        "question": "Count how many orders each customer has across regions."
+    },
+    {
+        "id": 19,
+        "question": "Which currency generates higher revenue this quarter?"
+    },
+    {
+        "id": 20,
+        "question": "Find orders where the customer exists in the other region but has no orders there."
+    },
+    {
+        "id": 21,
+        "question": "Which customers have different full names in EU vs US but share the same email?"
+    },
+    {
+        "id": 22,
+        "question": "Show emails that have conflicting country vs state values."
+    },
+    {
+        "id": 23,
+        "question": "Find duplicate customer identities across both systems based on similar names (Levenshtein distance < 2)."
+    },
+    {
+        "id": 24,
+        "question": "List cases where a customer has orders in both EUR and USD."
+    },
+    {
+        "id": 25,
+        "question": "How many customers from EU have migrated to US based on matching email?"
+    },
+    {
+        "id": 26,
+        "question": "Show EU customers with NULL email or invalid email formats."
+    },
+    {
+        "id": 27,
+        "question": "Find negative revenue orders, if any, across both regions."
+    },
+    {
+        "id": 28,
+        "question": "Show orders that reference a non-existent customer in EU or US."
+    },
+    {
+        "id": 29,
+        "question": "Highlight customers with more than one account in the same region (same email)."
+    },
+    {
+        "id": 30,
+        "question": "Show customers whose last update is older than one year."
+    },
+    {
+        "id": 31,
+        "question": "What percentage of total revenue comes from EU vs US?"
+    },
+    {
+        "id": 32,
+        "question": "Which US states generate the most order volume?"
+    },
+    {
+        "id": 33,
+        "question": "Which EU countries generate the most revenue?"
+    },
+    {
+        "id": 34,
+        "question": "Compare average delay between a customer's profile update and their most recent order."
+    },
+    {
+        "id": 35,
+        "question": "Track how many new customers joined per month per region."
+    },
+    {
+        "id": 36,
+        "question": "Show top 10 revenue customers globally, combining EU and US."
+    },
+    {
+        "id": 37,
+        "question": "Segment customers into high, medium, and low spend groups across regions."
+    },
+    {
+        "id": 38,
+        "question": "Rank countries and states together by total order count."
+    },
+    {
+        "id": 39,
+        "question": "Which region has the fastest profile update turnaround after orders?"
+    },
+    {
+        "id": 40,
+        "question": "List the youngest customers in terms of account creation across both systems."
+    }
+]

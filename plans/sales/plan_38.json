@@ -1,0 +1,85 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get order counts per customer from the centralized Orders table (orders_db MySQL).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT customer_id, COUNT(*) AS order_count FROM Orders GROUP BY customer_id;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Get order counts per customer from the EU sales orders table (sales_eu PostgreSQL).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customer_id, COUNT(*) AS order_count FROM orders GROUP BY customer_id;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 5,
+            "description": "Get order counts per customer from the US sales orders table (sales_us PostgreSQL).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customer_id, COUNT(*) AS order_count FROM orders GROUP BY customer_id;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get country and state (county) for customers that have orders in step 1 (users_db PostgreSQL).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, country, county AS state FROM customers WHERE customer_id IN ($step1.customer_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "customer_id",
+                    "dependency_step_column": "customer_id"
+                }
+            }
+        },
+        {
+            "id": 4,
+            "description": "Get country for EU customers that have orders in step 3; state is not available in this DB so return NULL for state (sales_eu PostgreSQL).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS customer_id, country, NULL::text AS state FROM customers WHERE id IN ($step3.customer_id);",
+            "depends_on": [
+                3
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "customer_id",
+                    "dependency_step_column": "customer_id"
+                }
+            }
+        },
+        {
+            "id": 6,
+            "description": "Get country for US customers that have orders in step 5; state is not available in this DB so return NULL for state (sales_us PostgreSQL).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS customer_id, country, NULL::text AS state FROM customers WHERE id IN ($step5.customer_id);",
+            "depends_on": [
+                5
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "customer_id",
+                    "dependency_step_column": "customer_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "country",
+        "state",
+        "total_orders"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "order_count"
+    }
+}

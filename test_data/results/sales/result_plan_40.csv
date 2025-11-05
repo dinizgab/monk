@@ -1,0 +1,21 @@
+source,customer_id,email,full_name,country,updated_at
+sales_us,1,alice@example.com,Alice Braun,DE,2025-10-29 15:01:08.232364+00:00
+sales_us,2,bob@example.com,Bob Martin,FR,2025-10-29 15:01:08.232364+00:00
+sales_us,3,carla@sample.eu,Carla Schmidt,DE,2025-10-29 15:01:08.232364+00:00
+sales_us,4,daniel@sample.eu,Daniel Rossi,IT,2025-10-29 15:01:08.232364+00:00
+sales_us,5,eva@sample.eu,Eva Novak,CZ,2025-10-29 15:01:08.232364+00:00
+sales_us,6,giulia@sample.eu,Giulia Conti,IT,2025-10-29 15:01:08.232364+00:00
+sales_us,7,eu_user_ 1@example.com,EU User  1,FR,2025-10-29 15:01:08.237480+00:00
+sales_us,8,eu_user_ 2@example.com,EU User  2,IT,2025-10-29 15:01:08.237480+00:00
+sales_us,9,eu_user_ 3@example.com,EU User  3,ES,2025-10-29 15:01:08.237480+00:00
+sales_us,10,eu_user_ 4@example.com,EU User  4,PT,2025-10-29 15:01:08.237480+00:00
+sales_us,11,eu_user_ 5@example.com,EU User  5,PL,2025-10-29 15:01:08.237480+00:00
+sales_us,12,eu_user_ 6@example.com,EU User  6,NL,2025-10-29 15:01:08.237480+00:00
+sales_us,13,eu_user_ 7@example.com,EU User  7,AT,2025-10-29 15:01:08.237480+00:00
+sales_us,14,eu_user_ 8@example.com,EU User  8,DE,2025-10-29 15:01:08.237480+00:00
+sales_us,15,eu_user_ 9@example.com,EU User  9,FR,2025-10-29 15:01:08.237480+00:00
+sales_us,16,eu_user_10@example.com,EU User 10,IT,2025-10-29 15:01:08.237480+00:00
+sales_us,17,eu_user_11@example.com,EU User 11,ES,2025-10-29 15:01:08.237480+00:00
+sales_us,18,eu_user_12@example.com,EU User 12,PT,2025-10-29 15:01:08.237480+00:00
+sales_us,19,eu_user_13@example.com,EU User 13,PL,2025-10-29 15:01:08.237480+00:00
+sales_us,20,eu_user_14@example.com,EU User 14,NL,2025-10-29 15:01:08.237480+00:00

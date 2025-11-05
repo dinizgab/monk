@@ -1,0 +1,29 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the average time (in seconds) between an order update and a subsequent customer profile update for the EU region.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT 'EU' AS region, AVG(EXTRACT(EPOCH FROM (customers.updated_at - orders.updated_at))) AS avg_turnaround_seconds, COUNT(*) AS updates_count FROM customers JOIN orders ON customers.id = orders.customer_id WHERE customers.updated_at > orders.updated_at;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute the average time (in seconds) between an order update and a subsequent customer profile update for the US region.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT 'US' AS region, AVG(EXTRACT(EPOCH FROM (customers.updated_at - orders.updated_at))) AS avg_turnaround_seconds, COUNT(*) AS updates_count FROM customers JOIN orders ON customers.id = orders.customer_id WHERE customers.updated_at > orders.updated_at;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "avg_turnaround_seconds",
+        "updates_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

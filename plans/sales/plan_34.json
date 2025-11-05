@@ -1,0 +1,31 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "For EU sales: compute each customer's most recent order timestamp and the delay in seconds between the customer's profile update (customers.updated_at) and that most recent order.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT\n  'EU' AS region,\n  c.id AS customer_id,\n  c.updated_at AS profile_updated_at,\n  o.last_order_at,\n  EXTRACT(EPOCH FROM (o.last_order_at - c.updated_at)) AS delay_seconds\nFROM customers c\nINNER JOIN (\n  SELECT customer_id, MAX(updated_at) AS last_order_at\n  FROM orders\n  GROUP BY customer_id\n) o ON o.customer_id = c.id;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "For US sales: compute each customer's most recent order timestamp and the delay in seconds between the customer's profile update (customers.updated_at) and that most recent order.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT\n  'US' AS region,\n  c.id AS customer_id,\n  c.updated_at AS profile_updated_at,\n  o.last_order_at,\n  EXTRACT(EPOCH FROM (o.last_order_at - c.updated_at)) AS delay_seconds\nFROM customers c\nINNER JOIN (\n  SELECT customer_id, MAX(updated_at) AS last_order_at\n  FROM orders\n  GROUP BY customer_id\n) o ON o.customer_id = c.id;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "customer_id",
+        "profile_updated_at",
+        "last_order_at",
+        "delay_seconds"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

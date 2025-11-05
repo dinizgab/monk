@@ -151,6 +151,42 @@ services:
       - pg_goods_demo_data:/var/lib/postgresql/data
       - ./schemas/bakery_1/postgres/goods/00_goods_db.sql:/docker-entrypoint-initdb.d/00_goods_db.sql:ro
 
+  sales_eu_db:
+    image: postgres:16
+    container_name: sales_eu_db
+    environment:
+      POSTGRES_USER: eu_user
+      POSTGRES_PASSWORD: eu_pass
+      POSTGRES_DB: sales_eu
+    ports:
+      - "5437:5432"
+    volumes:
+      - eu-data:/var/lib/postgresql/data
+      - ./schemas/sales/postgres/eu-sales/eu_sales_db.sql:/docker-entrypoint-initdb.d/_eu_sales_db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eu_user -d sales_eu"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  sales_us_db:
+    image: postgres:16
+    container_name: sales_us_db
+    environment:
+      POSTGRES_USER: us_user
+      POSTGRES_PASSWORD: us_pass
+      POSTGRES_DB: sales_us
+    ports:
+      - "5438:5432"
+    volumes:
+      - us-data:/var/lib/postgresql/data
+      - ./schemas/sales/postgres/eu-sales/eu_sales_db.sql:/docker-entrypoint-initdb.d/_eu_sales_db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U us_user -d sales_us"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 volumes:
   mysql_products_data:
   mysql_orders_data:
@@ -160,3 +196,6 @@ volumes:
   mysql_items_demo_data:
   pg_customers_demo_data:
   pg_goods_demo_data:
+  pg_orders_demo_data:
+  eu-data:
+  us-data:

@@ -1,0 +1,33 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve customers from the EU sales database whose updated_at is older than one year.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id, email, full_name, country, marketing_ok, updated_at, 'sales_eu' AS source FROM customers WHERE updated_at < NOW() - INTERVAL '1 year';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve customers from the US sales database whose updated_at is older than one year.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id, email, full_name, country, marketing_ok, updated_at, 'sales_us' AS source FROM customers WHERE updated_at < NOW() - INTERVAL '1 year';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "email",
+        "full_name",
+        "country",
+        "marketing_ok",
+        "updated_at",
+        "source"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}
