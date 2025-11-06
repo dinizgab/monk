@@ -29,7 +29,34 @@ def extract_db_info(urls: str) -> dict:
         }
 
         for table in insp.get_table_names():
-            cols = [serialize_column(col, dialect) for col in insp.get_columns(table)]
+            pk_constraint = insp.get_pk_constraint(table) or {}
+            pk_columns = pk_constraint.get("constrained_columns") or []
+
+            fk_constraints = insp.get_foreign_keys(table)
+            fk_map = {}
+            for fk in fk_constraints:
+                constrained_columns = fk.get("constrained_columns") or []
+                referred_table = fk.get("referred_table")
+                referred_schema = fk.get("referred_schema")
+                referred_columns = fk.get("referred_columns") or []
+
+                for idx, col_name in enumerate(constrained_columns):
+                    reference = {
+                        "table": referred_table,
+                        "column": referred_columns[idx]
+                        if idx < len(referred_columns)
+                        else None,
+                    }
+
+                    if referred_schema:
+                        reference["schema"] = referred_schema
+
+                    fk_map.setdefault(col_name, []).append(reference)
+
+            cols = [
+                serialize_column(col, dialect, pk_columns=pk_columns, fk_map=fk_map)
+                for col in insp.get_columns(table)
+            ]
 
             payload["tables"][table] = cols
 
