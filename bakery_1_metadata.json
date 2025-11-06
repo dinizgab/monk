@@ -15,7 +15,10 @@
                     "nullable": false,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "Date",
@@ -23,7 +26,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "CustomerId",
@@ -31,7 +37,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 }
             ]
         }
@@ -52,7 +61,10 @@
                     "nullable": false,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "Ordinal",
@@ -60,7 +72,10 @@
                     "nullable": false,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "Item",
@@ -68,7 +83,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 }
             ]
         }
@@ -89,7 +107,10 @@
                     "nullable": false,
                     "default": "nextval('customers_id_seq'::regclass)",
                     "comment": null,
-                    "autoincrement": true
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "lastname",
@@ -97,7 +118,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "firstname",
@@ -105,7 +129,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 }
             ]
         }
@@ -126,7 +153,10 @@
                     "nullable": false,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "flavor",
@@ -134,7 +164,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "food",
@@ -142,7 +175,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 },
                 {
                     "name": "price",
@@ -150,7 +186,10 @@
                     "nullable": true,
                     "default": null,
                     "comment": null,
-                    "autoincrement": false
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
                 }
             ]
         }
