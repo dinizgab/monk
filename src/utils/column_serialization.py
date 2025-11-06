@@ -11,7 +11,10 @@ def to_scalar(v):
     return str(v)
 
 
-def serialize_column(col, dialect) -> dict:
+def serialize_column(col, dialect, pk_columns=None, fk_map=None) -> dict:
+    pk_columns = set(pk_columns or [])
+    fk_map = fk_map or {}
+
     t = col.get("type")
     out = {
         "name": col.get("name"),
@@ -22,5 +25,15 @@ def serialize_column(col, dialect) -> dict:
     }
 
     out["autoincrement"] = bool(col.get("autoincrement", False))
+
+    column_name = out["name"]
+
+    out["is_primary_key"] = column_name in pk_columns or bool(
+        col.get("primary_key", False)
+    )
+
+    references = fk_map.get(column_name, [])
+    out["is_foreign_key"] = bool(references)
+    out["foreign_key_references"] = references
 
     return out
