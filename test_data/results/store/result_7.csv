@@ -1,0 +1,13 @@
+id,name,price,sku,category_id
+10,Caneta Gel 0.7mm (azul),14.9,PP-CAN-GEL-07-AZ,4
+12,Adaptador P2 para P3,19.9,AC-ADAPT-P2P3,2
+9,Caderno A5 Pontilhado,39.9,PP-CAD-A5-DOT,4
+3,Cabo USB-C 2m,49.9,AC-CABO-USBC-2M,2
+11,Planner Semanal,59.9,PP-PLAN-SEMANAL,4
+2,Carregador USB-C 20W,79.9,AC-CHARGER-20W,2
+4,Mouse Sem Fio Orbit,89.9,EL-MOUSE-ORBIT,1
+6,Lâmpada LED Smart,119.9,CC-LAMP-SMART,3
+1,Fone Bluetooth Wave,129.9,AC-FONE-WAVE,2
+8,Kit Organizadores (3 peças),139.9,CC-ORG-3PCS,3
+7,Garrafa Térmica Inox 750ml,159.9,CC-GARRAFA-750,3
+5,Teclado Mecânico Compact,219.9,EL-TECLADO-COMPACT,1

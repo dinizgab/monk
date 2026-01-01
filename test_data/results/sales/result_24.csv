@@ -1,0 +1,23 @@
+email,us_customer_id,us_order_id
+alice@example.com,1,1
+alice@example.com,1,2
+carol@example.com,2,3
+grace@example.com,6,4
+erika@example.com,4,5
+us_user_ 1@example.com,7,6
+us_user_ 2@example.com,8,7
+us_user_ 3@example.com,9,8
+us_user_ 4@example.com,10,9
+us_user_ 5@example.com,11,10
+us_user_ 6@example.com,12,11
+us_user_ 7@example.com,13,12
+us_user_ 8@example.com,14,13
+us_user_ 9@example.com,15,14
+us_user_10@example.com,16,15
+us_user_11@example.com,17,16
+us_user_12@example.com,18,17
+us_user_13@example.com,19,18
+us_user_14@example.com,20,19
+dave@example.com,3,20
+frank@example.com,5,21
+grace@example.com,6,22

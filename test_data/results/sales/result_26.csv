@@ -1,0 +1,10 @@
+id,full_name,email,country,updated_at
+7,EU User  1,eu_user_ 1@example.com,FR,2026-01-01 18:14:54.296893+00:00
+8,EU User  2,eu_user_ 2@example.com,IT,2026-01-01 18:14:54.296893+00:00
+9,EU User  3,eu_user_ 3@example.com,ES,2026-01-01 18:14:54.296893+00:00
+10,EU User  4,eu_user_ 4@example.com,PT,2026-01-01 18:14:54.296893+00:00
+11,EU User  5,eu_user_ 5@example.com,PL,2026-01-01 18:14:54.296893+00:00
+12,EU User  6,eu_user_ 6@example.com,NL,2026-01-01 18:14:54.296893+00:00
+13,EU User  7,eu_user_ 7@example.com,AT,2026-01-01 18:14:54.296893+00:00
+14,EU User  8,eu_user_ 8@example.com,DE,2026-01-01 18:14:54.296893+00:00
+15,EU User  9,eu_user_ 9@example.com,FR,2026-01-01 18:14:54.296893+00:00
