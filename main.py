@@ -89,30 +89,30 @@ if __name__ == "__main__":
     #        )
     #        print("=" * 80)
 
-    errors = {}
-    test_domains = ["bakery_1", "ecommerce", "sales"] 
+    #errors = {}
+    #test_domains = ["bakery_1", "ecommerce", "sales"] 
+    #
+    #for domain in test_domains:
+    #    for plan in Path(f"./plans/{domain}").glob("*.json"):
+    #        print(f"Executing plan {plan.name}...")
+    #        with open(plan, "r") as f:
+    #            data = json.load(f)
+    #            data = TranslationReturn(**data)
+    #            try:
+    #                result_df = execute_plan(data)
+    #            except Exception as e:
+    #                print(f"Error executing plan {domain}/{plan.name}: {e}")
+    #                errors[f'{domain}/{plan.name}'] = str(e)
+    #                continue
+    #
+    #            out_path = Path(f"./test_data/results/{domain}/result_{plan.stem}.csv")
+    #            out_path.parent.mkdir(parents=True, exist_ok=True)
+    #            result_df.to_csv(out_path, index=False)
+    #            print(f"Final result saved to {out_path.resolve()}")
+    #
+    #print("All plans executed.")
+    #print(f"total errors: {len(errors)}")
+    #for p, e in errors.items():
+    #    print(f"{p} : {e}")
 
-    for domain in test_domains:
-        for plan in Path(f"./plans/{domain}").glob("*.json"):
-            print(f"Executing plan {plan.name}...")
-            with open(plan, "r") as f:
-                data = json.load(f)
-                data = TranslationReturn(**data)
-                try:
-                    result_df = execute_plan(data)
-                except Exception as e:
-                    print(f"Error executing plan {domain}/{plan.name}: {e}")
-                    errors[f'{domain}/{plan.name}'] = str(e)
-                    continue
-
-                out_path = Path(f"./test_data/results/{domain}/result_{plan.stem}.csv")
-                out_path.parent.mkdir(parents=True, exist_ok=True)
-                result_df.to_csv(out_path, index=False)
-                print(f"Final result saved to {out_path.resolve()}")
-    
-    print("All plans executed.")
-    print(f"total errors: {len(errors)}")
-    for p, e in errors.items():
-        print(f"{p} : {e}")
-
-#    app()
+    app()
