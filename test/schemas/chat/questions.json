@@ -1,0 +1,48 @@
+[
+  { "id": 1, "question": "List all users." },
+  { "id": 2, "question": "List all chats." },
+  { "id": 3, "question": "Show the names and descriptions of all chats." },
+  { "id": 4, "question": "List all messages." },
+  { "id": 5, "question": "List all users in the app database." },
+  { "id": 6, "question": "List all posts." },
+  { "id": 7, "question": "Show the usernames of all users in app_chat." },
+  { "id": 8, "question": "Show the emails of all users in app." },
+
+  { "id": 9, "question": "List the chats named Backend." },
+  { "id": 10, "question": "Show messages sent after the first of january of 2023." },
+  { "id": 11, "question": "List users whose full name is not null." },
+  { "id": 12, "question": "Show posts that contain a specific word." },
+  { "id": 13, "question": "List chats created after the first of january of 2023." },
+  { "id": 14, "question": "Show users whose email ends with the domain: \"gmail\"." },
+
+  { "id": 15, "question": "List usernames and the chats they belong to." },
+  { "id": 16, "question": "Show all messages with the username of the sender." },
+  { "id": 17, "question": "List users and the number of chats they participate in." },
+  { "id": 18, "question": "Show each chat and the number of messages in it." },
+  { "id": 19, "question": "List posts with the username of their author." },
+  { "id": 20, "question": "Show users who have sent at least one message." },
+
+  { "id": 21, "question": "How many users are in each chat?" },
+  { "id": 22, "question": "Which chat has the most messages?" },
+  { "id": 23, "question": "List users who sent more than a given number of messages." },
+  { "id": 24, "question": "Show the number of posts per user." },
+  { "id": 25, "question": "List chats with more than a given number of members." },
+  { "id": 26, "question": "Show users who participate in more than one chat." },
+
+  { "id": 27, "question": "List users who never sent any messages." },
+  { "id": 28, "question": "Show chats that have no messages." },
+  { "id": 29, "question": "List users who joined chats but never sent messages in them." },
+  { "id": 30, "question": "Show users who have posts but no messages." },
+  { "id": 31, "question": "List chats where every member has sent at least one message." },
+  { "id": 32, "question": "Show users whose number of messages is above the average." },
+
+  { "id": 33, "question": "List usernames that appear in both databases." },
+  { "id": 34, "question": "Show users who have posts and also sent messages." },
+  { "id": 35, "question": "List users that exist in the chat but not in the app." },
+  { "id": 36, "question": "Show users that exist in the app but are not members of any chat." },
+
+  { "id": 37, "question": "List users who are active, defined as having posts or messages." },
+  { "id": 38, "question": "Show users ordered by total activity combining posts and messages." },
+  { "id": 39, "question": "List users who participate in technical chats and also have posts." },
+  { "id": 40, "question": "Rank users by number of chats, messages, and posts combined." }
+]

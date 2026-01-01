@@ -162,7 +162,7 @@ services:
       - "5437:5432"
     volumes:
       - eu-data:/var/lib/postgresql/data
-      - ./schemas/sales/postgres/eu-sales/eu_sales_db.sql:/docker-entrypoint-initdb.d/_eu_sales_db.sql:ro
+      - ./schemas/sales/postgres/eu_sales_db.sql:/docker-entrypoint-initdb.d/_eu_sales_db.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U eu_user -d sales_eu"]
       interval: 5s
@@ -180,13 +180,77 @@ services:
       - "5438:5432"
     volumes:
       - us-data:/var/lib/postgresql/data
-      - ./schemas/sales/postgres/eu-sales/eu_sales_db.sql:/docker-entrypoint-initdb.d/_eu_sales_db.sql:ro
+      - ./schemas/sales/postgres/us_sales_db.sql:/docker-entrypoint-initdb.d/_us_sales_db.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U us_user -d sales_us"]
       interval: 5s
       timeout: 5s
       retries: 10
-
+  app_chat_db:
+    image: postgres:16
+    container_name: app_chat_db
+    environment:
+      POSTGRES_USER: app_chat_user
+      POSTGRES_PASSWORD: app_chat_pass
+      POSTGRES_DB: app_chat 
+    ports:
+      - "5439:5432"
+    volumes:
+      - app_chat_data:/var/lib/postgresql/data
+      - ./schemas/chat/postgres/app_chat.sql:/docker-entrypoint-initdb.d/app_chat.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_chat_user -d app_chat"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app_db:
+    image: postgres:16
+    container_name: app_db
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_pass
+      POSTGRES_DB: app 
+    ports:
+      - "5440:5432"
+    volumes:
+      - app_data:/var/lib/postgresql/data
+      - ./schemas/chat/postgres/app.sql:/docker-entrypoint-initdb.d/app.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app"]
+      interval: 5s
+      timeout: 5s
+  store_main_db:
+    image: postgres:16
+    container_name: store_main_db
+    environment:
+      POSTGRES_USER: store_main_user
+      POSTGRES_PASSWORD: store_main_pass
+      POSTGRES_DB: store_main 
+    ports:
+      - "5441:5432"
+    volumes:
+      - store_main_data:/var/lib/postgresql/data
+      - ./schemas/store/postgres/store_main.sql:/docker-entrypoint-initdb.d/store_main.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U store_main_user -d store_main"]
+      interval: 5s
+      timeout: 5s
+  store_alt_db:
+    image: postgres:16
+    container_name: store_alt_db
+    environment:
+      POSTGRES_USER: store_alt_user
+      POSTGRES_PASSWORD: store_alt_pass
+      POSTGRES_DB: store_alt 
+    ports:
+      - "5442:5432"
+    volumes:
+      - store_alt_data:/var/lib/postgresql/data
+      - ./schemas/store/postgres/store_alt.sql:/docker-entrypoint-initdb.d/store_alt.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U store_alt_user -d store_alt"]
+      interval: 5s
+      timeout: 5s
 volumes:
   mysql_products_data:
   mysql_orders_data:
@@ -199,3 +263,7 @@ volumes:
   pg_orders_demo_data:
   eu-data:
   us-data:
+  app_chat_data:
+  app_data:
+  store_main_data:
+  store_alt_data:

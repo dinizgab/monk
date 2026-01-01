@@ -1,0 +1,48 @@
+[
+  { "id": 1, "question": "List all categories." },
+  { "id": 2, "question": "List all product groups." },
+  { "id": 3, "question": "Show the names of all products." },
+  { "id": 4, "question": "Show the titles of all items." },
+  { "id": 5, "question": "Which products are active?" },
+  { "id": 6, "question": "Which items are active?" },
+  { "id": 7, "question": "List products ordered by price from lowest to highest." },
+  { "id": 8, "question": "List items ordered by creation date." },
+  { "id": 9, "question": "How many categories are there?" },
+  { "id": 10, "question": "How many product groups are there?" },
+
+  { "id": 11, "question": "Find products with price greater than 100." },
+  { "id": 12, "question": "Find items with amount in cents greater than 5000." },
+  { "id": 13, "question": "List products created today." },
+  { "id": 14, "question": "List items created last year." },
+  { "id": 15, "question": "Find inactive products." },
+  { "id": 16, "question": "Find inactive items." },
+  { "id": 17, "question": "Find products whose name contains the word 'USB'." },
+  { "id": 18, "question": "Find items whose title contains the word 'LED'." },
+
+  { "id": 19, "question": "What is the average price of products?" },
+  { "id": 20, "question": "What is the average amount in cents of items?" },
+  { "id": 21, "question": "What is the maximum product price?" },
+  { "id": 22, "question": "What is the highest amount in cents among items?" },
+  { "id": 23, "question": "Count how many products exist per category." },
+  { "id": 24, "question": "Count how many items exist per product group." },
+
+  { "id": 25, "question": "List products with their category names." },
+  { "id": 26, "question": "List items with their product group names." },
+  { "id": 27, "question": "Which category has the most products?" },
+  { "id": 28, "question": "Which product group has the most items?" },
+
+  { "id": 29, "question": "Compare the number of active products and active items." },
+  { "id": 30, "question": "List the most recent products and items together." },
+  { "id": 31, "question": "Show products and items that contain the word 'mouse' in their name or title." },
+  { "id": 32, "question": "Compare product prices with item prices converted from cents." },
+
+  { "id": 33, "question": "Count active products per category and active items per group." },
+  { "id": 34, "question": "Find categories and groups that have no active records." },
+  { "id": 35, "question": "Rank products and items together by price." },
+  { "id": 36, "question": "Find categories and groups that share the same name." },
+
+  { "id": 37, "question": "Compare categories and groups with the same name by number of records." },
+  { "id": 38, "question": "Find categories where most products are inactive." },
+  { "id": 39, "question": "Find product groups where most items are inactive." },
+  { "id": 40, "question": "Detect name-matching categories and groups with very different active ratios." }
+]
