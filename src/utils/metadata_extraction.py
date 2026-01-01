@@ -66,16 +66,18 @@ def extract_db_info(urls: str) -> dict:
 
 
 def add_url_driver(url: str) -> str:
-    drivers = {
-        "oracle": "cx_oracle",
-        "postgresql": "psycopg",
-        "mysql": "pymysql",
-        "mssql": "pyodbc",
-    }
     dialect = url.split("://")[0]
 
     if "+" in dialect:
         return url
-
-    if dialect in drivers:
-        return url.replace(dialect, f"{dialect}+{drivers[dialect]}")
+    
+    match dialect:
+        case "postgresql" | "postgres":
+            return url.replace(dialect, "postgresql+psycopg")
+        case "oracle":
+            return url.replace(dialect, "oracle+cx_oracle")
+        case "mysql":
+            return url.replace(dialect, "mysql+pymysql")
+        case "mssql":
+            return url.replace(dialect, "mssql+pyodbc")
+        

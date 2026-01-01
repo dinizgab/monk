@@ -144,11 +144,9 @@ def _finalize_results(
     plan: ExecutionPlan
 ) -> pd.DataFrame:
     """Apply final aggregations and column filtering."""
-    # Apply aggregation if specified
     if plan.final_aggregation:
         df = _aggregate_results(df, plan.final_aggregation, plan.final_output_columns)
     
-    # Filter to requested columns
     if plan.final_output_columns:
         existing_cols = [col for col in plan.final_output_columns if col in df.columns]
         if not existing_cols:
