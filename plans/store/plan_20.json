@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the amount_in_cents for all items from the store_alt database. The application will compute the average from these values.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT amount_in_cents FROM items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "average_amount_in_cents"
+    ],
+    "final_aggregation": {
+        "type": "AVG",
+        "column": "amount_in_cents"
+    }
+}

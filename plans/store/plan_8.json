@@ -1,0 +1,33 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve products from store_main and expose a unified set of columns (id, name, creation timestamp, price, sku) with id cast to text so it can be combined with items from the other database.",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id::text AS item_id, name AS title, 'store_main.products' AS source, created_at AS created_at, price AS price, sku AS sku, NULL::CHAR(1) AS active FROM products;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve items from store_alt and expose a unified set of columns (code, title, creation timestamp normalized to timestamptz, price converted from cents to main currency units) with code cast to text so it can be combined with products.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code::text AS item_id, title AS title, 'store_alt.items' AS source, (created_on::timestamp) AT TIME ZONE 'UTC' AS created_at, (amount_in_cents::numeric / 100.0) AS price, NULL::text AS sku, active AS active FROM items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "source",
+        "item_id",
+        "title",
+        "created_at",
+        "price",
+        "sku",
+        "active"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

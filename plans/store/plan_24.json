@@ -1,0 +1,35 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all product groups (group id and name).",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT gid, group_name FROM product_groups;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all items with their group reference so the application can count how many items belong to each product group.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code, group_ref FROM items;",
+            "depends_on": [],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "group_ref",
+                    "dependency_step_column": "gid"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "gid",
+        "group_name",
+        "item_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "code"
+    }
+}

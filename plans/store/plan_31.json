@@ -1,0 +1,39 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all products whose name contains the word 'mouse' (case-insensitive).",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id, name, sku, price, category_id, is_active, created_at FROM products WHERE name ILIKE '%mouse%';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all items whose title contains the word 'mouse' (case-insensitive).",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code, title, amount_in_cents, active, group_ref, created_on FROM items WHERE title ILIKE '%mouse%';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "name",
+        "sku",
+        "price",
+        "category_id",
+        "is_active",
+        "created_at",
+        "code",
+        "title",
+        "amount_in_cents",
+        "active",
+        "group_ref",
+        "created_on"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

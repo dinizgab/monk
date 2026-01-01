@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch all chats (their ids and names).",
+            "database": "postgres://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT id, name FROM chats;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch message ids and their chat_id for messages belonging to the chats returned in step 1.",
+            "database": "postgres://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT id, chat_id FROM messages WHERE chat_id IN ($step1.id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "chat_id",
+                    "dependency_step_column": "id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "name",
+        "message_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "id"
+    }
+}

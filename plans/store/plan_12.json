@@ -1,0 +1,24 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve items whose amount_in_cents is greater than 5000 from the items table.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code, title, group_ref, amount_in_cents, active, created_on FROM items WHERE amount_in_cents > 5000;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "code",
+        "title",
+        "group_ref",
+        "amount_in_cents",
+        "active",
+        "created_on"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

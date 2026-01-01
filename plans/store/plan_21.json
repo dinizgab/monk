@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get the maximum product price from the primary store (products.price is NUMERIC(10,2)).",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT MAX(price) AS max_price FROM products;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get the maximum product price from the alternate store (items.amount_in_cents is integer; convert to currency by dividing by 100).",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT (MAX(amount_in_cents) / 100.0) AS max_price FROM items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "max_price"
+    ],
+    "final_aggregation": {
+        "type": "MAX",
+        "column": "max_price"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count active products in the store_main database (products where is_active = true).",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT COUNT(*) AS active_product_count FROM products WHERE is_active = true;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count active items in the store_alt database (items where active = 'Y').",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT COUNT(*) AS active_item_count FROM items WHERE active = 'Y';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "active_product_count",
+        "active_item_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

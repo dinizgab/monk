@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find users (id, username, full_name) who are members of more than one distinct chat by counting chat_ids in chat_members and joining to the users table for display information.",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT u.id AS user_id, u.username, u.full_name, COUNT(DISTINCT cm.chat_id) AS chat_count\nFROM chat_members cm\nJOIN users u ON cm.user_id = u.id\nGROUP BY u.id, u.username, u.full_name\nHAVING COUNT(DISTINCT cm.chat_id) > 1;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "user_id",
+        "username",
+        "full_name",
+        "chat_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

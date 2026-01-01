@@ -1,0 +1,30 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count active products per category from the main store. Include categories with zero active products.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT c.id AS category_id, c.name AS category_name, COUNT(p.id) AS product_count\nFROM categories c\nLEFT JOIN products p\n  ON p.category_id = c.id AND p.is_active = true\nGROUP BY c.id, c.name\nORDER BY product_count DESC;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count active items per product group from the alternative store. Include groups with zero active items. Items are considered active when items.active = 'Y'.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT pg.gid AS group_id, pg.group_name, COUNT(i.code) AS item_count\nFROM product_groups pg\nLEFT JOIN items i\n  ON i.group_ref = pg.gid AND i.active = 'Y'\nGROUP BY pg.gid, pg.group_name\nORDER BY item_count DESC;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "category_name",
+        "product_count",
+        "group_name",
+        "item_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

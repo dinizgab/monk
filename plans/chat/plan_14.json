@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve users from the app database whose email domain (case-insensitive) is 'gmail'.",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT id, username, email FROM users WHERE lower(split_part(split_part(email, '@', 2), '.', 1)) = 'gmail';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "username",
+        "email"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

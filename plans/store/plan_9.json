@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all category IDs from the main store database so the application can count them.",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id FROM categories;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "category_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "id"
+    }
+}

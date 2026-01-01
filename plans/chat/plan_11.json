@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all users from the app_chat database whose full_name is not null.",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT id, username, full_name FROM users WHERE full_name IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "username",
+        "full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

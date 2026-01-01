@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get distinct users in the application database who have at least one post (user id, username, email).",
+            "database": "postgres://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT DISTINCT u.id AS user_id, u.username, u.email FROM users u JOIN posts p ON p.user_id = u.id;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get distinct chat users who have sent at least one message, filtered to usernames found in step 1.",
+            "database": "postgres://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT DISTINCT u.id AS chat_user_id, u.username, u.full_name FROM users u JOIN messages m ON m.sended_by = u.id WHERE u.username IN ($step1.username);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "username",
+                    "dependency_step_column": "username"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "username",
+        "email",
+        "full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

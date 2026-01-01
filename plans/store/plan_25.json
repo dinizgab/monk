@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all products together with their category names from the store_main database by joining products to categories on category_id.",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT p.id AS product_id, p.name AS product_name, c.name AS category_name FROM products p JOIN categories c ON p.category_id = c.id;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "product_id",
+        "product_name",
+        "category_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

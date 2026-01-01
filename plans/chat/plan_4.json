@@ -1,0 +1,23 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all messages from the app_chat.messages table.",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT id, content, sended_by, chat_id, sended_at FROM messages;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "content",
+        "sended_by",
+        "chat_id",
+        "sended_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

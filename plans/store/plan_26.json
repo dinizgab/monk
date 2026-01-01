@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all items and their associated product group names from the store_alt database. Use a LEFT JOIN so items without a group are still returned.",
+            "database": "postgres://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT i.code, i.title, pg.group_name FROM items i LEFT JOIN product_groups pg ON i.group_ref = pg.gid;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "code",
+        "title",
+        "group_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

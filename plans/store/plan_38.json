@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find categories where more than half of the products in the category are inactive; return category id, name, inactive product count and total product count.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT c.id, c.name, COUNT(*) FILTER (WHERE p.is_active = false) AS inactive_count, COUNT(*) AS total_count FROM categories c JOIN products p ON p.category_id = c.id GROUP BY c.id, c.name HAVING COUNT(*) FILTER (WHERE p.is_active = false) > COUNT(*) / 2;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "name",
+        "inactive_count",
+        "total_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}
