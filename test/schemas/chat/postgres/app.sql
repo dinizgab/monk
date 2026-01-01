@@ -1,3 +1,5 @@
+\c postgres
+
 DROP DATABASE IF EXISTS app;
 CREATE DATABASE app;
 
@@ -18,17 +20,17 @@ CREATE TABLE posts (
   user_id BIGINT NOT NULL REFERENCES users(id)
 );
 
-INSERT INTO users (id, username, email) VALUES
-  (1, 'alice', 'alice@gmail.com'),
-  (2, 'bob', 'bob@email.com'),
-  (3, 'carol', 'carol@email.com'),
-  (4, 'dave', 'dave@gmail.com'),
-  (5, 'eve', 'eve@email.com'),
-  (6, 'frank', 'frank@gmail.com'),
-  (7, 'grace', 'grace@email.com'),
-  (8, 'heidi', 'heidi@gmail.com'),
-  (9, 'ivan', 'ivan@gmail.com'),
-  (10, 'judy', 'judy@email.com');
+INSERT INTO users (username, email) VALUES
+  ('alice', 'alice@gmail.com'),
+  ('bob', 'bob@email.com'),
+  ('carol', 'carol@email.com'),
+  ('dave', 'dave@gmail.com'),
+  ('eve', 'eve@email.com'),
+  ('frank', 'frank@gmail.com'),
+  ('grace', 'grace@email.com'),
+  ('heidi', 'heidi@gmail.com'),
+  ('ivan', 'ivan@gmail.com'),
+  ('judy', 'judy@email.com');
 
 INSERT INTO posts (content, user_id) VALUES
   ('Primeiro post da Alice', 1),

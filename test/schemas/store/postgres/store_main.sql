@@ -1,3 +1,5 @@
+\c postgres
+
 DROP DATABASE IF EXISTS store_main;
 CREATE DATABASE store_main;
 

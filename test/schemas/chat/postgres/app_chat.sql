@@ -1,3 +1,5 @@
+\c postgres
+
 DROP DATABASE IF EXISTS app_chat;
 CREATE DATABASE app_chat;
 
@@ -36,12 +38,25 @@ CREATE TABLE messages (
   sended_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-INSERT INTO chats (id, name, description) VALUES
-  (1, 'Geral', 'Chat geral da aplicação'),
-  (2, 'Backend', 'Discussões sobre backend'),
-  (3, 'Banco de Dados', 'SQL, NoSQL e afins'),
-  (4, 'Arquitetura', 'Padrões e boas práticas'),
-  (5, 'Off-topic', 'Conversas aleatórias');
+INSERT INTO users (username, full_name) VALUES
+  ('alice', 'Alice Silva'),
+  ('bob',   'Bob Santos'),
+  ('carol', 'Carol Pereira'),
+  ('dave',  'Dave Oliveira'),
+  ('eve',   'Eve Costa'),
+  ('frank', 'Frank Rodrigues'),
+  ('grace', 'Grace Almeida'),
+  ('heidi', 'Heidi Nogueira'),
+  ('ivan',  'Ivan Ribeiro'),
+  ('judy',  'Judy Martins');
+
+
+INSERT INTO chats (name, description) VALUES
+  ('Geral', 'Chat geral da aplicação'),
+  ('Backend', 'Discussões sobre backend'),
+  ('Banco de Dados', 'SQL, NoSQL e afins'),
+  ('Arquitetura', 'Padrões e boas práticas'),
+  ('Off-topic', 'Conversas aleatórias');
 
 SELECT setval('chats_id_seq', 5, true);
 

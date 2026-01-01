@@ -1,3 +1,5 @@
+\c postgres
+
 DROP DATABASE IF EXISTS store_alt;
 CREATE DATABASE store_alt;
 
