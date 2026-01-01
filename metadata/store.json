@@ -1,0 +1,246 @@
+[
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "store_main_user",
+        "password": "store_main_pass",
+        "host": "localhost",
+        "port": 5441,
+        "database": "store_main",
+        "tables": {
+            "categories": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "products": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "category_id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "categories",
+                            "column": "id"
+                        }
+                    ]
+                },
+                {
+                    "name": "price",
+                    "type": "NUMERIC(10, 2)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "sku",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "is_active",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "true",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "store_alt_user",
+        "password": "store_alt_pass",
+        "host": "localhost",
+        "port": 5442,
+        "database": "store_alt",
+        "tables": {
+            "product_groups": [
+                {
+                    "name": "gid",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "group_name",
+                    "type": "VARCHAR(255)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "last_mod",
+                    "type": "TIMESTAMP WITHOUT TIME ZONE",
+                    "nullable": false,
+                    "default": "CURRENT_TIMESTAMP",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "items": [
+                {
+                    "name": "code",
+                    "type": "UUID",
+                    "nullable": false,
+                    "default": "gen_random_uuid()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "title",
+                    "type": "VARCHAR(255)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "group_ref",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "amount_in_cents",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "active",
+                    "type": "CHAR(1)",
+                    "nullable": false,
+                    "default": "'Y'::bpchar",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "created_on",
+                    "type": "DATE",
+                    "nullable": false,
+                    "default": "CURRENT_DATE",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    }
+]

@@ -45,7 +45,7 @@ _BASE_CONTAINERS: Dict[str, ContainerConfig] = {
         dialect="postgresql", username="app_user", password="app_pass", database="app", port=5440
     ),
     "app_chat": ContainerConfig(
-        dialect="postgresql", username="app_chat_user", password="app_chat_pass", database="app_chat_db", port=5439
+        dialect="postgresql", username="app_chat_user", password="app_chat_pass", database="app_chat", port=5439
     ),
     # Sales
     "sales_eu": ContainerConfig(
@@ -82,7 +82,6 @@ _BASE_CONTAINERS: Dict[str, ContainerConfig] = {
     ),
 }
 
-# Allow common aliases such as container_name from docker-compose or shorter identifiers
 _CONTAINER_ALIASES: Dict[str, str] = {
     # Sales
     "sales_eu_db": "sales_eu",
