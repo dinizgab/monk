@@ -7,14 +7,18 @@ Supported commands:
 """
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import json
 from dataclasses import dataclass
 from pathlib import Path
+import re
+import traceback
 from typing import Dict, Iterable, List
 
 import typer
 
-from src.query_translation import translate_query
+from src.plan_execution import execute_plan
+from src.query_translation import TranslationReturn, translate_query
 from src.utils.metadata_extraction import extract_db_info
 from src.utils.sort import sort_execution_plan
 
@@ -95,7 +99,7 @@ CONTAINER_CONFIGS: Dict[str, ContainerConfig] = {
     **{alias: _BASE_CONTAINERS[target] for alias, target in _CONTAINER_ALIASES.items()},
 }
 
-QUESTIONS_ROOT = Path("test/schema")
+QUESTIONS_ROOT = Path("test/schemas")
 app = typer.Typer(help="Helper commands for extracting metadata and translating test questions.")
 
 
@@ -132,7 +136,20 @@ def _load_questions(suite_name: str) -> List[dict]:
     return data
 
 
-@app.command()
+def _append_error_jsonl(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+        
+
+def _plan_number(path: Path) -> int:
+    m = re.search(r"plan_(\d+)\.json$", path.name)
+    if not m:
+        raise ValueError(f"Nome inesperado: {path.name}")
+    return int(m.group(1))
+
+
+@app.command("extract_metadata")
 def extract_metadata(
     containers: List[str] = typer.Argument(..., help="Container names or database URLs"),
     output_path: Path = typer.Option(Path("./metadata.json"), help="Where to save the metadata JSON"),
@@ -147,7 +164,7 @@ def extract_metadata(
     typer.echo(f"Metadata saved to {output_path.resolve()}")
 
 
-@app.command()
+@app.command("translate")
 def translate(
     suite_name: str = typer.Argument(..., help="Name of the test suite (folder under test/schema)"),
     metadata_path: Path = typer.Option(Path("./metadata.json"), help="Path to the metadata JSON"),
@@ -178,6 +195,59 @@ def translate(
             json.dumps(translation.model_dump(), indent=4, ensure_ascii=False), encoding="utf-8"
         )
         typer.echo(f"Saved plan to {output_path}")
+
+
+@app.command("run_plans")
+def run_plans(
+    suite_name: List[str] = typer.Argument(help="Name of the test suite (folder under test/schemas)", default=["bakery_1", "chat", "ecommerce", "sales", "store"] ),
+):
+    """Run all translation plans for the specified test suites."""
+
+    for suite in suite_name:
+        plans_dir = Path("plans") / suite
+        if not plans_dir.exists():
+            typer.echo(f"Plans directory not found for suite '{suite}': {plans_dir}")
+            continue
+
+        plan_files = sorted(plans_dir.glob("plan_*.json"), key=_plan_number)
+
+        typer.echo("============================================")
+        typer.echo(f"Found {len(plan_files)} plan(s) in {plans_dir}")
+        typer.echo(f"Running plans for suite '{suite}'...")
+        typer.echo("============================================")
+        
+        errors_out_path = Path(f"./test_data/errors/{suite}.jsonl")
+        for i, plan_file in enumerate(plan_files):
+            plan_num = _plan_number(plan_file)
+            typer.echo(f"Processing plan file: {plan_num}")
+            
+            with open(plan_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                data = TranslationReturn(**data)
+                try:
+                    result_df = execute_plan(data)
+                except Exception as e:
+                    err_payload = {
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "suite": suite,
+                        "plan_num": plan_num,
+                        "plan_file": str(plan_file),
+                        "exception_type": type(e).__name__,
+                        "message": str(e),
+                        "traceback": traceback.format_exc(),
+                    }
+                    _append_error_jsonl(errors_out_path, err_payload)
+                    typer.echo(f"[ERROR] suite={suite} plan_num={plan_num} {type(e).__name__}: {e}")
+                    continue
+
+            res_out_path = Path(f"./test_data/results/{suite}/result_{plan_num}.csv")
+            res_out_path.parent.mkdir(parents=True, exist_ok=True)
+            result_df.to_csv(res_out_path, index=False)
+            print(f"Final result saved to {res_out_path.resolve()}")
+            
+        typer.echo("============================================")
+        typer.echo(f"Completed running plans for suite '{suite}'.")
+        typer.echo("============================================")
 
 
 if __name__ == "__main__":
