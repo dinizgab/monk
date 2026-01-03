@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 
 from src.models.execution_plan import ExecutionPlan
+from src.query_translation import FinalAggregationModel
 from src.utils.metadata_extraction import add_url_driver
 
 class ExecutionError(Exception):
@@ -161,41 +162,33 @@ def _finalize_results(
 
 def _aggregate_results(
     df: pd.DataFrame, 
-    aggregation_info: Dict[str, str], 
+    aggregation_info: FinalAggregationModel,
     final_output_columns: Optional[list[str]]
 ) -> pd.DataFrame:
-    """
-    Apply aggregation to results with optional grouping.
-    
-    Supports: COUNT, SUM, AVG, MAX, MIN
-    """
-    agg_type = aggregation_info.get("type", "NONE").upper()
-    agg_column = aggregation_info.get("column")
+    agg_type = (aggregation_info.type or "NONE").upper()
+    agg_column = aggregation_info.column
+    distinct = bool(getattr(aggregation_info, "distinct", False))
     
     if agg_type == "NONE":
         return df
     
-    # Validate aggregation parameters
     if not agg_column:
         raise ExecutionError(f"Aggregation column not specified for type {agg_type}")
     
     if agg_column not in df.columns:
-        # Check if we can proceed without aggregation
         if final_output_columns and all(col in df.columns for col in final_output_columns):
             return df[final_output_columns]
         raise ExecutionError(f"Aggregation column '{agg_column}' not found in DataFrame")
     
-    # Determine grouping columns
-    group_by_cols = []
+    group_by_cols: list[str] = []
     if final_output_columns:
         group_by_cols = [
-            col for col in final_output_columns 
+            col for col in final_output_columns
             if col != agg_column and col in df.columns
         ]
     
-    # Perform aggregation
     if not group_by_cols:
-        return _global_aggregation(df, agg_type, agg_column, final_output_columns)
+        return _global_aggregation(df, agg_type, agg_column, final_output_columns, distinct)
     else:
         return _grouped_aggregation(df, agg_type, agg_column, group_by_cols)
 
@@ -204,11 +197,15 @@ def _global_aggregation(
     df: pd.DataFrame,
     agg_type: str,
     agg_column: str,
-    final_output_columns: Optional[list[str]]
+    final_output_columns: Optional[list[str]],
+    distinct: bool = False
 ) -> pd.DataFrame:
-    """Perform aggregation across entire dataframe (no grouping)."""
+    s = df[agg_column] 
+    if distinct:
+        s = s.dropna().drop_duplicates()
+        
     agg_functions = {
-        "COUNT": lambda s: s.nunique(),
+        "COUNT": lambda x: x.nunique(dropna=True) if not distinct else len(x),  
         "SUM": lambda s: s.sum(),
         "AVG": lambda s: s.mean(),
         "MAX": lambda s: s.max(),
@@ -218,14 +215,14 @@ def _global_aggregation(
     if agg_type not in agg_functions:
         raise ExecutionError(f"Unsupported global aggregation type: {agg_type}")
     
-    result_val = agg_functions[agg_type](df[agg_column])
+    result_val = agg_functions[agg_type](s)
     
-    # Determine output column name
     if final_output_columns and len(final_output_columns) == 1:
         col_name = final_output_columns[0]
     else:
-        col_name = f"{agg_column}_{agg_type.lower()}"
-    
+        suffix = f"{agg_type.lower()}{'_distinct' if distinct else ''}"
+        col_name = f"{agg_column}_{suffix}"
+
     return pd.DataFrame({col_name: [result_val]})
 
 
@@ -233,17 +230,26 @@ def _grouped_aggregation(
     df: pd.DataFrame,
     agg_type: str,
     agg_column: str,
-    group_by_cols: list[str]
+    group_by_cols: list[str],
+    distinct: bool = False
 ) -> pd.DataFrame:
-    """Perform aggregation with grouping."""
-    grouped = df.groupby(group_by_cols, dropna=False)
+    grouped = df.groupby(group_by_cols, dropna=False)[agg_column]
+    if agg_type == "COUNT":
+        if distinct:
+            result_df = grouped.nunique(dropna=True).reset_index(name=agg_column)
+        else:
+            result_df = grouped.count().reset_index(name=agg_column)
+            
+        return result_df
     
+    if distinct:
+        grouped = grouped.apply(lambda s: s.dropna().drop_duplicates())
+
     agg_functions = {
-        "COUNT": lambda g: g.nunique(),
-        "SUM": lambda g: g.sum(),
-        "AVG": lambda g: g.mean(),
-        "MAX": lambda g: g.max(),
-        "MIN": lambda g: g.min(),
+        "SUM": lambda s: s.sum(),
+        "AVG": lambda s: s.mean(),
+        "MAX": lambda s: s.max(),
+        "MIN": lambda s: s.min(),
     }
     
     if agg_type not in agg_functions:
@@ -251,11 +257,9 @@ def _grouped_aggregation(
     
     result_df = agg_functions[agg_type](grouped[agg_column]).reset_index()
     
-    # Rename the aggregated column if needed
-    if agg_column not in result_df.columns:
-        result_df.rename(
-            columns={result_df.columns[-1]: agg_column}, 
-            inplace=True
-        )
-    
+    if agg_type not in agg_functions:
+        raise ExecutionError(f"Unsupported grouped aggregation type: {agg_type}")
+
+    result_series = grouped.apply(agg_functions[agg_type])
+    result_df = result_series.reset_index(name=agg_column)
     return result_df
