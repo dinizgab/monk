@@ -10,12 +10,10 @@ from src.query_translation import FinalAggregationModel
 from src.utils.metadata_extraction import add_url_driver
 
 class ExecutionError(Exception):
-    """Custom exception for execution plan errors."""
     pass
 
 @contextmanager
 def get_db_engines(databases: set[str]) -> Dict[str, Engine]:
-    """Context manager for database engine lifecycle management."""
     engines = {}
     try:
         for db_url in databases:
@@ -144,7 +142,6 @@ def _finalize_results(
     df: pd.DataFrame, 
     plan: ExecutionPlan
 ) -> pd.DataFrame:
-    """Apply final aggregations and column filtering."""
     if plan.final_aggregation:
         df = _aggregate_results(df, plan.final_aggregation, plan.final_output_columns)
     
