@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count receipts grouped by Date and return the top 3 dates with the most receipts.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT Date AS s1__Date, COUNT(ReceiptNumber) AS s1__receipt_count FROM receipts GROUP BY Date ORDER BY s1__receipt_count DESC LIMIT 3;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__Date",
+                    "source": "receipts.Date"
+                },
+                {
+                    "alias": "s1__receipt_count",
+                    "source": "receipts.ReceiptNumber"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__Date",
+        "s1__receipt_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

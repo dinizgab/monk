@@ -1,0 +1,90 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate total revenue per customer in the EU database",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.email AS s1__email, customers.full_name AS s1__full_name, SUM(orders.total_eur) AS s1__total_eur FROM customers JOIN orders ON customers.id = orders.customer_id GROUP BY customers.email, customers.full_name;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s1__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s1__total_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Aggregate total revenue per customer in the US database",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.email AS s2__email, customers.full_name AS s2__full_name, SUM(orders.total_eur) AS s2__total_eur FROM customers JOIN orders ON customers.id = orders.customer_id GROUP BY customers.email, customers.full_name;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s2__total_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Combine EU and US per-customer totals (matching by email), sum global revenue, and return top 10 customers",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT combined.email AS s3__email, combined.full_name AS s3__full_name, SUM(combined.total_eur) AS s3__total_eur FROM ( SELECT $step1.s1__email AS email, $step1.s1__full_name AS full_name, $step1.s1__total_eur AS total_eur UNION ALL SELECT $step2.s2__email AS email, $step2.s2__full_name AS full_name, $step2.s2__total_eur AS total_eur ) AS combined GROUP BY combined.email, combined.full_name ORDER BY s3__total_eur DESC LIMIT 10;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s3__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s3__total_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s3__email",
+                    "dependency_step_column": "s1__email"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__email",
+        "s3__full_name",
+        "s3__total_eur"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

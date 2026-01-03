@@ -1,0 +1,77 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select inactive products from store_main.products (is_active = false).",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT products.id AS s1__id, products.name AS s1__name, products.sku AS s1__sku, products.price AS s1__price, products.is_active AS s1__is_active FROM products WHERE products.is_active = false;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "products.id"
+                },
+                {
+                    "alias": "s1__name",
+                    "source": "products.name"
+                },
+                {
+                    "alias": "s1__sku",
+                    "source": "products.sku"
+                },
+                {
+                    "alias": "s1__price",
+                    "source": "products.price"
+                },
+                {
+                    "alias": "s1__is_active",
+                    "source": "products.is_active"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select inactive items from store_alt.items (active flag not 'Y').",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT items.code AS s2__code, items.title AS s2__title, items.amount_in_cents AS s2__amount_in_cents, items.active AS s2__active FROM items WHERE items.active <> 'Y';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__code",
+                    "source": "items.code"
+                },
+                {
+                    "alias": "s2__title",
+                    "source": "items.title"
+                },
+                {
+                    "alias": "s2__amount_in_cents",
+                    "source": "items.amount_in_cents"
+                },
+                {
+                    "alias": "s2__active",
+                    "source": "items.active"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__name",
+        "s1__sku",
+        "s1__price",
+        "s1__is_active",
+        "s2__code",
+        "s2__title",
+        "s2__amount_in_cents",
+        "s2__active"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

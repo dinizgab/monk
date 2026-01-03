@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the average product price from the Products table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT AVG(Products.product_price) AS s1__product_price_avg FROM Products",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__product_price_avg",
+                    "source": "Products.product_price"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__product_price_avg"
+    ],
+    "final_aggregation": {
+        "type": "AVG",
+        "column": "s1__product_price_avg",
+        "distinct": false,
+        "group_by": []
+    }
+}

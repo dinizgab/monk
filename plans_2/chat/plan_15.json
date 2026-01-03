@@ -1,0 +1,58 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get all users (id and username) from app_chat.users.",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT users.id AS s1__id, users.username AS s1__username FROM users;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "users.id"
+                },
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get chat memberships and chat names for users produced in step 1.",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT chat_members.user_id AS s2__user_id, chats.name AS s2__chat_name FROM chat_members INNER JOIN chats ON chat_members.chat_id = chats.id WHERE chat_members.user_id IN ($step1.s1__id);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__user_id",
+                    "source": "chat_members.user_id"
+                },
+                {
+                    "alias": "s2__chat_name",
+                    "source": "chats.name"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__user_id",
+                    "dependency_step_column": "s1__id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s1__username",
+        "s2__chat_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

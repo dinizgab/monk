@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all customer_id values from Orders (orders_db).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Orders.customer_id AS s1__customer_id FROM Orders;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_id",
+                    "source": "Orders.customer_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__customer_id"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__customer_id",
+        "distinct": true,
+        "group_by": []
+    }
+}

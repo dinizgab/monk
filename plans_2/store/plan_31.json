@@ -1,0 +1,72 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select products whose name contains 'mouse' from store_main.products",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT products.id AS s1__id, products.name AS s1__name, products.price AS s1__price, products.sku AS s1__sku FROM products WHERE products.name ILIKE '%mouse%';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "products.id"
+                },
+                {
+                    "alias": "s1__name",
+                    "source": "products.name"
+                },
+                {
+                    "alias": "s1__price",
+                    "source": "products.price"
+                },
+                {
+                    "alias": "s1__sku",
+                    "source": "products.sku"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select items whose title contains 'mouse' from store_alt.items",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT items.code AS s2__code, items.title AS s2__title, items.amount_in_cents AS s2__amount_in_cents, items.active AS s2__active FROM items WHERE items.title ILIKE '%mouse%';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__code",
+                    "source": "items.code"
+                },
+                {
+                    "alias": "s2__title",
+                    "source": "items.title"
+                },
+                {
+                    "alias": "s2__amount_in_cents",
+                    "source": "items.amount_in_cents"
+                },
+                {
+                    "alias": "s2__active",
+                    "source": "items.active"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__name",
+        "s1__price",
+        "s1__sku",
+        "s2__code",
+        "s2__title",
+        "s2__amount_in_cents",
+        "s2__active"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

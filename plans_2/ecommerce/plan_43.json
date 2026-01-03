@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count distinct payment_method_code values in customer_payment_methods to determine number of different payment methods.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT COUNT(DISTINCT payment_method_code) AS s1__count_payment_methods FROM customer_payment_methods;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__count_payment_methods",
+                    "source": "customer_payment_methods.payment_method_code"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__count_payment_methods"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

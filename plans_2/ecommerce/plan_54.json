@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Left join customers to customer_payment_methods to list each customer and their payment method (if any).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customers.customer_id AS s1__customer_id, customer_payment_methods.payment_method_code AS s1__payment_method_code FROM customers LEFT JOIN customer_payment_methods ON customers.customer_id = customer_payment_methods.customer_id",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_id",
+                    "source": "customers.customer_id"
+                },
+                {
+                    "alias": "s1__payment_method_code",
+                    "source": "customer_payment_methods.payment_method_code"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__customer_id",
+        "s1__payment_method_code"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__customer_id",
+        "distinct": true,
+        "group_by": []
+    }
+}

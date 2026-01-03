@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute item counts per product group and return the group with the highest count.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT pg.gid AS s1__gid, pg.group_name AS s1__group_name, COUNT(i.code) AS s1__item_count FROM product_groups pg LEFT JOIN items i ON i.group_ref = pg.gid GROUP BY pg.gid, pg.group_name ORDER BY COUNT(i.code) DESC LIMIT 1;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__gid",
+                    "source": "product_groups.gid"
+                },
+                {
+                    "alias": "s1__group_name",
+                    "source": "product_groups.group_name"
+                },
+                {
+                    "alias": "s1__item_count",
+                    "source": "items.code"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__group_name",
+        "s1__item_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,164 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Extract all customers from EU database (id, full_name, email).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS s1__id, full_name AS s1__full_name, email AS s1__email FROM customers",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s1__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Extract all customers from US database (id, full_name, email).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS s2__id, full_name AS s2__full_name, email AS s2__email FROM customers",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Find intra-EU customers that share the same full_name but have different emails (pairwise, one pair per row).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT a.id AS s3__id_a, b.id AS s3__id_b, a.full_name AS s3__full_name, a.email AS s3__email_a, b.email AS s3__email_b FROM customers a JOIN customers b ON a.full_name = b.full_name AND a.email <> b.email AND a.id < b.id",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s3__id_a",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s3__id_b",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s3__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s3__email_a",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s3__email_b",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 4,
+            "description": "Find intra-US customers that share the same full_name but have different emails (pairwise, one pair per row).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT a.id AS s4__id_a, b.id AS s4__id_b, a.full_name AS s4__full_name, a.email AS s4__email_a, b.email AS s4__email_b FROM customers a JOIN customers b ON a.full_name = b.full_name AND a.email <> b.email AND a.id < b.id",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s4__id_a",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s4__id_b",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s4__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s4__email_a",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s4__email_b",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 5,
+            "description": "Find cross-database pairs (EU vs US) where full_name matches but emails differ.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT $step1.s1__id AS s5__eu_id, $step2.s2__id AS s5__us_id, $step1.s1__full_name AS s5__full_name, $step1.s1__email AS s5__eu_email, $step2.s2__email AS s5__us_email WHERE $step1.s1__full_name = $step2.s2__full_name AND $step1.s1__email <> $step2.s2__email",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s5__eu_id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s5__us_id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s5__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s5__eu_email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s5__us_email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s5__full_name",
+                    "dependency_step_column": "s1__full_name"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__full_name",
+        "s3__email_a",
+        "s3__email_b",
+        "s4__full_name",
+        "s4__email_a",
+        "s4__email_b",
+        "s5__full_name",
+        "s5__eu_email",
+        "s5__us_email"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

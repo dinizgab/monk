@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select distinct goods ids whose price is less than the minimum price among all Tarts.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT goods.id AS s1__id FROM goods WHERE goods.price < (SELECT MIN(price) FROM goods WHERE food = 'Tart')",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "goods.id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

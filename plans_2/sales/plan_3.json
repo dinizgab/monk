@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select US customers with marketing opt-in (interpreted as SMS opt-in) from the sales_us customers table.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.id AS s1__id, customers.email AS s1__email, customers.full_name AS s1__full_name\nFROM customers\nWHERE customers.country = 'US' AND customers.marketing_ok = true;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s1__full_name",
+                    "source": "customers.full_name"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__email",
+        "s1__full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count number of posts per user from the app database; include user id and username with post counts (users with zero posts included).",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.id AS s1__id, users.username AS s1__username, COUNT(posts.id) AS s1__post_count FROM users LEFT JOIN posts ON posts.user_id = users.id GROUP BY users.id, users.username;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "users.id"
+                },
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s1__post_count",
+                    "source": "posts.id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__username",
+        "s1__post_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

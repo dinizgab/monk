@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the flavor and price of the most expensive item whose food type is 'cake' from goods.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.flavor AS s1__flavor, goods.price AS s1__price FROM goods WHERE goods.food = 'cake' ORDER BY goods.price DESC LIMIT 1;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__flavor",
+        "s1__price"
+    ],
+    "final_aggregation": {
+        "type": "NONE"
+    }
+}

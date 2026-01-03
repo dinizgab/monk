@@ -1,0 +1,53 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find customers who have at least 2 payment methods.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id AS s1__customer_id FROM customer_payment_methods GROUP BY customer_id HAVING COUNT(payment_method_code) >= 2;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_id",
+                    "source": "customer_payment_methods.customer_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get order dates for orders placed by the customers identified in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Orders.customer_id AS s2__customer_id, Orders.date_order_placed AS s2__date_order_placed FROM Orders WHERE Orders.customer_id IN ($step1.s1__customer_id);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__customer_id",
+                    "source": "Orders.customer_id"
+                },
+                {
+                    "alias": "s2__date_order_placed",
+                    "source": "Orders.date_order_placed"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__customer_id",
+                    "dependency_step_column": "s1__customer_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__date_order_placed"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

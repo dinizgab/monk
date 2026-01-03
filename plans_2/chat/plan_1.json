@@ -1,0 +1,62 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch all users from the primary app database (id, username, email).",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.id AS s1__id, users.username AS s1__username, users.email AS s1__email FROM users;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "users.id"
+                },
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s1__email",
+                    "source": "users.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch all users from the chat database (id, username, full_name).",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT users.id AS s2__id, users.username AS s2__username, users.full_name AS s2__full_name FROM users;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "users.id"
+                },
+                {
+                    "alias": "s2__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "users.full_name"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__username",
+        "s1__email",
+        "s2__id",
+        "s2__username",
+        "s2__full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

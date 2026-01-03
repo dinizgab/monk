@@ -1,0 +1,68 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate number of order items per product from the orders database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT product_id AS s1__product_id, COUNT(order_item_id) AS s1__order_count FROM Order_Items GROUP BY product_id;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__product_id",
+                    "source": "Order_Items.product_id"
+                },
+                {
+                    "alias": "s1__order_count",
+                    "source": "Order_Items.order_item_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select product details and left-join aggregated order counts; keep products ordered fewer than 2 times (including never ordered).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id AS s2__product_id, product_name AS s2__product_name, product_price AS s2__product_price, product_color AS s2__product_color FROM Products LEFT JOIN (SELECT $step1.s1__product_id AS s1__product_id, $step1.s1__order_count AS s1__order_count) AS s1 ON Products.product_id = s1.s1__product_id WHERE COALESCE(s1.s1__order_count, 0) < 2;",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__product_id",
+                    "source": "Products.product_id"
+                },
+                {
+                    "alias": "s2__product_name",
+                    "source": "Products.product_name"
+                },
+                {
+                    "alias": "s2__product_price",
+                    "source": "Products.product_price"
+                },
+                {
+                    "alias": "s2__product_color",
+                    "source": "Products.product_color"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s2__product_id",
+                    "dependency_step_column": "s1__product_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__product_id",
+        "s2__product_name",
+        "s2__product_price",
+        "s2__product_color"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

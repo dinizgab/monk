@@ -1,0 +1,64 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate per-user chat membership count and message count from the chat database (app_chat).",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT users.username AS s1__username, COUNT(DISTINCT chat_members.chat_id) AS s1__chats_count, COUNT(messages.id) AS s1__messages_count FROM users LEFT JOIN chat_members ON chat_members.user_id = users.id LEFT JOIN messages ON messages.sended_by = users.id GROUP BY users.username;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s1__chats_count",
+                    "source": "chat_members.chat_id"
+                },
+                {
+                    "alias": "s1__messages_count",
+                    "source": "messages.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Aggregate per-user posts count from the application database (app). Will be joined to chat aggregates by username to combine counts across systems.",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.username AS s2__username, COUNT(posts.id) AS s2__posts_count FROM users LEFT JOIN posts ON posts.user_id = users.id GROUP BY users.username;",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s2__posts_count",
+                    "source": "posts.id"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s2__username",
+                    "dependency_step_column": "s1__username"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s1__username",
+        "s1__chats_count",
+        "s1__messages_count",
+        "s2__posts_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,100 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute per-category active ratio and total product count in store_main (products grouped by categories.name).",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT categories.name AS s1__category_name,\n       SUM(CASE WHEN products.is_active THEN 1 ELSE 0 END)::NUMERIC / NULLIF(COUNT(products.id)::NUMERIC, 0) AS s1__active_ratio,\n       COUNT(products.id) AS s1__total_count\nFROM categories\nJOIN products ON products.category_id = categories.id\nGROUP BY categories.name;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__category_name",
+                    "source": "categories.name"
+                },
+                {
+                    "alias": "s1__active_ratio",
+                    "source": "products.is_active"
+                },
+                {
+                    "alias": "s1__total_count",
+                    "source": "products.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute per-group active ratio and total item count in store_alt (items grouped by product_groups.group_name).",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT product_groups.group_name AS s2__group_name,\n       SUM(CASE WHEN items.active = 'Y' THEN 1 ELSE 0 END)::NUMERIC / NULLIF(COUNT(items.code)::NUMERIC, 0) AS s2__active_ratio,\n       COUNT(items.code) AS s2__total_count\nFROM product_groups\nJOIN items ON items.group_ref = product_groups.gid\nGROUP BY product_groups.group_name;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__group_name",
+                    "source": "product_groups.group_name"
+                },
+                {
+                    "alias": "s2__active_ratio",
+                    "source": "items.active"
+                },
+                {
+                    "alias": "s2__total_count",
+                    "source": "items.code"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Find name-matching category/group pairs (categories.name = product_groups.group_name) whose active ratios differ by >= 0.5 (very different). This step performs an application-level join using the aggregated outputs from steps 1 and 2 via placeholders.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT\n  $step1.s1__category_name AS s3__category_name,\n  $step1.s1__active_ratio AS s3__category_active_ratio,\n  $step2.s2__group_name AS s3__group_name,\n  $step2.s2__active_ratio AS s3__group_active_ratio,\n  ABS($step1.s1__active_ratio - $step2.s2__active_ratio) AS s3__abs_diff\nFROM (SELECT 1) AS dummy\nWHERE $step1.s1__category_name = $step2.s2__group_name\n  AND ABS($step1.s1__active_ratio - $step2.s2__active_ratio) >= 0.5;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__category_name",
+                    "source": "categories.name"
+                },
+                {
+                    "alias": "s3__category_active_ratio",
+                    "source": "products.is_active"
+                },
+                {
+                    "alias": "s3__group_name",
+                    "source": "product_groups.group_name"
+                },
+                {
+                    "alias": "s3__group_active_ratio",
+                    "source": "items.active"
+                },
+                {
+                    "alias": "s3__abs_diff",
+                    "source": "items.active"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__category_name",
+                    "dependency_step_column": "s2__group_name"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__category_name",
+        "s3__category_active_ratio",
+        "s3__group_name",
+        "s3__group_active_ratio",
+        "s3__abs_diff"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

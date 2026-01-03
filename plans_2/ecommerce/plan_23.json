@@ -1,0 +1,42 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Join customers with customer_payment_methods to list each customer's first name, middle initial, last name, and their payment method codes.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customers.customer_first_name AS s1__customer_first_name, customers.customer_middle_initial AS s1__customer_middle_initial, customers.customer_last_name AS s1__customer_last_name, customer_payment_methods.payment_method_code AS s1__payment_method_code FROM customers JOIN customer_payment_methods ON customers.customer_id = customer_payment_methods.customer_id;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_first_name",
+                    "source": "customers.customer_first_name"
+                },
+                {
+                    "alias": "s1__customer_middle_initial",
+                    "source": "customers.customer_middle_initial"
+                },
+                {
+                    "alias": "s1__customer_last_name",
+                    "source": "customers.customer_last_name"
+                },
+                {
+                    "alias": "s1__payment_method_code",
+                    "source": "customer_payment_methods.payment_method_code"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__customer_first_name",
+        "s1__customer_middle_initial",
+        "s1__customer_last_name",
+        "s1__payment_method_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

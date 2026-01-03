@@ -1,0 +1,77 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate total EUR revenue by country from the sales_eu database.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.country AS s1__country, SUM(orders.total_eur) AS s1__revenue_eur\nFROM customers\nJOIN orders ON customers.id = orders.customer_id\nGROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__revenue_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Aggregate total EUR revenue by country from the sales_us database.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.country AS s2__country, SUM(orders.total_eur) AS s2__revenue_eur\nFROM customers\nJOIN orders ON customers.id = orders.customer_id\nGROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__revenue_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Combine aggregated per-country revenues from both regions and compute total revenue per country (EUR equivalent).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT COALESCE($step1.s1__country, $step2.s2__country) AS s3__country,\n       COALESCE($step1.s1__revenue_eur, 0) + COALESCE($step2.s2__revenue_eur, 0) AS s3__total_revenue_eur\n-- Placeholders $step1.* and $step2.* refer to the aggregated result rows from steps 1 and 2 respectively.",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__country",
+                    "source": "s1__country / s2__country"
+                },
+                {
+                    "alias": "s3__total_revenue_eur",
+                    "source": "s1__revenue_eur / s2__revenue_eur"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s3__country",
+                    "dependency_step_column": "s1__country"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__country",
+        "s3__total_revenue_eur"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

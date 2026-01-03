@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select distinct cake flavors from goods to enumerate types of Cake sold.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT goods.flavor AS s1__flavor FROM goods WHERE goods.food = 'Cake';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__flavor"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__flavor",
+        "distinct": false,
+        "group_by": []
+    }
+}

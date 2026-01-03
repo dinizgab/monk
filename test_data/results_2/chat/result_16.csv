@@ -1,0 +1,27 @@
+s1__id,s1__content,s1__sended_at,s1__username
+1,"Bom dia, pessoal!",2026-01-01 18:14:55.545479+00:00,alice
+2,Alguém testando algo novo hoje?,2026-01-01 18:14:55.545479+00:00,bob
+3,Estou estudando concorrência,2026-01-01 18:14:55.545479+00:00,carol
+4,PostgreSQL é poderoso,2026-01-01 18:14:55.545479+00:00,dave
+5,Segurança nunca é demais,2026-01-01 18:14:55.545479+00:00,eve
+6,API bem feita salva vidas,2026-01-01 18:14:55.545479+00:00,frank
+7,Escalabilidade é um desafio real,2026-01-01 18:14:55.545479+00:00,grace
+8,Mensageria ajuda muito,2026-01-01 18:14:55.545479+00:00,heidi
+9,REST ainda domina?,2026-01-01 18:14:55.560358+00:00,alice
+10,Depende do caso,2026-01-01 18:14:55.560358+00:00,bob
+11,GraphQL resolve alguns problemas,2026-01-01 18:14:55.560358+00:00,frank
+12,Clean Architecture ajuda bastante,2026-01-01 18:14:55.560358+00:00,grace
+13,"SQL vs NoSQL, qual escolher?",2026-01-01 18:14:55.577293+00:00,alice
+14,Depende da carga e do modelo,2026-01-01 18:14:55.577293+00:00,bob
+15,Índices fazem muita diferença,2026-01-01 18:14:55.577293+00:00,dave
+16,Kafka não é banco 😅,2026-01-01 18:14:55.577293+00:00,heidi
+17,Modelo relacional ainda é rei,2026-01-01 18:14:55.577293+00:00,ivan
+18,DDD ainda vale a pena?,2026-01-01 18:14:55.591307+00:00,carol
+19,"Quando bem aplicado, sim",2026-01-01 18:14:55.591307+00:00,eve
+20,Hexagonal facilita testes,2026-01-01 18:14:55.591307+00:00,frank
+21,Arquitetura ruim custa caro,2026-01-01 18:14:55.591307+00:00,grace
+22,Começar simples é melhor,2026-01-01 18:14:55.591307+00:00,judy
+23,Café ou chá?,2026-01-01 18:14:55.606410+00:00,bob
+24,Café sempre,2026-01-01 18:14:55.606410+00:00,dave
+25,Depende do dia,2026-01-01 18:14:55.606410+00:00,heidi
+26,Qualquer coisa com açúcar,2026-01-01 18:14:55.606410+00:00,ivan

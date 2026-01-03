@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select the receipt number and date for the receipt with the latest Date from receipts table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT receipts.ReceiptNumber AS s1__ReceiptNumber, receipts.Date AS s1__Date FROM receipts ORDER BY receipts.Date DESC LIMIT 1;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__ReceiptNumber",
+                    "source": "receipts.ReceiptNumber"
+                },
+                {
+                    "alias": "s1__Date",
+                    "source": "receipts.Date"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__ReceiptNumber",
+        "s1__Date"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

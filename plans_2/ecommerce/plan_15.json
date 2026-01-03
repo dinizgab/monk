@@ -1,0 +1,85 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Read order items (order_id and product_id) from the Orders database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_id AS s1__order_id, product_id AS s1__product_id FROM Order_Items;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_id",
+                    "source": "Order_Items.order_id"
+                },
+                {
+                    "alias": "s1__product_id",
+                    "source": "Order_Items.product_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch product prices for the product_ids referenced by order items from the Products database.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id AS s2__product_id, product_price AS s2__product_price FROM Products WHERE product_id IN ($step1.s1__product_id);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__product_id",
+                    "source": "Products.product_id"
+                },
+                {
+                    "alias": "s2__product_price",
+                    "source": "Products.product_price"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__product_id",
+                    "dependency_step_column": "s1__product_id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Aggregate: compute sum of product prices per order by joining the order items (step 1) with product prices (step 2), then return the order with the smallest sum.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT $step1.s1__order_id AS s3__order_id, SUM($step2.s2__product_price) AS s3__order_sum FROM (SELECT 1) AS _dummy GROUP BY $step1.s1__order_id ORDER BY s3__order_sum ASC LIMIT 1;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__order_id",
+                    "source": "Order_Items.order_id"
+                },
+                {
+                    "alias": "s3__order_sum",
+                    "source": "Products.product_price"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__order_id",
+                    "dependency_step_column": "s1__order_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__order_id",
+        "s3__order_sum"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

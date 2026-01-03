@@ -1,0 +1,85 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute per-country total order value and order count in the EU database.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.country AS s1__country, SUM(orders.total_eur) AS s1__sum_total, COUNT(orders.id) AS s1__order_count FROM orders JOIN customers ON orders.customer_id = customers.id GROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__sum_total",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s1__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute per-country total order value and order count in the US database.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.country AS s2__country, SUM(orders.total_eur) AS s2__sum_total, COUNT(orders.id) AS s2__order_count FROM orders JOIN customers ON orders.customer_id = customers.id GROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__sum_total",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s2__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Combine per-country totals from EU and US and compute average order value per country (sum_total / order_count).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT COALESCE($step1.s1__country, $step2.s2__country) AS s3__country, (COALESCE($step1.s1__sum_total, 0) + COALESCE($step2.s2__sum_total, 0)) / NULLIF((COALESCE($step1.s1__order_count, 0) + COALESCE($step2.s2__order_count, 0)), 0) AS s3__avg_order_value FROM (SELECT 1) AS _dummy;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s3__avg_order_value",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s3__country",
+                    "dependency_step_column": "s1__country"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__country",
+        "s3__avg_order_value"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

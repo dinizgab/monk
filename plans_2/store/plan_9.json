@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Read category ids from the store_main.categories table",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT categories.id AS s1__id FROM categories;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "categories.id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__id",
+        "distinct": false,
+        "group_by": []
+    }
+}

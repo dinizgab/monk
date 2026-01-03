@@ -1,0 +1,53 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the average price of items whose food is 'Tart'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT AVG(price) AS s1__avg_price FROM goods WHERE food = 'Tart'",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__avg_price",
+                    "source": "goods.price"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select ids of goods that are cakes and have price >= the average Tart price computed in step 1.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id AS s2__id, price AS s2__price FROM goods WHERE food = 'Cake' AND price >= $step1.s1__avg_price",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "goods.id"
+                },
+                {
+                    "alias": "s2__price",
+                    "source": "goods.price"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__price",
+                    "dependency_step_column": "s1__avg_price"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

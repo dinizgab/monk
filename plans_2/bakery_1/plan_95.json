@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find flavors present for food = 'Cake' but exclude any flavors that appear for food = 'Tart'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT goods.flavor AS s1__flavor FROM goods WHERE goods.food = 'Cake' AND goods.flavor NOT IN (SELECT flavor FROM goods WHERE food = 'Tart')",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__flavor",
+                    "source": "goods.flavor"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__flavor"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

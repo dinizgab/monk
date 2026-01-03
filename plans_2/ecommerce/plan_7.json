@@ -1,0 +1,63 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get distinct customer_ids that have placed orders from the Orders table in orders_db.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT DISTINCT Orders.customer_id AS s1__customer_id FROM Orders",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_id",
+                    "source": "Orders.customer_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select customers (first, middle, last) from users_db whose customer_id is NOT IN the set of customer_ids that have orders.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customers.customer_id AS s2__customer_id, customers.customer_first_name AS s2__customer_first_name, customers.customer_middle_initial AS s2__customer_middle_initial, customers.customer_last_name AS s2__customer_last_name FROM customers WHERE customers.customer_id NOT IN ($step1.s1__customer_id)",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__customer_id",
+                    "source": "customers.customer_id"
+                },
+                {
+                    "alias": "s2__customer_first_name",
+                    "source": "customers.customer_first_name"
+                },
+                {
+                    "alias": "s2__customer_middle_initial",
+                    "source": "customers.customer_middle_initial"
+                },
+                {
+                    "alias": "s2__customer_last_name",
+                    "source": "customers.customer_last_name"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s2__customer_id",
+                    "dependency_step_column": "s1__customer_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__customer_first_name",
+        "s2__customer_middle_initial",
+        "s2__customer_last_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

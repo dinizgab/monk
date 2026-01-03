@@ -1,0 +1,67 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate new customers by month and country in the EU database.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT date_trunc('month', customers.updated_at)::date AS s1__month, customers.country AS s1__country, COUNT(customers.id) AS s1__count FROM customers GROUP BY 1,2",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__month",
+                    "source": "customers.updated_at"
+                },
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__count",
+                    "source": "customers.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Aggregate new customers by month and country in the US database and combine with EU aggregates to get total new customers per month per region.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "WITH eu AS (\n  /* EU aggregated rows are provided via placeholders from step 1 */\n  SELECT v.s1__month::date AS month, v.s1__country AS country, v.s1__count::bigint AS count\n  FROM (VALUES\n    ($step1.s1__month, $step1.s1__country, $step1.s1__count)\n  ) AS v(s1__month, s1__country, s1__count)\n),\nus AS (\n  SELECT date_trunc('month', customers.updated_at)::date AS s2__month, customers.country AS s2__country, COUNT(customers.id) AS s2__count\n  FROM customers\n  GROUP BY 1,2\n)\nSELECT\n  COALESCE(eu.month, us.s2__month) AS s2__month,\n  COALESCE(eu.country, us.s2__country) AS s2__country,\n  COALESCE(eu.count, 0) + COALESCE(us.s2__count, 0) AS s2__count\nFROM eu\nFULL OUTER JOIN us\n  ON eu.month = us.s2__month AND eu.country = us.s2__country",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__month",
+                    "source": "customers.updated_at"
+                },
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__count",
+                    "source": "customers.id"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s2__month",
+                    "dependency_step_column": "s1__month"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__month",
+        "s2__country",
+        "s2__count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

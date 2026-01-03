@@ -1,0 +1,49 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get the set of product_ids that have been sold (present in order items).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT DISTINCT product_id AS s1__product_id FROM Order_Items",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__product_id",
+                    "source": "Order_Items.product_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select products whose product_id is not in the sold product_ids (i.e., not sold).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id AS s2__product_id FROM Products WHERE product_id NOT IN ($step1.s1__product_id)",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__product_id",
+                    "source": "Products.product_id"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s2__product_id",
+                    "dependency_step_column": "s1__product_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__product_id"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s2__product_id",
+        "distinct": false,
+        "group_by": []
+    }
+}

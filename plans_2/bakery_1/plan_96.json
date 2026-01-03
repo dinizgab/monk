@@ -1,0 +1,49 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get distinct flavors available for Tart from goods table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT flavor AS s1__flavor FROM goods WHERE food = 'Tart';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__flavor",
+                    "source": "goods.flavor"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get distinct flavors available for Cake that are not present for Tart (exclude flavors from step 1).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT flavor AS s2__flavor FROM goods WHERE food = 'Cake' AND flavor NOT IN ($step1.s1__flavor);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__flavor",
+                    "source": "goods.flavor"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s2__flavor",
+                    "dependency_step_column": "s1__flavor"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__flavor"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

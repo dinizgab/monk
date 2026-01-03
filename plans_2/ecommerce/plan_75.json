@@ -1,0 +1,58 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate shipments by invoice_number and keep only invoices with at least 2 shipments.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT invoice_number AS s1__invoice_number, COUNT(shipment_id) AS s1__shipment_count FROM shipments GROUP BY invoice_number HAVING COUNT(shipment_id) >= 2;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__invoice_number",
+                    "source": "shipments.invoice_number"
+                },
+                {
+                    "alias": "s1__shipment_count",
+                    "source": "shipments.shipment_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Return invoice ids and dates for invoices that have at least 2 shipments by joining aggregated shipment invoice_numbers to the Invoices table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT invoice_number AS s2__invoice_number, invoice_date AS s2__invoice_date FROM Invoices WHERE invoice_number IN ($step1.s1__invoice_number);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__invoice_number",
+                    "source": "Invoices.invoice_number"
+                },
+                {
+                    "alias": "s2__invoice_date",
+                    "source": "Invoices.invoice_date"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__invoice_number",
+                    "dependency_step_column": "s1__invoice_number"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__invoice_number",
+        "s2__invoice_date"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

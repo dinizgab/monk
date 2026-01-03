@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select tracking numbers and shipment dates for all shipments.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT shipments.shipment_tracking_number AS s1__shipment_tracking_number, shipments.shipment_date AS s1__shipment_date FROM shipments",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__shipment_tracking_number",
+                    "source": "shipments.shipment_tracking_number"
+                },
+                {
+                    "alias": "s1__shipment_date",
+                    "source": "shipments.shipment_date"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__shipment_tracking_number",
+        "s1__shipment_date"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

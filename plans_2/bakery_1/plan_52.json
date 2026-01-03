@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select id and price for goods whose id contains '70'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.id AS s1__id, goods.price AS s1__price FROM goods WHERE goods.id LIKE '%70%';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "goods.id"
+                },
+                {
+                    "alias": "s1__price",
+                    "source": "goods.price"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

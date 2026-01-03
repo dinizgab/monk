@@ -1,0 +1,42 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find product groups where the number of inactive items (active <> 'Y') is greater than the number of active items by aggregating items per group and filtering.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT product_groups.gid AS s1__gid, product_groups.group_name AS s1__group_name, SUM(CASE WHEN items.active <> 'Y' THEN 1 ELSE 0 END) AS s1__inactive_count, SUM(CASE WHEN items.active = 'Y' THEN 1 ELSE 0 END) AS s1__active_count FROM product_groups LEFT JOIN items ON items.group_ref = product_groups.gid GROUP BY product_groups.gid, product_groups.group_name HAVING SUM(CASE WHEN items.active <> 'Y' THEN 1 ELSE 0 END) > SUM(CASE WHEN items.active = 'Y' THEN 1 ELSE 0 END);",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__gid",
+                    "source": "product_groups.gid"
+                },
+                {
+                    "alias": "s1__group_name",
+                    "source": "product_groups.group_name"
+                },
+                {
+                    "alias": "s1__inactive_count",
+                    "source": "items.active"
+                },
+                {
+                    "alias": "s1__active_count",
+                    "source": "items.active"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__gid",
+        "s1__group_name",
+        "s1__inactive_count",
+        "s1__active_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

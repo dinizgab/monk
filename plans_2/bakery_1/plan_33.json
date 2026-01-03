@@ -1,0 +1,34 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count number of goods available for each food type from the goods table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.food AS s1__food, COUNT(goods.id) AS s1__count FROM goods GROUP BY goods.food;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__food",
+                    "source": "goods.food"
+                },
+                {
+                    "alias": "s1__count",
+                    "source": "goods.id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__food",
+        "s1__count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__count",
+        "distinct": false,
+        "group_by": [
+            "s1__food"
+        ]
+    }
+}

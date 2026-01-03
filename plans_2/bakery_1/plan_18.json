@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select flavors of goods where the food type is 'cake'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.flavor AS s1__flavor FROM goods WHERE goods.food = 'cake';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__flavor"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__flavor",
+        "distinct": true,
+        "group_by": []
+    }
+}

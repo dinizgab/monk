@@ -1,0 +1,55 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve every purchased item identifier from the items table (one row per purchased item).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT items.Item AS s1__Item FROM items",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__Item",
+                    "source": "items.Item"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve goods metadata (id and food name) for goods that appear in the purchased items list. This step will be application-joined with step 1 on goods.id = item id to associate each purchase with its goods metadata.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.id AS s2__id, goods.food AS s2__food FROM goods WHERE goods.id IN ($step1.s1__Item)",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "goods.id"
+                },
+                {
+                    "alias": "s2__food",
+                    "source": "goods.food"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__id",
+                    "dependency_step_column": "s1__Item"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__food"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s2__id",
+        "distinct": false,
+        "group_by": [
+            "s2__food"
+        ]
+    }
+}

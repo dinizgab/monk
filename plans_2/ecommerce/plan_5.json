@@ -1,0 +1,35 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find orders with the earliest placement date or more than one item; return order id, date placed, and item count.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.order_id AS s1__order_id, o.date_order_placed AS s1__date_order_placed, COUNT(oi.order_item_id) AS s1__item_count FROM Orders o LEFT JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.order_id, o.date_order_placed HAVING o.date_order_placed = (SELECT MIN(date_order_placed) FROM Orders) OR COUNT(oi.order_item_id) > 1;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_id",
+                    "source": "Orders.order_id"
+                },
+                {
+                    "alias": "s1__date_order_placed",
+                    "source": "Orders.date_order_placed"
+                },
+                {
+                    "alias": "s1__item_count",
+                    "source": "Order_Items.order_item_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__date_order_placed"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

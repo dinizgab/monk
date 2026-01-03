@@ -1,0 +1,52 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find categories that have no active products in store_main",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT categories.id AS s1__id, categories.name AS s1__name FROM categories WHERE NOT EXISTS (SELECT 1 FROM products WHERE products.category_id = categories.id AND products.is_active = true);",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "categories.id"
+                },
+                {
+                    "alias": "s1__name",
+                    "source": "categories.name"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find product groups that have no active items in store_alt",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT product_groups.gid AS s2__gid, product_groups.group_name AS s2__group_name FROM product_groups WHERE NOT EXISTS (SELECT 1 FROM items WHERE items.group_ref = product_groups.gid AND items.active = 'Y');",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__gid",
+                    "source": "product_groups.gid"
+                },
+                {
+                    "alias": "s2__group_name",
+                    "source": "product_groups.group_name"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__name",
+        "s2__gid",
+        "s2__group_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "For each order, get its id, status, and count of products (order items). Include orders with zero items.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Orders.order_id AS s1__order_id, Orders.order_status_code AS s1__order_status_code, COUNT(Order_Items.product_id) AS s1__product_count FROM Orders LEFT JOIN Order_Items ON Orders.order_id = Order_Items.order_id GROUP BY Orders.order_id, Orders.order_status_code;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_id",
+                    "source": "Orders.order_id"
+                },
+                {
+                    "alias": "s1__order_status_code",
+                    "source": "Orders.order_status_code"
+                },
+                {
+                    "alias": "s1__product_count",
+                    "source": "Order_Items.product_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__order_id",
+        "s1__order_status_code",
+        "s1__product_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__product_count",
+        "distinct": false,
+        "group_by": [
+            "s1__order_id",
+            "s1__order_status_code"
+        ]
+    }
+}

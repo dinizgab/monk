@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count customers who have no payment methods by left-joining customers to customer_payment_methods and selecting rows with no match.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT COUNT(customers.customer_id) AS s1__count FROM customers LEFT JOIN customer_payment_methods ON customers.customer_id = customer_payment_methods.customer_id WHERE customer_payment_methods.customer_id IS NULL;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__count",
+                    "source": "customers.customer_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__count",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select goods id, flavor, and food, ordered by price",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.id AS s1__id, goods.flavor AS s1__flavor, goods.food AS s1__food FROM goods ORDER BY goods.price;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "goods.id"
+                },
+                {
+                    "alias": "s1__flavor",
+                    "source": "goods.flavor"
+                },
+                {
+                    "alias": "s1__food",
+                    "source": "goods.food"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__flavor",
+        "s1__food"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

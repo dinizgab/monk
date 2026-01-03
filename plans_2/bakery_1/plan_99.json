@@ -1,0 +1,69 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Read receipts to obtain receipt numbers and associated customer ids.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber AS s1__ReceiptNumber, CustomerId AS s1__CustomerId FROM receipts",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__ReceiptNumber",
+                    "source": "receipts.ReceiptNumber"
+                },
+                {
+                    "alias": "s1__CustomerId",
+                    "source": "receipts.CustomerId"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Read items to obtain which item appears on which receipt.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Receipt AS s2__Receipt, Item AS s2__Item FROM items",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__Receipt",
+                    "source": "items.Receipt"
+                },
+                {
+                    "alias": "s2__Item",
+                    "source": "items.Item"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Read goods to obtain item ids and their prices.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id AS s3__id, price AS s3__price FROM goods",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s3__id",
+                    "source": "goods.id"
+                },
+                {
+                    "alias": "s3__price",
+                    "source": "goods.price"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__CustomerId"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "s3__price",
+        "distinct": false,
+        "group_by": [
+            "s1__CustomerId"
+        ]
+    }
+}

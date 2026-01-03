@@ -1,0 +1,51 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch customer emails and country from the EU sales database.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT email AS s1__email, country AS s1__country FROM customers",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch customer emails and country from the US sales database.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT email AS s2__email, country AS s2__country FROM customers",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__email",
+        "s1__country",
+        "s2__country"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

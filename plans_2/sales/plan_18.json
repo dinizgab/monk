@@ -1,0 +1,70 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute per-customer order counts in the EU database (grouped by customer email and name).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.email AS s1__email, customers.full_name AS s1__full_name, COUNT(orders.id) AS s1__order_count FROM customers JOIN orders ON customers.id = orders.customer_id GROUP BY customers.email, customers.full_name;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s1__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s1__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Combine EU per-customer counts (from step 1) with US per-customer counts, producing a unified dataset of email, full_name, and order_count. The step runs on the US database and appends the EU rows via placeholders.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "WITH dep_rows AS (\n  SELECT $step1.s1__email AS email, $step1.s1__full_name AS full_name, $step1.s1__order_count AS order_count\n)\nSELECT email AS s2__email, full_name AS s2__full_name, order_count AS s2__order_count FROM dep_rows\nUNION ALL\nSELECT customers.email AS s2__email, customers.full_name AS s2__full_name, COUNT(orders.id) AS s2__order_count FROM customers JOIN orders ON customers.id = orders.customer_id GROUP BY customers.email, customers.full_name;",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s2__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s2__email",
+                    "dependency_step_column": "s1__email"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__email",
+        "s2__full_name",
+        "s2__order_count"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "s2__order_count",
+        "distinct": false,
+        "group_by": [
+            "s2__email",
+            "s2__full_name"
+        ]
+    }
+}

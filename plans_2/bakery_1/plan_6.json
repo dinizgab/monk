@@ -1,0 +1,18 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select ids from goods table where flavor is 'apple'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.id AS s1__id FROM goods WHERE goods.flavor = 'apple';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id"
+    ],
+    "final_aggregation": {
+        "type": "NONE"
+    }
+}

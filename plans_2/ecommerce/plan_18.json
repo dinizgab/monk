@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the payment method used by the most customers by counting distinct customers per payment_method_code and returning the top method.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_payment_methods.payment_method_code AS s1__payment_method_code, COUNT(DISTINCT customer_payment_methods.customer_id) AS s1__customer_count FROM customer_payment_methods GROUP BY customer_payment_methods.payment_method_code ORDER BY s1__customer_count DESC LIMIT 1;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__payment_method_code",
+                    "source": "customer_payment_methods.payment_method_code"
+                },
+                {
+                    "alias": "s1__customer_count",
+                    "source": "customer_payment_methods.customer_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__payment_method_code",
+        "s1__customer_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select posts whose content contains the specific word 'specific_word'. Replace the literal if needed by the application before execution.",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT posts.id AS s1__id, posts.content AS s1__content FROM posts WHERE posts.content ILIKE '%specific_word%';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "posts.id"
+                },
+                {
+                    "alias": "s1__content",
+                    "source": "posts.content"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__content"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

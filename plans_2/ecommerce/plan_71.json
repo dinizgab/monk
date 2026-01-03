@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the order_status_code that occurs least often by counting orders per status and returning the smallest count.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Orders.order_status_code AS s1__order_status_code, COUNT(Orders.order_id) AS s1__count FROM Orders GROUP BY Orders.order_status_code ORDER BY s1__count ASC LIMIT 1;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_status_code",
+                    "source": "Orders.order_status_code"
+                },
+                {
+                    "alias": "s1__count",
+                    "source": "Orders.order_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__order_status_code",
+        "s1__count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}
