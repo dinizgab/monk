@@ -181,7 +181,6 @@ def translate(
     for item in questions:
         question_id = item.get("id")
         question_text = item.get("question")
-
         if question_id is None or not question_text:
             typer.echo(f"Skipping malformed item: {item}")
             continue
@@ -248,6 +247,26 @@ def run_plans(
         typer.echo("============================================")
         typer.echo(f"Completed running plans for suite '{suite}'.")
         typer.echo("============================================")
+
+@app.command("debug_plan")
+def debug_plan(
+    plan_path: Path = typer.Argument(..., help="Path to the plan JSON file"),
+):
+    """Debug a single execution plan."""
+
+    if not plan_path.exists():
+        raise typer.BadParameter(f"Plan file not found: {plan_path}")
+
+    with open(plan_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        data = TranslationReturn(**data)
+        try:
+            result_df = execute_plan(data)
+            typer.echo("Execution successful. Result:")
+            typer.echo(result_df)
+        except Exception as e:
+            typer.echo(f"[ERROR] {type(e).__name__}: {e}")
+            typer.echo(traceback.format_exc())
 
 
 if __name__ == "__main__":
