@@ -12,4 +12,5 @@ class ExecutionPlan(BaseModel):
     database: str
     query: str
     depends_on: list[int]
+    output_columns: list[dict[str, str]] = []
     join_info: JoinInfo | None = None

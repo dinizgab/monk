@@ -1,0 +1,72 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "For EU database: compute total EUR spent per customer and classify each customer into high/medium/low spend buckets (per their country).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.id AS s1__customer_id, customers.country AS s1__country, CASE WHEN SUM(orders.total_eur) >= 1000 THEN 'high' WHEN SUM(orders.total_eur) >= 500 THEN 'medium' ELSE 'low' END AS s1__segment, SUM(orders.total_eur) AS s1__total_eur FROM customers JOIN orders ON orders.customer_id = customers.id GROUP BY customers.id, customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__segment",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s1__total_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "For US database: compute total EUR spent per customer and classify each customer into high/medium/low spend buckets (per their country).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.id AS s2__customer_id, customers.country AS s2__country, CASE WHEN SUM(orders.total_eur) >= 1000 THEN 'high' WHEN SUM(orders.total_eur) >= 500 THEN 'medium' ELSE 'low' END AS s2__segment, SUM(orders.total_eur) AS s2__total_eur FROM customers JOIN orders ON orders.customer_id = customers.id GROUP BY customers.id, customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__customer_id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__segment",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s2__total_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__customer_id",
+        "s1__country",
+        "s1__segment",
+        "s1__total_eur",
+        "s2__customer_id",
+        "s2__country",
+        "s2__segment",
+        "s2__total_eur"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

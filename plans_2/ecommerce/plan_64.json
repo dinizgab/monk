@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve product prices from the Products table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_price AS s1__product_price FROM Products;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__product_price",
+                    "source": "Products.product_price"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__product_price"
+    ],
+    "final_aggregation": {
+        "type": "AVG",
+        "column": "s1__product_price",
+        "distinct": false,
+        "group_by": []
+    }
+}

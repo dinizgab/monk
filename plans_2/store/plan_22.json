@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select amount_in_cents from items to compute the maximum amount in cents.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT items.amount_in_cents AS s1__amount_in_cents FROM items;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__amount_in_cents",
+                    "source": "items.amount_in_cents"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__amount_in_cents"
+    ],
+    "final_aggregation": {
+        "type": "MAX",
+        "column": "s1__amount_in_cents",
+        "distinct": false,
+        "group_by": []
+    }
+}

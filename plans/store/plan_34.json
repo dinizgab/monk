@@ -1,0 +1,30 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find categories that have no active products (is_active = true).",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id AS category_id, name AS category_name FROM categories c WHERE NOT EXISTS (SELECT 1 FROM products p WHERE p.category_id = c.id AND p.is_active = true);",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find product groups that have no active items (active = 'Y').",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT gid AS group_id, group_name FROM product_groups g WHERE NOT EXISTS (SELECT 1 FROM items i WHERE i.group_ref = g.gid AND i.active = 'Y');",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "category_id",
+        "category_name",
+        "group_id",
+        "group_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

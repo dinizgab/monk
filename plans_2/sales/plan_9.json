@@ -1,0 +1,82 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select customers from EU database who have marketing consent (marketing_ok = true).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS s1__id, email AS s1__email, full_name AS s1__full_name, country AS s1__country, marketing_ok AS s1__marketing_ok FROM customers WHERE marketing_ok = true;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s1__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__marketing_ok",
+                    "source": "customers.marketing_ok"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select customers from US database who have consented via SMS. (No explicit SMS column exists in metadata; using marketing_ok = true as the available consent indicator.)",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS s2__id, email AS s2__email, full_name AS s2__full_name, country AS s2__country, marketing_ok AS s2__marketing_ok FROM customers WHERE marketing_ok = true;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__marketing_ok",
+                    "source": "customers.marketing_ok"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__email",
+        "s1__full_name",
+        "s1__country",
+        "s1__marketing_ok",
+        "s2__id",
+        "s2__email",
+        "s2__full_name",
+        "s2__country",
+        "s2__marketing_ok"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

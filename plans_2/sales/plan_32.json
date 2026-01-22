@@ -1,0 +1,34 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select every order's country and order amount from the US database by joining orders to customers. (Note: metadata does not include a state column, so this computes totals by customers.country.)",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.country AS s1__country, orders.total_eur AS s1__total_eur FROM customers INNER JOIN orders ON customers.id = orders.customer_id;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__total_eur",
+                    "source": "orders.total_eur"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__country",
+        "s1__total_eur"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "s1__total_eur",
+        "distinct": false,
+        "group_by": [
+            "s1__country"
+        ]
+    }
+}

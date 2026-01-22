@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the order status value(s) that have the smallest number of orders (i.e., the most uncommon order status). Returns each status and its count; includes all statuses tied for the minimum count.",
+            "database": "mysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT t.order_status_code, t.cnt FROM (SELECT order_status_code, COUNT(*) AS cnt FROM Orders GROUP BY order_status_code) t JOIN (SELECT MIN(cnt) AS min_cnt FROM (SELECT COUNT(*) AS cnt FROM Orders GROUP BY order_status_code) x) m ON t.cnt = m.min_cnt;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "order_status_code",
+        "cnt"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

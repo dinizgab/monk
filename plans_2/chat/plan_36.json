@@ -1,0 +1,59 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get the set of user IDs that are members of any chat from the app_chat database.",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT DISTINCT chat_members.user_id AS s1__user_id FROM chat_members;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__user_id",
+                    "source": "chat_members.user_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select users from the app database whose id is NOT in the set of chat member user_ids (i.e., users not a member of any chat). Uses the result of step 1 for exclusion.",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.id AS s2__id, users.username AS s2__username, users.email AS s2__email FROM users WHERE users.id NOT IN ($step1.s1__user_id);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "users.id"
+                },
+                {
+                    "alias": "s2__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s2__email",
+                    "source": "users.email"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s2__id",
+                    "dependency_step_column": "s1__user_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__id",
+        "s2__username",
+        "s2__email"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the minimum price among all goods with food = 'Croissant'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT MIN(price) AS min_price FROM goods WHERE food = 'Croissant' AND price IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get ids of goods with food = 'Cookies' whose price is lower than the minimum Croissant price found in step 1.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE food = 'Cookies' AND price IS NOT NULL AND price < $step1.min_price;",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "price",
+                    "dependency_step_column": "min_price"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

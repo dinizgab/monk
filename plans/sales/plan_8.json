@@ -1,0 +1,31 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get customers in the EU sales database who have never placed an order (customers with no matching orders.customer_id).",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT c.id AS customer_id, c.email, c.full_name, c.country, 'EU' AS region\nFROM customers c\nWHERE NOT EXISTS (\n  SELECT 1 FROM orders o WHERE o.customer_id = c.id\n);",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get customers in the US sales database who have never placed an order (customers with no matching orders.customer_id).",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT c.id AS customer_id, c.email, c.full_name, c.country, 'US' AS region\nFROM customers c\nWHERE NOT EXISTS (\n  SELECT 1 FROM orders o WHERE o.customer_id = c.id\n);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "customer_id",
+        "email",
+        "full_name",
+        "country"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

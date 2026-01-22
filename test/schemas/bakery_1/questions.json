@@ -1,0 +1,418 @@
+[
+  {
+    "id": 1,
+    "question": "What is the most expensive cake and its flavor?"
+  },
+  {
+    "id": 2,
+    "question": "Give the id and flavor of the most expensive cake."
+  },
+  {
+    "id": 3,
+    "question": "What is the cheapest cookie and its flavor?"
+  },
+  {
+    "id": 4,
+    "question": "What is the id and flavor of the cheapest cookie?"
+  },
+  {
+    "id": 5,
+    "question": "Find the ids of goods that have apple flavor."
+  },
+  {
+    "id": 6,
+    "question": "What are the ids with apple flavor?"
+  },
+  {
+    "id": 7,
+    "question": "What are the ids of goods that cost less than 3 dollars?"
+  },
+  {
+    "id": 8,
+    "question": "Give the ids of goods that cost less than 3 dollars."
+  },
+  {
+    "id": 9,
+    "question": "List the distinct ids of all customers who bought a cake with lemon flavor?"
+  },
+  {
+    "id": 10,
+    "question": "What are the distinct ids of customers who bought lemon flavored cake?"
+  },
+  {
+    "id": 11,
+    "question": "For each type of food, tell me how many customers have ever bought it."
+  },
+  {
+    "id": 12,
+    "question": "How many customers have bought each food?"
+  },
+  {
+    "id": 13,
+    "question": "Find the id of customers who shopped at the bakery at least 15 times."
+  },
+  {
+    "id": 14,
+    "question": "What are the customer ids of customers who have at least 15 receipts?"
+  },
+  {
+    "id": 15,
+    "question": "What is the last name of the customers who shopped at the bakery more than 10 times?"
+  },
+  {
+    "id": 16,
+    "question": "Give the last names of customers who have been to the bakery more than 10 times?"
+  },
+  {
+    "id": 17,
+    "question": "How many types of Cake does this bakery sell?"
+  },
+  {
+    "id": 18,
+    "question": "Count the number of types of cake this bakery sells."
+  },
+  {
+    "id": 19,
+    "question": "List all the flavors of Croissant available in this bakery."
+  },
+  {
+    "id": 20,
+    "question": "What are all the flavors of croissant?"
+  },
+  {
+    "id": 21,
+    "question": "Give me a list of all the distinct items bought by the customer number 15."
+  },
+  {
+    "id": 22,
+    "question": "What are all the distinct items bought by customer 15?"
+  },
+  {
+    "id": 23,
+    "question": "For each type of food, what are the average, maximum and minimum price?"
+  },
+  {
+    "id": 24,
+    "question": "What are the average, minimum and maximum prices for each food?"
+  },
+  {
+    "id": 25,
+    "question": "Find the receipt numbers where both Cake and Cookie were bought."
+  },
+  {
+    "id": 26,
+    "question": "What are the receipt numbers for instances where both cakes and cookies were purchased?"
+  },
+  {
+    "id": 27,
+    "question": "Find all the receipt numbers in which customer with last name LOGAN purchased Croissant."
+  },
+  {
+    "id": 28,
+    "question": "What are the receipt numbers for a customer with the last name Logan who purchased a croissant?"
+  },
+  {
+    "id": 29,
+    "question": "What is the receipt number and date of the receipt in which the most expensive item was bought?"
+  },
+  {
+    "id": 30,
+    "question": "What is the receipt number and date corresponding to the receipt for which the most expensive item was purchased?"
+  },
+  {
+    "id": 31,
+    "question": "What is the item that was bought the least number of times?"
+  },
+  {
+    "id": 32,
+    "question": "Which item was bought the fewest times?"
+  },
+  {
+    "id": 33,
+    "question": "How many goods are available for each food type?"
+  },
+  {
+    "id": 34,
+    "question": "Count the number of goods for each food type."
+  },
+  {
+    "id": 35,
+    "question": "What is the average price for each food type?"
+  },
+  {
+    "id": 36,
+    "question": "Give the average price for each food type."
+  },
+  {
+    "id": 37,
+    "question": "What are ids of the goods that have Apricot flavor and are cheaper than 5 dollars?"
+  },
+  {
+    "id": 38,
+    "question": "Give the ids for goods that have Apricot flavor and have a price lower than 5 dollars."
+  },
+  {
+    "id": 39,
+    "question": "Find flavor of cakes that cost more than 10 dollars."
+  },
+  {
+    "id": 40,
+    "question": "What are the flavors of cakes that cost more than 10 dollars?"
+  },
+  {
+    "id": 41,
+    "question": "Give me the distinct id and price for all goods whose price is below the average of all goods?"
+  },
+  {
+    "id": 42,
+    "question": "What are the distinct ids and prices for goods that cost less than the average good?"
+  },
+  {
+    "id": 43,
+    "question": "What are the distinct ids of all goods that are cheaper than some goods of type Tart?"
+  },
+  {
+    "id": 44,
+    "question": "Give the distinct ids for goods that cost less than any Tart."
+  },
+  {
+    "id": 45,
+    "question": "List distinct receipt numbers for which someone bought a good that costs more than 13 dollars."
+  },
+  {
+    "id": 46,
+    "question": "What distinct receipt numbers correspond to someone who bought a good that costs more than 13 dollars?"
+  },
+  {
+    "id": 47,
+    "question": "On which date did some customer buy a good that costs more than 15 dollars?"
+  },
+  {
+    "id": 48,
+    "question": "Which date corresponds to when a customer purchased a good costing over 15 dollars?"
+  },
+  {
+    "id": 49,
+    "question": "Give me the list of ids of all goods whose id has \"APP\"."
+  },
+  {
+    "id": 50,
+    "question": "What are all the ids of goods with an id which contains \"APP\"?"
+  },
+  {
+    "id": 51,
+    "question": "Which good has \"70\" in its id? And what is its price?"
+  },
+  {
+    "id": 52,
+    "question": "What are the id and price for the good with \"70\" in its id?"
+  },
+  {
+    "id": 53,
+    "question": "List the last names of all customers in an alphabetical order."
+  },
+  {
+    "id": 54,
+    "question": "What are the last names of the customers in alphabetical order?"
+  },
+  {
+    "id": 55,
+    "question": "Return the ordered list of all good ids."
+  },
+  {
+    "id": 56,
+    "question": "Order the distinct good ids."
+  },
+  {
+    "id": 57,
+    "question": "Find all receipts in which either apple flavor pie was bought or customer id 12 shopped."
+  },
+  {
+    "id": 58,
+    "question": "What are the receipt numbers for which either an apple flavor pie was purchased or the customer with id 12 shopped?"
+  },
+  {
+    "id": 59,
+    "question": "Find all receipts which has the latest date. Also tell me that date."
+  },
+  {
+    "id": 60,
+    "question": "What is the receipt number with the latest date, and what is that date?"
+  },
+  {
+    "id": 61,
+    "question": "Find all receipts which either has the earliest date or has a good with price above 10."
+  },
+  {
+    "id": 62,
+    "question": "What are all the receipt numbers that have a good with a price above 10 or have the earliest date?"
+  },
+  {
+    "id": 63,
+    "question": "What are the ids of Cookie and Cake that cost between 3 and 7 dollars."
+  },
+  {
+    "id": 64,
+    "question": "Give the ids of Cookies or Cakes that cost between 3 and 7 dollars."
+  },
+  {
+    "id": 65,
+    "question": "Find the first name and last name of a customer who visited on the earliest date."
+  },
+  {
+    "id": 66,
+    "question": "What is the full name of the customer who visited on the earliest date?"
+  },
+  {
+    "id": 67,
+    "question": "What is average price of goods whose flavor is blackberry or blueberry?"
+  },
+  {
+    "id": 68,
+    "question": "What are the average prices of goods with blackberry or blueberry flavor?"
+  },
+  {
+    "id": 69,
+    "question": "Return the cheapest price for goods with cheese flavor."
+  },
+  {
+    "id": 70,
+    "question": "What is the cheapest good with cheese flavor?"
+  },
+  {
+    "id": 71,
+    "question": "What are highest, lowest, and average prices of goods, grouped and ordered by flavor?"
+  },
+  {
+    "id": 72,
+    "question": "What are the maximum, minimum, and average prices of goods of each flavor, ordered by flavor?"
+  },
+  {
+    "id": 73,
+    "question": "Return the lowest and highest prices of goods grouped and ordered by food type."
+  },
+  {
+    "id": 74,
+    "question": "What are the minimum and maximum prices of food goods, ordered by food?"
+  },
+  {
+    "id": 75,
+    "question": "Find the top three dates with the most receipts."
+  },
+  {
+    "id": 76,
+    "question": "What are the three dates for which the most receipts were given?"
+  },
+  {
+    "id": 77,
+    "question": "Which customer shopped most often? How many times?"
+  },
+  {
+    "id": 78,
+    "question": "Give the customer id of the customer that made the most purchases, as well as the number of purchases made."
+  },
+  {
+    "id": 79,
+    "question": "For each date, return how many distinct customers visited on that day."
+  },
+  {
+    "id": 80,
+    "question": "How many cusomters visited on each date?"
+  },
+  {
+    "id": 81,
+    "question": "Give me the first name and last name of customers who have bought apple flavor Tart."
+  },
+  {
+    "id": 82,
+    "question": "What are the full names of customers who bought apple flavored Tarts?"
+  },
+  {
+    "id": 83,
+    "question": "What are the ids of Cookies whose price is lower than any Croissant?"
+  },
+  {
+    "id": 84,
+    "question": "Give the ids of cookes that are cheaper than any croissant."
+  },
+  {
+    "id": 85,
+    "question": "Give me the ids of Cakes whose price is at least as much as the average price of Tart?"
+  },
+  {
+    "id": 86,
+    "question": "What are the ids of cakes that are at least as expensive as the average Tart?"
+  },
+  {
+    "id": 87,
+    "question": "What are the ids of goods whose price is above twice the average price of all goods?"
+  },
+  {
+    "id": 88,
+    "question": "Give the ids of goods that are more than twice as expensive as the average good."
+  },
+  {
+    "id": 89,
+    "question": "List the id, flavor and type of food of goods ordered by price."
+  },
+  {
+    "id": 90,
+    "question": "What are the ids, flavors, and food types of goods, ordered by price?"
+  },
+  {
+    "id": 91,
+    "question": "Return a list of the id and flavor for Cakes ordered by flavor."
+  },
+  {
+    "id": 92,
+    "question": "What are the ids and flavors of cakes, ordered by flavor?"
+  },
+  {
+    "id": 93,
+    "question": "Find all the items that have chocolate flavor but were not bought more than 10 times."
+  },
+  {
+    "id": 94,
+    "question": "What are the items with chocolate flavor that were purchased at most 10 times."
+  },
+  {
+    "id": 95,
+    "question": "What are the flavors available for Cake but not for Tart?"
+  },
+  {
+    "id": 96,
+    "question": "Give the flavors of Cakes that are not available for Tart."
+  },
+  {
+    "id": 97,
+    "question": "What is the three most popular goods in this bakery?"
+  },
+  {
+    "id": 98,
+    "question": "Give the three most purchased items at this bakery."
+  },
+  {
+    "id": 99,
+    "question": "Find the ids of customers who have spent more than 150 dollars in total."
+  },
+  {
+    "id": 100,
+    "question": "What are the ids of customers who have spent over 150 dollars in total?"
+  },
+  {
+    "id": 101,
+    "question": "Find the ids of customers whose average spending for each good is above 5."
+  },
+  {
+    "id": 102,
+    "question": "What are the ids of customers who spend more than 5 on average for each good?"
+  },
+  {
+    "id": 103,
+    "question": "On which day did the bakery sell more than 100 dollars in total."
+  },
+  {
+    "id": 104,
+    "question": "On what dates did the bakery sell more than 100 dollars worth of goods in total?"
+  }
+]

@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the category (id and name) with the highest number of products by counting products per category.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT c.id AS category_id, c.name AS category_name, COUNT(p.id) AS product_count\nFROM categories c\nJOIN products p ON p.category_id = c.id\nGROUP BY c.id, c.name\nORDER BY product_count DESC\nLIMIT 1;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "category_id",
+        "category_name",
+        "product_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

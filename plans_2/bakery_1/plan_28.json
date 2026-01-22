@@ -1,0 +1,75 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the customer id(s) for customers with last name Logan.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5435/customers_db",
+            "query": "SELECT customers.id AS s1__id FROM customers WHERE customers.lastname = 'Logan';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "customers.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select receipts for the customer(s) identified in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT receipts.ReceiptNumber AS s2__ReceiptNumber, receipts.CustomerId AS s2__CustomerId FROM receipts WHERE receipts.CustomerId IN ($step1.s1__id);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__ReceiptNumber",
+                    "source": "receipts.ReceiptNumber"
+                },
+                {
+                    "alias": "s2__CustomerId",
+                    "source": "receipts.CustomerId"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__CustomerId",
+                    "dependency_step_column": "s1__id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Find receipts that include an item named 'croissant' and intersect with receipts from step 2.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT items.Receipt AS s3__Receipt FROM items WHERE items.Item = 'croissant' AND items.Receipt IN ($step2.s2__ReceiptNumber);",
+            "depends_on": [
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__Receipt",
+                    "source": "items.Receipt"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__Receipt",
+                    "dependency_step_column": "s2__ReceiptNumber"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__ReceiptNumber"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

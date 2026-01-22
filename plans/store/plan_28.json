@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all product groups and their associated items (one row per item). Groups with no items are included with NULL item_code.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT pg.gid AS gid, pg.group_name AS group_name, i.code AS item_code FROM product_groups pg LEFT JOIN items i ON i.group_ref = pg.gid;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "group_name",
+        "item_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "item_code"
+    }
+}

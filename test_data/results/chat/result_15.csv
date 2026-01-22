@@ -1,0 +1,30 @@
+username,chat_name
+alice,Geral
+bob,Geral
+carol,Geral
+dave,Geral
+eve,Geral
+frank,Geral
+grace,Geral
+heidi,Geral
+ivan,Geral
+judy,Geral
+alice,Backend
+bob,Backend
+carol,Backend
+frank,Backend
+grace,Backend
+alice,Banco de Dados
+bob,Banco de Dados
+dave,Banco de Dados
+heidi,Banco de Dados
+ivan,Banco de Dados
+carol,Arquitetura
+eve,Arquitetura
+frank,Arquitetura
+grace,Arquitetura
+judy,Arquitetura
+bob,Off-topic
+dave,Off-topic
+heidi,Off-topic
+ivan,Off-topic

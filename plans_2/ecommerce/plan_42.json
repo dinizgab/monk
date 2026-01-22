@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Read all order item status codes from the Order_Items table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Order_Items.order_item_status_code AS s1__order_item_status_code FROM Order_Items;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_item_status_code",
+                    "source": "Order_Items.order_item_status_code"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__order_item_status_code"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__order_item_status_code",
+        "distinct": true,
+        "group_by": []
+    }
+}

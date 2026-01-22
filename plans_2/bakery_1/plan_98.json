@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count purchases per item and return the top 3 most purchased items from the items table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT items.Item AS s1__Item, COUNT(*) AS s1__purchase_count FROM items GROUP BY items.Item ORDER BY s1__purchase_count DESC LIMIT 3;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__Item",
+                    "source": "items.Item"
+                },
+                {
+                    "alias": "s1__purchase_count",
+                    "source": "items.Item"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__Item",
+        "s1__purchase_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

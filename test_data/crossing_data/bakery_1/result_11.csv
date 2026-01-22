@@ -1,0 +1,11 @@
+Food,count(DISTINCT T3.CustomerId)
+Bear Claw,15
+Cake,20
+Cookie,20
+Croissant,17
+Danish,17
+Eclair,16
+Meringue,15
+Pie,9
+Tart,20
+Twist,11

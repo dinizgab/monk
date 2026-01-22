@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all product group identifiers from the product_groups table so the application can count them.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT gid FROM product_groups;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "group_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "gid"
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count customers per country in the EU database.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT country AS s1__country, COUNT(id) AS s1__customer_count FROM customers GROUP BY country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__customer_count",
+                    "source": "customers.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count customers per country in the US database.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT country AS s2__country, COUNT(id) AS s2__customer_count FROM customers GROUP BY country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__customer_count",
+                    "source": "customers.id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__country",
+        "s1__customer_count",
+        "s2__country",
+        "s2__customer_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

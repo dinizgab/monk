@@ -1,0 +1,21 @@
+s1__id,s1__content,s1__user_id
+1,Primeiro post da Alice,1
+2,Alice gosta de banco de dados,1
+3,Bob explorando PostgreSQL,2
+4,Bob falando sobre índices,2
+5,Carol estudando sistemas distribuídos,3
+6,Carol escrevendo sobre concorrência,3
+7,Dave entrou na plataforma,4
+8,Dave aprendendo SQL,4
+9,Eve gosta de segurança da informação,5
+10,Eve escrevendo sobre autenticação,5
+11,Frank falando de APIs REST,6
+12,Frank comparando GraphQL e REST,6
+13,Grace discutindo microsserviços,7
+14,Grace escrevendo sobre escalabilidade,7
+15,Heidi estudando mensageria,8
+16,Heidi testando Kafka,8
+17,Ivan escrevendo sobre NoSQL,9
+18,Ivan comparando SQL e NoSQL,9
+19,Judy iniciando no desenvolvimento,10
+20,Judy aprendendo modelagem de dados,10

@@ -1,0 +1,24 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all rows from store_alt.items whose created_on date falls within the entire previous calendar year.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code, title, group_ref, amount_in_cents, active, created_on FROM items WHERE created_on >= (date_trunc('year', CURRENT_DATE) - INTERVAL '1 year')::date AND created_on < date_trunc('year', CURRENT_DATE)::date;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "code",
+        "title",
+        "group_ref",
+        "amount_in_cents",
+        "active",
+        "created_on"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

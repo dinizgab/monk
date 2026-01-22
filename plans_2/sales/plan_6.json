@@ -1,0 +1,86 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Extract distinct customer emails from EU region.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT DISTINCT customers.email AS s1__email\nFROM customers;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Extract distinct customer emails from US region.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT DISTINCT customers.email AS s2__email\nFROM customers;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 4,
+            "description": "Find customer emails present in US but not in EU (appear in only the US region).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT DISTINCT customers.email AS s4__email\nFROM customers\nWHERE customers.email NOT IN ($step1.s1__email);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s4__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s4__email",
+                    "dependency_step_column": "s1__email"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Find customer emails present in EU but not in US (appear in only the EU region).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT DISTINCT customers.email AS s3__email\nFROM customers\nWHERE customers.email NOT IN ($step2.s2__email);",
+            "depends_on": [
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s3__email",
+                    "dependency_step_column": "s2__email"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__email",
+        "s4__email"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

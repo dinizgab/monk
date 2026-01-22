@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve product identifiers and their prices from the goods catalog.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, price FROM goods;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve sold items with their receipt reference from the items table (each row represents one sold item occurrence).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Receipt AS receipt_number, Item AS item_id FROM items;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Retrieve receipt numbers with their sale dates.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber AS receipt_number, Date FROM receipts;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "Date",
+        "total_sales"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "price"
+    }
+}

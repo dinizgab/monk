@@ -1,0 +1,34 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Scan receipts to retrieve the visit date and customer identifier for each receipt.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT `Date` AS s1__Date, `CustomerId` AS s1__CustomerId FROM receipts",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__Date",
+                    "source": "receipts.Date"
+                },
+                {
+                    "alias": "s1__CustomerId",
+                    "source": "receipts.CustomerId"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__Date",
+        "s1__CustomerId"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__CustomerId",
+        "distinct": true,
+        "group_by": [
+            "s1__Date"
+        ]
+    }
+}

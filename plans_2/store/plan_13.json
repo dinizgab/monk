@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select products created today from store_main.products",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT products.id AS s1__id, products.name AS s1__name, products.created_at AS s1__created_at FROM products WHERE products.created_at::date = CURRENT_DATE;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "products.id"
+                },
+                {
+                    "alias": "s1__name",
+                    "source": "products.name"
+                },
+                {
+                    "alias": "s1__created_at",
+                    "source": "products.created_at"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__name",
+        "s1__created_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

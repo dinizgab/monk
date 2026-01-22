@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the maximum product price from the products table.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT MAX(products.price) AS s1__price FROM products;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__price",
+                    "source": "products.price"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__price"
+    ],
+    "final_aggregation": {
+        "type": "MAX",
+        "column": "s1__price",
+        "distinct": false,
+        "group_by": []
+    }
+}

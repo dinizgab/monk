@@ -1,0 +1,47 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select all orders in the US database that have a non-null coupon_code (i.e., used a coupon).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT orders.id AS s1__id, orders.customer_id AS s1__customer_id, orders.total_eur AS s1__total_eur, orders.coupon_code AS s1__coupon_code, orders.updated_at AS s1__updated_at FROM orders WHERE orders.coupon_code IS NOT NULL;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "orders.id"
+                },
+                {
+                    "alias": "s1__customer_id",
+                    "source": "orders.customer_id"
+                },
+                {
+                    "alias": "s1__total_eur",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s1__coupon_code",
+                    "source": "orders.coupon_code"
+                },
+                {
+                    "alias": "s1__updated_at",
+                    "source": "orders.updated_at"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__customer_id",
+        "s1__total_eur",
+        "s1__coupon_code",
+        "s1__updated_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Search the store_main database for products whose name contains 'USB' (case-insensitive). Return product-level fields and placeholders to align with the remote items schema.",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id::text AS product_id, name AS product_name, sku AS sku_or_code, price AS price_dollars, NULL::INTEGER AS amount_in_cents, is_active::text AS active_flag, created_at AS created_at, category_id, NULL::INTEGER AS group_ref, 'store_main' AS source_database FROM products WHERE name ILIKE '%USB%';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Search the store_alt database for items whose title contains 'USB' (case-insensitive). Return item-level fields and placeholders to align with the main products schema.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code::text AS product_id, title AS product_name, code::text AS sku_or_code, NULL::numeric(10,2) AS price_dollars, amount_in_cents, active AS active_flag, created_on::timestamp AS created_at, NULL::BIGINT AS category_id, group_ref, 'store_alt' AS source_database FROM items WHERE title ILIKE '%USB%';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "product_id",
+        "product_name",
+        "sku_or_code",
+        "price_dollars",
+        "amount_in_cents",
+        "active_flag",
+        "created_at",
+        "category_id",
+        "group_ref",
+        "source_database"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

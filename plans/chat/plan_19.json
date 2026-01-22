@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all posts together with the username of their author by joining posts.user_id to users.id in the app database.",
+            "database": "postgresql://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT p.id AS post_id, p.content, p.user_id, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "post_id",
+        "content",
+        "user_id",
+        "username"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

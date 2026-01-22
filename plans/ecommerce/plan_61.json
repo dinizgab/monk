@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the order_item_id for every shipped item from the shipments database (shipment_items table). The application will perform the final count to determine how many items are shipped.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT order_item_id FROM shipment_items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "order_item_id"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "order_item_id"
+    }
+}

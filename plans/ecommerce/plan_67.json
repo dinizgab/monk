@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the gender_code(s) that are least common (have the minimum customer count).",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT gender_code FROM customers GROUP BY gender_code HAVING COUNT(*) = (SELECT MIN(gender_count) FROM (SELECT COUNT(*) AS gender_count FROM customers GROUP BY gender_code) AS counts);",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve email address, town (town_city) and county for customers whose gender_code is one of the least common values returned in step 1.",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT email_address, town_city, county FROM customers WHERE gender_code IN ($step1.gender_code);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "gender_code",
+                    "dependency_step_column": "gender_code"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "email_address",
+        "town_city",
+        "county"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

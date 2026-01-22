@@ -1,164 +1,284 @@
 import re
+from contextlib import contextmanager
+from typing import Dict, Optional
 import pandas as pd
 from sqlalchemy import create_engine, text
+from sqlalchemy.engine import Engine
 
 from src.models.execution_plan import ExecutionPlan
+from src.query_translation import FinalAggregationModel
 from src.utils.metadata_extraction import add_url_driver
 
+class ExecutionError(Exception):
+    pass
 
-def execute_plan(plan: ExecutionPlan) -> None:
-    partial_results = {}
-    db_engines = {}
+@contextmanager
+def get_db_engines(databases: set[str]) -> Dict[str, Engine]:
+    engines = {}
+    try:
+        for db_url in databases:
+            engines[db_url] = create_engine(db_url)
+        yield engines
+    finally:
+        for engine in engines.values():
+            engine.dispose()
 
-    for step in plan.execution_plan:
-        print("-" * 40)
-        print(f"▶️ Executing Step {step.id}: {step.description}")
-
-        query = _replace_placeholders(step.query, partial_results)
-
-        db_url = add_url_driver(step.database)
-        if db_url not in db_engines:
-            db_engines[db_url] = create_engine(db_url)
-
-        engine = db_engines[db_url]
-        print(f"Executing {step.id} on database: {db_url}")
-        try:
-            with engine.connect() as conn:
-                current_df = pd.read_sql(text(query), conn)
-            print(f"✅ Step executed successfully - Returned {len(current_df)} rows.")
-        except Exception as e:
-            print(e)
-            raise RuntimeError(f"Failed to execute query into database {db_url}: {e}")
-
-        final_step_df = current_df
-        if step.depends_on and step.join_info:
+def execute_plan(plan: ExecutionPlan) -> pd.DataFrame:
+    partial_results: Dict[int, pd.DataFrame] = {}
+    
+    db_urls = {add_url_driver(step.database) for step in plan.execution_plan}
+    
+    with get_db_engines(db_urls) as db_engines:
+        for step in plan.execution_plan:
             print("-" * 40)
-            print(f"▶️ Joining results with step(s): {step.depends_on}")
-            dep_id_to_join = step.depends_on[0]
-            dep_df = partial_results[dep_id_to_join]
-
-            final_step_df = pd.merge(
-                left=dep_df,
-                right=current_df,
-                how=step.join_info.type.lower(),
-                left_on=step.join_info.on["dependency_step_column"],
-                right_on=step.join_info.on["current_step_column"],
-            )
-            print(f"✅ Join resulted in {len(final_step_df)} rows.")
-
-        partial_results[step.id] = final_step_df
+            print(f"▶️ Executing Step {step.id}: {step.description}")
+            
+            query = _replace_placeholders(step.query, partial_results)
+            current_df = _execute_query(step, query, db_engines)
+            
+            final_step_df = _handle_joins(step, current_df, partial_results)
+            
+            partial_results[step.id] = final_step_df
 
     print("-" * 40)
+    
+    final_df = partial_results[plan.execution_plan[-1].id]
+    return _finalize_results(final_df, plan)
 
-    last_step = plan.execution_plan[-1]
-    final_df = partial_results[last_step.id]
 
-    if plan.final_aggregation:
-        final_df = _aggregate_results(
-            final_df, plan.final_aggregation, plan.final_output_columns
-        )
+def _execute_query(step, query: str, db_engines: Dict[str, Engine]) -> pd.DataFrame:
+    db_url = add_url_driver(step.database)
+    engine = db_engines[db_url]
+    
+    print(f"Executing {step.id} on database: {db_url}")
+    
+    try:
+        with engine.connect() as conn:
+            df = pd.read_sql(text(query), conn)
+            df = _enforce_step_schema(df, step)
+        print(f"✅ Step executed successfully - Returned {len(df)} rows.")
+        return df
+    except Exception as e:
+        raise ExecutionError(
+            f"Failed to execute step {step.id} on database {db_url}: {e}"
+        ) from e
 
-    if plan.final_output_columns:
-        existing_cols = [
-            col for col in final_df.columns if col in plan.final_output_columns
-        ]
-        final_df = final_df[existing_cols]
-
-    return final_df
-
+def _handle_joins(
+    step, 
+    current_df: pd.DataFrame, 
+    partial_results: Dict[int, pd.DataFrame]
+) -> pd.DataFrame:
+    """Handle joining current results with dependencies."""
+    if not (step.depends_on and step.join_info):
+        return current_df
+    
+    print("-" * 40)
+    print(f"▶️ Joining results with step(s): {step.depends_on}")
+    
+    dep_id = step.depends_on[0]
+    if dep_id not in partial_results:
+        raise ExecutionError(f"Step {step.id} depends on step {dep_id} which hasn't been executed")
+    
+    dep_df = partial_results[dep_id]
+    
+    left_col = step.join_info.on["dependency_step_column"]
+    right_col = step.join_info.on["current_step_column"]
+    
+    if left_col not in dep_df.columns:
+        raise ExecutionError(f"Join column '{left_col}' not found in step {dep_id} results")
+    if right_col not in current_df.columns:
+        raise ExecutionError(f"Join column '{right_col}' not found in step {step.id} results")
+    
+    joined_df = pd.merge(
+        left=dep_df,
+        right=current_df,
+        how=step.join_info.type.lower(),
+        left_on=left_col,
+        right_on=right_col,
+    )
+    
+    print(f"✅ Join resulted in {len(joined_df)} rows.")
+    return joined_df
 
 def _replace_placeholders(query: str, partial_results: dict[int, pd.DataFrame]) -> str:
     placeholders = re.findall(r"(\$step\d+).(\w+)", query)
-    for step_id, col in placeholders:
-        dep_id = int(step_id[-1])
+    for step_ref, col in placeholders:
+        dep_id_str = step_ref.replace("$step", "")
+        if not dep_id_str.isdigit():
+            raise ExecutionError(f"Invalid placeholder '{step_ref}.{col}' in query")
+        
+        dep_id = int(dep_id_str)
+        
         if dep_id not in partial_results:
-            raise RuntimeError(f"Step {dep_id} has not been executed yet.")
-
+            raise ExecutionError(f"Referenced step {dep_id} not found in results")
+        
         dep_df = partial_results[dep_id]
+        
         if col not in dep_df.columns:
-            raise RuntimeError(f"Column '{col}' not found in results of step {dep_id}.")
-
-        dtype = dep_df[col].dtype
-        values = dep_df[col].dropna().unique()
-        if len(values) == 0:
-            if pd.api.types.is_numeric_dtype(dtype):
-                values_sql = -1
-            else:
-                values_sql = "''"
-        else:
-            if pd.api.types.is_string_dtype(
-                dtype
-            ) or pd.api.types.is_datetime64_any_dtype(dtype):
-                values_list = [f"'{v}'" for v in values]
-            else:
-                values_list = [str(v) for v in values]
-
-            values_sql = f"{', '.join(values_list)}"
-
-        query = query.replace(f"{step_id}.{col}", values_sql)
-
+            raise ExecutionError(f"Column '{col}' not found in step {dep_id} results")
+        
+        values_sql = _format_column_values(dep_df[col])
+        query = query.replace(f"{step_ref}.{col}", values_sql)
+    
     return query
+
+def _format_column_values(series: pd.Series) -> str:
+    dtype = series.dtype
+    values = series.dropna().unique()
+    
+    if len(values) == 0:
+        return 'NULL'
+    
+    if pd.api.types.is_string_dtype(dtype) or pd.api.types.is_datetime64_any_dtype(dtype):
+        values_list = [
+            "'" + str(v).replace("'", "''") + "'" 
+            for v in values
+        ]
+    else:
+        values_list = [str(v) for v in values]
+    
+    return ', '.join(values_list)
+
+def _finalize_results(
+    df: pd.DataFrame, 
+    plan: ExecutionPlan
+) -> pd.DataFrame:
+    if plan.final_aggregation:
+        df = _aggregate_results(df, plan.final_aggregation, plan.final_output_columns)
+    
+    if plan.final_output_columns:
+        existing_cols = [col for col in plan.final_output_columns if col in df.columns]
+        if not existing_cols:
+            raise ExecutionError(
+                f"None of the requested output columns {plan.final_output_columns} "
+                f"found in final results"
+            )
+        df = df[existing_cols]
+    
+    return df
 
 
 def _aggregate_results(
-    df: pd.DataFrame, aggregation_info: dict[str, str], final_output_columns: list[str]
+    df: pd.DataFrame, 
+    aggregation_info: FinalAggregationModel,
+    final_output_columns: Optional[list[str]]
 ) -> pd.DataFrame:
-    agg_type = aggregation_info.get("type", "NONE").upper()
-    agg_column = aggregation_info.get("column")
-
+    agg_type = (aggregation_info.type or "NONE").upper()
+    agg_column = aggregation_info.column
+    distinct = bool(getattr(aggregation_info, "distinct", False))
+    
     if agg_type == "NONE":
         return df
-
+    
     if not agg_column:
-        raise RuntimeError(f"Aggregation column not specified for type {agg_type}")
+        raise ExecutionError(f"Aggregation column not specified for type {agg_type}")
+    
     if agg_column not in df.columns:
-        if all(col in df.columns for col in final_output_columns):
+        if final_output_columns and all(col in df.columns for col in final_output_columns):
             return df[final_output_columns]
-        else:
-            raise RuntimeError(f"Aggregation column '{agg_column}' not found in DataFrame.")
-
-    group_by_cols = [
-        col for col in final_output_columns if col != agg_column and col in df.columns
-    ]
+        raise ExecutionError(f"Aggregation column '{agg_column}' not found in DataFrame")
+    
+    group_by_cols: list[str] = []
+    if final_output_columns:
+        group_by_cols = [
+            col for col in final_output_columns
+            if col != agg_column and col in df.columns
+        ]
+    
     if not group_by_cols:
-        if agg_type == "COUNT":
-            result_val = df[agg_column].nunique()
-        elif agg_type == "SUM":
-            result_val = df[agg_column].sum()
-        elif agg_type == "AVG":
-            result_val = df[agg_column].mean()
-        elif agg_type == "MAX":
-            result_val = df[agg_column].max()
-        elif agg_type == "MIN":
-            result_val = df[agg_column].min()
-        else:
-            raise RuntimeError(f"Tipo de agregação global não suportado: {agg_type}")
-
-        if len(final_output_columns) == 1:
-            final_col_name = final_output_columns[0]
-        else:
-            final_col_name = f"{agg_column}_{agg_type.lower()}"
-
-        return pd.DataFrame({final_col_name: [result_val]})
+        return _global_aggregation(df, agg_type, agg_column, final_output_columns, distinct)
     else:
+        return _grouped_aggregation(df, agg_type, agg_column, group_by_cols)
 
-        grouped_df = df.groupby(group_by_cols)
-        result_df = None
 
-        if agg_type == "SUM":
-            result_df = grouped_df[agg_column].sum().reset_index()
-        elif agg_type == "COUNT":
-            result_df = grouped_df[agg_column].nunique().reset_index()
-        elif agg_type == "AVG":
-            result_df = grouped_df[agg_column].mean().reset_index()
-        elif agg_type == "MAX":
-            result_df = grouped_df[agg_column].max().reset_index()
-        elif agg_type == "MIN":
-            result_df = grouped_df[agg_column].min().reset_index()
+def _global_aggregation(
+    df: pd.DataFrame,
+    agg_type: str,
+    agg_column: str,
+    final_output_columns: Optional[list[str]],
+    distinct: bool = False
+) -> pd.DataFrame:
+    s = df[agg_column] 
+    if distinct:
+        s = s.dropna().drop_duplicates()
+        
+    agg_functions = {
+        "COUNT": lambda x: x.nunique(dropna=True) if not distinct else len(x),  
+        "SUM": lambda s: s.sum(),
+        "AVG": lambda s: s.mean(),
+        "MAX": lambda s: s.max(),
+        "MIN": lambda s: s.min(),
+    }
+    
+    if agg_type not in agg_functions:
+        raise ExecutionError(f"Unsupported global aggregation type: {agg_type}")
+    
+    result_val = agg_functions[agg_type](s)
+    
+    if final_output_columns and len(final_output_columns) == 1:
+        col_name = final_output_columns[0]
+    else:
+        suffix = f"{agg_type.lower()}{'_distinct' if distinct else ''}"
+        col_name = f"{agg_column}_{suffix}"
+
+    return pd.DataFrame({col_name: [result_val]})
+
+
+def _grouped_aggregation(
+    df: pd.DataFrame,
+    agg_type: str,
+    agg_column: str,
+    group_by_cols: list[str],
+    distinct: bool = False
+) -> pd.DataFrame:
+    grouped = df.groupby(group_by_cols, dropna=False)[agg_column]
+    if agg_type == "COUNT":
+        if distinct:
+            result_df = grouped.nunique(dropna=True).reset_index(name=agg_column)
         else:
-            raise RuntimeError(f"Tipo de agregação agrupada não suportado: {agg_type}")
-
-        if agg_column not in result_df.columns:
-            result_df.rename(columns={result_df.columns[-1]: agg_column}, inplace=True)
-
+            result_df = grouped.count().reset_index(name=agg_column)
+            
         return result_df
+    
+    if distinct:
+        grouped = grouped.apply(lambda s: s.dropna().drop_duplicates())
+
+    agg_functions = {
+        "SUM": lambda s: s.sum(),
+        "AVG": lambda s: s.mean(),
+        "MAX": lambda s: s.max(),
+        "MIN": lambda s: s.min(),
+    }
+    
+    if agg_type not in agg_functions:
+        raise ExecutionError(f"Unsupported grouped aggregation type: {agg_type}")
+    
+    result_df = agg_functions[agg_type](grouped[agg_column]).reset_index()
+    
+    if agg_type not in agg_functions:
+        raise ExecutionError(f"Unsupported grouped aggregation type: {agg_type}")
+
+    result_series = grouped.apply(agg_functions[agg_type])
+    result_df = result_series.reset_index(name=agg_column)
+    return result_df
+
+def _enforce_step_schema(df: pd.DataFrame, step) -> pd.DataFrame:
+    if not step.output_columns:
+        return df
+
+    expected = [c["alias"] if isinstance(c, dict) else c.alias for c in step.output_columns]
+    missing = [c for c in expected if c not in df.columns]
+    extra = [c for c in df.columns if c not in expected]
+
+    if missing:
+        raise ExecutionError(
+            f"Step {step.id} returned unexpected schema. Missing columns: {missing}. "
+            f"Got: {list(df.columns)}"
+        )
+
+    df = df[expected]
+
+    if extra:
+        print(f"ℹ️ Step {step.id}: ignoring extra columns: {extra}")
+
+    return df

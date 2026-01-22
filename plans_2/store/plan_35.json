@@ -1,0 +1,90 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Extract active products with their prices from store_main.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT products.id AS s1__id, products.name AS s1__name, products.price AS s1__price FROM products WHERE products.is_active = true;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "products.id"
+                },
+                {
+                    "alias": "s1__name",
+                    "source": "products.name"
+                },
+                {
+                    "alias": "s1__price",
+                    "source": "products.price"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Extract active items from store_alt and normalize amount_in_cents to price in dollars.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT items.code AS s2__id, items.title AS s2__name, (items.amount_in_cents::numeric / 100.0) AS s2__price FROM items WHERE items.active = 'Y';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "items.code"
+                },
+                {
+                    "alias": "s2__name",
+                    "source": "items.title"
+                },
+                {
+                    "alias": "s2__price",
+                    "source": "items.amount_in_cents"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Combine products and items into a single ranked-by-price list (highest price first). This step performs an application-level union of the two prior result sets and orders by price descending.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT $step1.s1__id AS s3__id, $step1.s1__name AS s3__name, $step1.s1__price AS s3__price FROM (SELECT 1) t WHERE $step1.s1__id IS NOT NULL UNION ALL SELECT $step2.s2__id AS s3__id, $step2.s2__name AS s3__name, $step2.s2__price AS s3__price FROM (SELECT 1) t WHERE $step2.s2__id IS NOT NULL ORDER BY s3__price DESC;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__id",
+                    "source": "products.id"
+                },
+                {
+                    "alias": "s3__name",
+                    "source": "products.name"
+                },
+                {
+                    "alias": "s3__price",
+                    "source": "products.price"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__id",
+                    "dependency_step_column": "s1__id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__id",
+        "s3__name",
+        "s3__price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

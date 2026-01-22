@@ -1,0 +1,39 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve active products from the primary store database (products with is_active = true).",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id, name, sku, price, category_id, is_active, created_at FROM products WHERE is_active = true;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve active items from the alternate store database (items marked active = 'Y').",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code, title, amount_in_cents, group_ref, active, created_on FROM items WHERE active = 'Y';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "store_main.products.id",
+        "store_main.products.name",
+        "store_main.products.sku",
+        "store_main.products.price",
+        "store_main.products.category_id",
+        "store_main.products.is_active",
+        "store_main.products.created_at",
+        "store_alt.items.code",
+        "store_alt.items.title",
+        "store_alt.items.amount_in_cents",
+        "store_alt.items.group_ref",
+        "store_alt.items.active",
+        "store_alt.items.created_on"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

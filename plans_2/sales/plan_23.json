@@ -1,0 +1,87 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Extract customer ids and full names from the EU system.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.id AS s1__id, customers.full_name AS s1__full_name FROM customers;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s1__full_name",
+                    "source": "customers.full_name"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Extract customer ids and full names from the US system.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.id AS s2__id, customers.full_name AS s2__full_name FROM customers;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "customers.full_name"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Compare EU and US customer names and return pairs with Levenshtein distance < 2 (likely duplicates). This step performs the pairwise comparison using the extracted name lists from steps 1 and 2.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT\n  eu_ids.eu_id AS s3__eu_id,\n  eu_ids.eu_full_name AS s3__eu_full_name,\n  us_ids.us_id AS s3__us_id,\n  us_ids.us_full_name AS s3__us_full_name\nFROM\n  unnest(ARRAY[$step1.s1__id]::bigint[], ARRAY[$step1.s1__full_name]::text[]) AS eu_ids(eu_id, eu_full_name)\nCROSS JOIN\n  unnest(ARRAY[$step2.s2__id]::bigint[], ARRAY[$step2.s2__full_name]::text[]) AS us_ids(us_id, us_full_name)\nWHERE levenshtein(eu_ids.eu_full_name, us_ids.us_full_name) < 2;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__eu_id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s3__eu_full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s3__us_id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s3__us_full_name",
+                    "source": "customers.full_name"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__eu_id",
+                    "dependency_step_column": "s1__id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__eu_id",
+        "s3__eu_full_name",
+        "s3__us_id",
+        "s3__us_full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

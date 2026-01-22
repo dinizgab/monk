@@ -1,0 +1,42 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select orders from the EU database with total_eur > 100 and updated within the last month.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT orders.id AS s1__id, orders.customer_id AS s1__customer_id, orders.total_eur AS s1__total_eur, orders.updated_at AS s1__updated_at FROM orders WHERE orders.total_eur > 100 AND orders.updated_at >= now() - INTERVAL '1 month';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "orders.id"
+                },
+                {
+                    "alias": "s1__customer_id",
+                    "source": "orders.customer_id"
+                },
+                {
+                    "alias": "s1__total_eur",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s1__updated_at",
+                    "source": "orders.updated_at"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__customer_id",
+        "s1__total_eur",
+        "s1__updated_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

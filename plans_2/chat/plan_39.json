@@ -1,0 +1,49 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find usernames of users who participate in chats whose name or description mentions 'technical' from the app_chat database.",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT users.username AS s1__username FROM users JOIN chat_members ON chat_members.user_id = users.id JOIN chats ON chats.id = chat_members.chat_id WHERE lower(chats.name) LIKE '%technical%' OR lower(chats.description) LIKE '%technical%';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Return usernames from the main app database that have posts, restricted to usernames found in step 1 (users who participate in technical chats).",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.username AS s2__username FROM users JOIN posts ON posts.user_id = users.id WHERE users.username IN ($step1.s1__username);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__username",
+                    "source": "users.username"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__username",
+                    "dependency_step_column": "s1__username"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__username"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

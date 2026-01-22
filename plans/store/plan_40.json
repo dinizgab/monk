@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute per-category totals and active ratios from store_main. Normalize category names for later name-based matching.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT c.id AS category_id, c.name AS category_name, lower(trim(c.name)) AS name_normalized, COUNT(p.id) AS category_total_products, SUM(CASE WHEN p.is_active THEN 1 ELSE 0 END) AS category_active_products, CASE WHEN COUNT(p.id)=0 THEN 0.0 ELSE SUM(CASE WHEN p.is_active THEN 1 ELSE 0 END)::float / COUNT(p.id) END AS category_active_ratio FROM categories c LEFT JOIN products p ON p.category_id = c.id GROUP BY c.id, c.name;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute per-group totals and active ratios from store_alt. Normalize group names for later name-based matching.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT g.gid AS group_id, g.group_name AS group_name, lower(trim(g.group_name)) AS name_normalized, COUNT(i.code) AS group_total_items, SUM(CASE WHEN i.active = 'Y' THEN 1 ELSE 0 END) AS group_active_items, CASE WHEN COUNT(i.code)=0 THEN 0.0 ELSE SUM(CASE WHEN i.active = 'Y' THEN 1 ELSE 0 END)::float / COUNT(i.code) END AS group_active_ratio FROM product_groups g LEFT JOIN items i ON i.group_ref = g.gid GROUP BY g.gid, g.group_name;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "category_id",
+        "category_name",
+        "category_total_products",
+        "category_active_products",
+        "category_active_ratio",
+        "group_id",
+        "group_name",
+        "group_total_items",
+        "group_active_items",
+        "group_active_ratio",
+        "active_ratio_difference"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

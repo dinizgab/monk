@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve product_id, product_price and product_size for products whose price is greater than the average product price (computed over all products).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id, product_price, product_size FROM Products WHERE product_price > (SELECT AVG(product_price) FROM Products);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "product_id",
+        "product_price",
+        "product_size"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

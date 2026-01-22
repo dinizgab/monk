@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve id, username and email for all users in the app database.",
+            "database": "postgres://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT id, username, email FROM users;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "username",
+        "email"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

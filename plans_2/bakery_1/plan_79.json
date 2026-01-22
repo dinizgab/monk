@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute, for each receipt Date, the number of distinct customers (CustomerId) who visited that day.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT Date AS s1__Date, COUNT(DISTINCT CustomerId) AS s1__distinct_customers FROM receipts GROUP BY Date;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__Date",
+                    "source": "receipts.Date"
+                },
+                {
+                    "alias": "s1__distinct_customers",
+                    "source": "receipts.CustomerId"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__Date",
+        "s1__distinct_customers"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

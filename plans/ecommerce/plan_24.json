@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve each customer's first name, middle initial, last name, and their payment method(s). Include customers even if they have no payment methods.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT c.customer_id, c.customer_first_name, c.customer_middle_initial, c.customer_last_name, pm.payment_method_code FROM customers c LEFT JOIN customer_payment_methods pm ON c.customer_id = pm.customer_id;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "customer_first_name",
+        "customer_middle_initial",
+        "customer_last_name",
+        "payment_method_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

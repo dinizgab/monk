@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all goods that have flavor = 'cheese', returning their id, food and price so the application can determine the cheapest.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, flavor, food, price FROM goods WHERE flavor = 'cheese';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "food",
+        "price",
+        "flavor"
+    ],
+    "final_aggregation": {
+        "type": "MIN",
+        "column": "price"
+    }
+}

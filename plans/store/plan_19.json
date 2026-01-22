@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the count of products and the sum of their prices from the primary products table (store_main).",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT COUNT(*) AS product_count, SUM(price) AS total_price FROM products;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute the count of items and the sum of their prices (in cents) from the alternative items table (store_alt).",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT COUNT(*) AS item_count, SUM(amount_in_cents) AS total_cents FROM items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "average_price"
+    ],
+    "final_aggregation": {
+        "type": "AVG",
+        "column": "price"
+    }
+}

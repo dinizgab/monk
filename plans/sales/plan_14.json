@@ -1,0 +1,29 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the average order value (total_eur) and order count for the EU region by aggregating the orders in the sales_eu database.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT 'EU' AS region, AVG(total_eur) AS avg_order_value, COUNT(*) AS order_count FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute the average order value (total_eur) and order count for the US region by aggregating the orders in the sales_us database.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT 'US' AS region, AVG(total_eur) AS avg_order_value, COUNT(*) AS order_count FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "avg_order_value",
+        "order_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

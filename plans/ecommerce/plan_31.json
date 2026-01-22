@@ -1,0 +1,52 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find all order_item_id values that have been shipped (shipment exists and shipment_date is not null).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT DISTINCT si.order_item_id FROM shipment_items si JOIN shipments s ON si.shipment_id = s.shipment_id WHERE s.shipment_date IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get product_id for the ordered items identified as shipped in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_item_id, product_id FROM Order_Items WHERE order_item_id IN ($step1.order_item_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "order_item_id",
+                    "dependency_step_column": "order_item_id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Retrieve product name and color for the product_ids found in step 2.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id, product_name, product_color FROM Products WHERE product_id IN ($step2.product_id);",
+            "depends_on": [
+                2
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "product_id",
+                    "dependency_step_column": "product_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "product_name",
+        "product_color"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

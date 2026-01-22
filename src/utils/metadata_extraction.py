@@ -29,7 +29,34 @@ def extract_db_info(urls: str) -> dict:
         }
 
         for table in insp.get_table_names():
-            cols = [serialize_column(col, dialect) for col in insp.get_columns(table)]
+            pk_constraint = insp.get_pk_constraint(table) or {}
+            pk_columns = pk_constraint.get("constrained_columns") or []
+
+            fk_constraints = insp.get_foreign_keys(table)
+            fk_map = {}
+            for fk in fk_constraints:
+                constrained_columns = fk.get("constrained_columns") or []
+                referred_table = fk.get("referred_table")
+                referred_schema = fk.get("referred_schema")
+                referred_columns = fk.get("referred_columns") or []
+
+                for idx, col_name in enumerate(constrained_columns):
+                    reference = {
+                        "table": referred_table,
+                        "column": referred_columns[idx]
+                        if idx < len(referred_columns)
+                        else None,
+                    }
+
+                    if referred_schema:
+                        reference["schema"] = referred_schema
+
+                    fk_map.setdefault(col_name, []).append(reference)
+
+            cols = [
+                serialize_column(col, dialect, pk_columns=pk_columns, fk_map=fk_map)
+                for col in insp.get_columns(table)
+            ]
 
             payload["tables"][table] = cols
 
@@ -39,16 +66,18 @@ def extract_db_info(urls: str) -> dict:
 
 
 def add_url_driver(url: str) -> str:
-    drivers = {
-        "oracle": "cx_oracle",
-        "postgresql": "psycopg",
-        "mysql": "pymysql",
-        "mssql": "pyodbc",
-    }
     dialect = url.split("://")[0]
 
     if "+" in dialect:
         return url
-
-    if dialect in drivers:
-        return url.replace(dialect, f"{dialect}+{drivers[dialect]}")
+    
+    match dialect:
+        case "postgresql" | "postgres":
+            return url.replace(dialect, "postgresql+psycopg")
+        case "oracle":
+            return url.replace(dialect, "oracle+cx_oracle")
+        case "mysql":
+            return url.replace(dialect, "mysql+pymysql")
+        case "mssql":
+            return url.replace(dialect, "mssql+pyodbc")
+        

@@ -1,7 +1,7 @@
 services:
-  mysql-products:
+  ecommerce_mysql_products:
     image: mysql:8.0
-    container_name: mysql_products
+    container_name: ecommerce_mysql_products
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: products_db
@@ -16,12 +16,12 @@ services:
       retries: 20
     volumes:
       - mysql_products_data:/var/lib/mysql
-      - ./schemas/mysql/products/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
-      - ./schemas/mysql/products/01_products_db.sql:/docker-entrypoint-initdb.d/01_products_db.sql:ro
+      - ./schemas/ecommerce/mysql/products/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
+      - ./schemas/ecommerce/mysql/products/01_products_db.sql:/docker-entrypoint-initdb.d/01_products_db.sql:ro
 
-  mysql-orders:
+  ecommerce_mysql_orders:
     image: mysql:8.0
-    container_name: mysql_orders
+    container_name: ecommerce_mysql_orders
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: orders_db
@@ -36,12 +36,12 @@ services:
       retries: 20
     volumes:
       - mysql_orders_data:/var/lib/mysql
-      - ./schemas/mysql/orders/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
-      - ./schemas/mysql/orders/01_orders_db.sql:/docker-entrypoint-initdb.d/01_orders_db.sql:ro
+      - ./schemas/ecommerce/mysql/orders/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
+      - ./schemas/ecommerce/mysql/orders/01_orders_db.sql:/docker-entrypoint-initdb.d/01_orders_db.sql:ro
 
-  pg-users:
+  ecommerce_pg_users:
     image: postgres:16
-    container_name: pg_users
+    container_name: ecommerce_pg_users
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: appuser
@@ -55,11 +55,11 @@ services:
       retries: 20
     volumes:
       - pg_users_data:/var/lib/postgresql/data
-      - ./schemas/postgres/users/00_user_db.sql:/docker-entrypoint-initdb.d/00_user_db.sql:ro
+      - ./schemas/ecommerce/postgres/users/00_user_db.sql:/docker-entrypoint-initdb.d/00_user_db.sql:ro
 
-  pg_shipments:
+  ecommerce_pg_shipments:
     image: postgres:16
-    container_name: pg_shipments
+    container_name: ecommerce_pg_shipments
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: appuser
@@ -73,10 +73,197 @@ services:
       retries: 20
     volumes:
       - pg_shipments_data:/var/lib/postgresql/data
-      - ./schemas/postgres/shipments/00_shipments_db.sql:/docker-entrypoint-initdb.d/00_shipments_db.sql:ro
+      - ./schemas/ecommerce/postgres/shipments/00_shipments_db.sql:/docker-entrypoint-initdb.d/00_shipments_db.sql:ro
 
+  bakery_1_mysql_receipts:
+    image: mysql:8.0
+    container_name: bakery_1_mysql_receipts
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: receipts_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3309:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - mysql_receipts_demo_data:/var/lib/mysql
+      - ./schemas/bakery_1/mysql/receipts/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
+      - ./schemas/bakery_1/mysql/receipts/01_seed_receipts_db.sql:/docker-entrypoint-initdb.d/01_seed_receipts_db.sql:ro
+
+  bakery_1_mysql_items:
+    image: mysql:8.0
+    container_name: bakery_1_mysql_item
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: items_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3310:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - mysql_items_demo_data:/var/lib/mysql
+      - ./schemas/bakery_1/mysql/items/00_create_db.sql:/docker-entrypoint-initdb.d/00_create_db.sql:ro
+      - ./schemas/bakery_1/mysql/items/01_seed_items_db.sql:/docker-entrypoint-initdb.d/01_seed_items_db.sql:ro
+
+  bakery_1_pg_customers:
+    image: postgres:16
+    container_name: bakery_1_pg_customers
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: appuser
+      POSTGRES_DB: customers_db
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d customers_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - pg_customers_demo_data:/var/lib/postgresql/data
+      - ./schemas/bakery_1/postgres/customers/00_customers_db.sql:/docker-entrypoint-initdb.d/00_customers_db.sql:ro
+
+  bakery_1_pg_goods:
+    image: postgres:16
+    container_name: bakery_1_pg_goods
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: appuser
+      POSTGRES_DB: goods_db
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d goods_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - pg_goods_demo_data:/var/lib/postgresql/data
+      - ./schemas/bakery_1/postgres/goods/00_goods_db.sql:/docker-entrypoint-initdb.d/00_goods_db.sql:ro
+
+  sales_eu_db:
+    image: postgres:16
+    container_name: sales_eu_db
+    environment:
+      POSTGRES_USER: eu_user
+      POSTGRES_PASSWORD: eu_pass
+      POSTGRES_DB: sales_eu
+    ports:
+      - "5437:5432"
+    volumes:
+      - eu-data:/var/lib/postgresql/data
+      - ./schemas/sales/postgres/eu_sales_db.sql:/docker-entrypoint-initdb.d/_eu_sales_db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eu_user -d sales_eu"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  sales_us_db:
+    image: postgres:16
+    container_name: sales_us_db
+    environment:
+      POSTGRES_USER: us_user
+      POSTGRES_PASSWORD: us_pass
+      POSTGRES_DB: sales_us
+    ports:
+      - "5438:5432"
+    volumes:
+      - us-data:/var/lib/postgresql/data
+      - ./schemas/sales/postgres/us_sales_db.sql:/docker-entrypoint-initdb.d/_us_sales_db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U us_user -d sales_us"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app_chat_db:
+    image: postgres:16
+    container_name: app_chat_db
+    environment:
+      POSTGRES_USER: app_chat_user
+      POSTGRES_PASSWORD: app_chat_pass
+      POSTGRES_DB: app_chat 
+    ports:
+      - "5439:5432"
+    volumes:
+      - app_chat_data:/var/lib/postgresql/data
+      - ./schemas/chat/postgres/app_chat.sql:/docker-entrypoint-initdb.d/app_chat.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_chat_user -d app_chat"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app_db:
+    image: postgres:16
+    container_name: app_db
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_pass
+      POSTGRES_DB: app 
+    ports:
+      - "5440:5432"
+    volumes:
+      - app_data:/var/lib/postgresql/data
+      - ./schemas/chat/postgres/app.sql:/docker-entrypoint-initdb.d/app.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app"]
+      interval: 5s
+      timeout: 5s
+  store_main_db:
+    image: postgres:16
+    container_name: store_main_db
+    environment:
+      POSTGRES_USER: store_main_user
+      POSTGRES_PASSWORD: store_main_pass
+      POSTGRES_DB: store_main 
+    ports:
+      - "5441:5432"
+    volumes:
+      - store_main_data:/var/lib/postgresql/data
+      - ./schemas/store/postgres/store_main.sql:/docker-entrypoint-initdb.d/store_main.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U store_main_user -d store_main"]
+      interval: 5s
+      timeout: 5s
+  store_alt_db:
+    image: postgres:16
+    container_name: store_alt_db
+    environment:
+      POSTGRES_USER: store_alt_user
+      POSTGRES_PASSWORD: store_alt_pass
+      POSTGRES_DB: store_alt 
+    ports:
+      - "5442:5432"
+    volumes:
+      - store_alt_data:/var/lib/postgresql/data
+      - ./schemas/store/postgres/store_alt.sql:/docker-entrypoint-initdb.d/store_alt.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U store_alt_user -d store_alt"]
+      interval: 5s
+      timeout: 5s
 volumes:
   mysql_products_data:
   mysql_orders_data:
   pg_users_data:
   pg_shipments_data:
+  mysql_receipts_demo_data:
+  mysql_items_demo_data:
+  pg_customers_demo_data:
+  pg_goods_demo_data:
+  pg_orders_demo_data:
+  eu-data:
+  us-data:
+  app_chat_data:
+  app_data:
+  store_main_data:
+  store_alt_data:

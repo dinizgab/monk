@@ -1,0 +1,35 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all distinct usernames from the primary app database.",
+            "database": "postgresql://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT DISTINCT username FROM users;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve usernames from the chat database that match the usernames returned by step 1 (intersection).",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT DISTINCT username FROM users WHERE username IN ($step1.username);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "username",
+                    "dependency_step_column": "username"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "username"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

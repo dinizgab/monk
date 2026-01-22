@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select login_name and login_password for customers whose phone_number starts with '+12'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customers.login_name AS s1__login_name, customers.login_password AS s1__login_password FROM customers WHERE customers.phone_number LIKE '+12%';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__login_name",
+                    "source": "customers.login_name"
+                },
+                {
+                    "alias": "s1__login_password",
+                    "source": "customers.login_password"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__login_name",
+        "s1__login_password"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

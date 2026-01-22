@@ -1,0 +1,63 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find product_id(s) that appear most frequently in Order_Items (handle ties).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT product_id AS s1__product_id, COUNT(order_item_id) AS s1__order_count FROM Order_Items GROUP BY product_id HAVING COUNT(order_item_id) = (SELECT MAX(cnt) FROM (SELECT COUNT(order_item_id) AS cnt FROM Order_Items GROUP BY product_id) AS sub);",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__product_id",
+                    "source": "Order_Items.product_id"
+                },
+                {
+                    "alias": "s1__order_count",
+                    "source": "Order_Items.order_item_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve product id, name and price for the most frequently ordered product(s) by joining to Products using the product_id(s) from step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_id AS s2__product_id, product_name AS s2__product_name, product_price AS s2__product_price FROM Products WHERE product_id IN ($step1.s1__product_id);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__product_id",
+                    "source": "Products.product_id"
+                },
+                {
+                    "alias": "s2__product_name",
+                    "source": "Products.product_name"
+                },
+                {
+                    "alias": "s2__product_price",
+                    "source": "Products.product_price"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__product_id",
+                    "dependency_step_column": "s1__product_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__product_id",
+        "s2__product_name",
+        "s2__product_price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

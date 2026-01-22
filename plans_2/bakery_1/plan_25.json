@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find receipts that contain both 'Cake' and 'Cookie' by grouping items per receipt and requiring both items be present.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT items.Receipt AS s1__Receipt FROM items WHERE items.Item IN ('Cake','Cookie') GROUP BY items.Receipt HAVING COUNT(DISTINCT items.Item) = 2;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__Receipt",
+                    "source": "items.Receipt"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__Receipt"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

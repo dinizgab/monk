@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate receipts by CustomerId and keep customers with at least 15 receipts.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT receipts.CustomerId AS s1__CustomerId, COUNT(receipts.ReceiptNumber) AS s1__receipt_count FROM receipts GROUP BY receipts.CustomerId HAVING COUNT(receipts.ReceiptNumber) >= 15",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__CustomerId"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,99 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the earliest receipt date from receipts_db.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT MIN(Date) AS s1__min_date FROM receipts",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__min_date",
+                    "source": "receipts.Date"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find goods ids with price > 10 from goods_db.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id AS s2__id, price AS s2__price FROM goods WHERE price > 10",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "goods.id"
+                },
+                {
+                    "alias": "s2__price",
+                    "source": "goods.price"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Find receipt numbers from items_db whose Item matches goods ids with price > 10.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Item AS s3__Item, Receipt AS s3__Receipt FROM items WHERE Item IN ($step2.s2__id)",
+            "depends_on": [
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__Item",
+                    "source": "items.Item"
+                },
+                {
+                    "alias": "s3__Receipt",
+                    "source": "items.Receipt"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__Item",
+                    "dependency_step_column": "s2__id"
+                }
+            }
+        },
+        {
+            "id": 4,
+            "description": "Select receipts that either have the earliest date or whose ReceiptNumber appears in receipts with goods priced > 10.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber AS s4__ReceiptNumber, Date AS s4__Date FROM receipts WHERE Date = $step1.s1__min_date OR ReceiptNumber IN ($step3.s3__Receipt)",
+            "depends_on": [
+                1,
+                3
+            ],
+            "output_columns": [
+                {
+                    "alias": "s4__ReceiptNumber",
+                    "source": "receipts.ReceiptNumber"
+                },
+                {
+                    "alias": "s4__Date",
+                    "source": "receipts.Date"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s4__ReceiptNumber",
+                    "dependency_step_column": "s3__Receipt"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s4__ReceiptNumber",
+        "s4__Date"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

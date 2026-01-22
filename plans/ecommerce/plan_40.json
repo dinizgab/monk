@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the distinct customer IDs from all orders (this yields the set of customers who have placed orders).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT DISTINCT customer_id FROM Orders;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "customer_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "customer_id"
+    }
+}

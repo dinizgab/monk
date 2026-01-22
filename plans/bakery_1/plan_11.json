@@ -1,0 +1,52 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all receipts with their associated customer IDs (exclude receipts with no customer).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber, CustomerId FROM receipts WHERE CustomerId IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get items for the receipts returned by step 1 (map receipts to bought items).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Receipt, Item FROM items WHERE Receipt IN ($step1.ReceiptNumber);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "Receipt",
+                    "dependency_step_column": "ReceiptNumber"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Get food type for each item id found in step 2.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, food FROM goods WHERE id IN ($step2.Item);",
+            "depends_on": [
+                2
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "id",
+                    "dependency_step_column": "Item"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "food",
+        "unique_customer_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

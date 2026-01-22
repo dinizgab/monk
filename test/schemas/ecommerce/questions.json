@@ -1,0 +1,322 @@
+[
+  {
+    "id": 1,
+    "question": "List the id, first name and last name of the customers who both have placed more than 2 orders and have bought at least 3 items."
+  },
+  {
+    "id": 2,
+    "question": "What are the ids, first and last names of the customers who have ordered more than twice and have bought at least 3 items?"
+  },
+  {
+    "id": 3,
+    "question": "For the orders with any produts, how many products does each orders contain ? List the order id, status and the number."
+  },
+  {
+    "id": 4,
+    "question": "For every order, how many products does it contain, and what are the orders' statuses and ids?"
+  },
+  {
+    "id": 5,
+    "question": "List the dates of the orders which were placed at the earliest time or have more than 1 items."
+  },
+  {
+    "id": 6,
+    "question": "What are the dates of the earliest order and the dates of all orders with more than 1 item?"
+  },
+  {
+    "id": 7,
+    "question": "Which customers did not make any orders? List the first name, middle initial and last name."
+  },
+  {
+    "id": 8,
+    "question": "WHat are the first and last names, and middle initials of all customers who did not make any orders?"
+  },
+  {
+    "id": 9,
+    "question": "What are the id, name, price and color of the products which have not been ordered for at least twice?"
+  },
+  {
+    "id": 10,
+    "question": "What are the ids , names , prices , and colors of all products that have been listed in less than two orders ?"
+  },
+  {
+    "id": 11,
+    "question": "Which orders have at least 2 products on it? List the order id and date."
+  },
+  {
+    "id": 12,
+    "question": "What are the ids and dates of the orders with at least two products?"
+  },
+  {
+    "id": 13,
+    "question": "Which product are listed in orders most frequently? List the id, product name and price."
+  },
+  {
+    "id": 14,
+    "question": "What are the ids, names, and prices of all products that are ordered most frequently?"
+  },
+  {
+    "id": 15,
+    "question": "Which order have the least sum of the product prices. List the order id and sum."
+  },
+  {
+    "id": 16,
+    "question": "What is the order that total cost the least , and how much is the total cost ?"
+  },
+  {
+    "id": 17,
+    "question": "What is the most popular payment method?"
+  },
+  {
+    "id": 18,
+    "question": "What is the payment method that most customers use?"
+  },
+  {
+    "id": 19,
+    "question": "How many number of products does each gender of customers buy? List the gender and the number"
+  },
+  {
+    "id": 20,
+    "question": "How many products does each gender buy?"
+  },
+  {
+    "id": 21,
+    "question": "How many orders has each gender of customers placed?"
+  },
+  {
+    "id": 22,
+    "question": "How many orders has each gender placed?"
+  },
+  {
+    "id": 23,
+    "question": "List the customers' first name, middle initial, last name and payment methods."
+  },
+  {
+    "id": 24,
+    "question": "What are the first names, middle initials, last names, and payment methods of all customers?"
+  },
+  {
+    "id": 25,
+    "question": "List the invoices' status, date and the date of shipment."
+  },
+  {
+    "id": 26,
+    "question": "What are the statuses, dates, and shipment dates for all invoices?"
+  },
+  {
+    "id": 27,
+    "question": "List the names of the products being shipped and the corresponding shipment date."
+  },
+  {
+    "id": 28,
+    "question": "What are the names of the products tht have been shipped, and on what days were they shipped?"
+  },
+  {
+    "id": 29,
+    "question": "What is the status code of the items being ordered and shipped and its corresponding shipment tracking number?"
+  },
+  {
+    "id": 30,
+    "question": "What is the status code of the items have been ordered and shipped, and also what are their shipment tracking numbers?"
+  },
+  {
+    "id": 31,
+    "question": "What is the product name and the color of the ordered items which have been shipped?"
+  },
+  {
+    "id": 32,
+    "question": "What are the names and colors of all products that have been shipped?"
+  },
+  {
+    "id": 33,
+    "question": "List all the distinct product names, price and descriptions which are bought by female customers."
+  },
+  {
+    "id": 34,
+    "question": "What are the different names, prices, and descriptions for all products bought by female customers?"
+  },
+  {
+    "id": 35,
+    "question": "What are invoices status of all the orders which have not been shipped?"
+  },
+  {
+    "id": 36,
+    "question": "What are the invoice statuses for all orderes that have not been shipped out yet?"
+  },
+  {
+    "id": 37,
+    "question": "What are the total cost of all the orders ? List the order id , date , and total cost ."
+  },
+  {
+    "id": 38,
+    "question": "For each order, what is its id, date, and total amount paid?"
+  },
+  {
+    "id": 39,
+    "question": "How many customers have placed any order?"
+  },
+  {
+    "id": 40,
+    "question": "How many different customers have ordered things?"
+  },
+  {
+    "id": 41,
+    "question": "How many item states are there in the orders?"
+  },
+  {
+    "id": 42,
+    "question": "How many different item status codes are there listed in ordered items?"
+  },
+  {
+    "id": 43,
+    "question": "How many different payment methods are there?"
+  },
+  {
+    "id": 44,
+    "question": "How many different payment methods can customers choose from?"
+  },
+  {
+    "id": 45,
+    "question": "What are the login names and passwords of the customers whose phone number have the prefix '+12'?"
+  },
+  {
+    "id": 46,
+    "question": "What are the usernames and passwords of all customers whose phone number starts with '+12'?"
+  },
+  {
+    "id": 47,
+    "question": "What are the product sizes of the products whose name has the substring 'Dell'?"
+  },
+  {
+    "id": 48,
+    "question": "What are the sizes of all products whose name includes the word 'Dell'?"
+  },
+  {
+    "id": 49,
+    "question": "What are the product price and the product size of the products whose price is above average?"
+  },
+  {
+    "id": 50,
+    "question": "What are the prices and sizes of all products whose price is above the mean?"
+  },
+  {
+    "id": 51,
+    "question": "How many kinds of products have not been sold?"
+  },
+  {
+    "id": 52,
+    "question": "What is the number of products that have not been ordered yet?"
+  },
+  {
+    "id": 53,
+    "question": "How many customers do not have any payment method?"
+  },
+  {
+    "id": 54,
+    "question": "How many customers do not have a listed payment method?"
+  },
+  {
+    "id": 55,
+    "question": "What are all the order status and all the dates of orders?"
+  },
+  {
+    "id": 56,
+    "question": "What are the status codes and dates placed for all of the orders?"
+  },
+  {
+    "id": 57,
+    "question": "List the address, town and county information of the customers who live in the USA."
+  },
+  {
+    "id": 58,
+    "question": "What are the addresses, towns, and county information for all customers who live in the United States?"
+  },
+  {
+    "id": 59,
+    "question": "List all the pairs of buyer first names and product names."
+  },
+  {
+    "id": 60,
+    "question": "What are the first names of all buyers and what products did they buy? List them in pairs."
+  },
+  {
+    "id": 61,
+    "question": "How many items are shipped?"
+  },
+  {
+    "id": 62,
+    "question": "How many products have been shipped?"
+  },
+  {
+    "id": 63,
+    "question": "What is the product average price?"
+  },
+  {
+    "id": 64,
+    "question": "How much do the products cost on average?"
+  },
+  {
+    "id": 65,
+    "question": "What is the average price of the products being ordered?"
+  },
+  {
+    "id": 66,
+    "question": "What is the price of all products being ordered on average?"
+  },
+  {
+    "id": 67,
+    "question": "What are the email address, town and county of the customers who are of the least common gender?"
+  },
+  {
+    "id": 68,
+    "question": "What are the email addresses, cities, and counties listed for all cusomters who are from the gender that orders less often?"
+  },
+  {
+    "id": 69,
+    "question": "List the order date of the orders who are placed by customers with at least 2 payment methods."
+  },
+  {
+    "id": 70,
+    "question": "What is the date of all orders that have been placed by customers with at least 2 payment methods?"
+  },
+  {
+    "id": 71,
+    "question": "What is the most uncommon order status?"
+  },
+  {
+    "id": 72,
+    "question": "What is the least common order status?"
+  },
+  {
+    "id": 73,
+    "question": "For all the products sold for more than 3 times, list their id and description."
+  },
+  {
+    "id": 74,
+    "question": "For all products sold more than 3 times, what are their ids and descriptions?"
+  },
+  {
+    "id": 75,
+    "question": "List the invoice dates and ids of the invoices causing at least 2 shipments."
+  },
+  {
+    "id": 76,
+    "question": "What are the dates and ids of the invoices that are related to at least 2 shipments?"
+  },
+  {
+    "id": 77,
+    "question": "what are all shipment tracking numbers and shipment dates?"
+  },
+  {
+    "id": 78,
+    "question": "What are the tracking numbers and dates for all shipments listed?"
+  },
+  {
+    "id": 79,
+    "question": "What are the color, description and size of the products priced below the maximum price."
+  },
+  {
+    "id": 80,
+    "question": "What are the colors , descriptions , and sizes for all products that are not at the maximum price ?"
+  }
+]

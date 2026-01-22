@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select product group primary keys to allow counting how many product groups exist.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT product_groups.gid AS s1__gid FROM product_groups;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__gid",
+                    "source": "product_groups.gid"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__gid"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__gid",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find customers who have placed more than 2 orders and have bought at least 3 items by aggregating Orders and Order_Items.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.customer_id AS s1__customer_id, COUNT(DISTINCT o.order_id) AS s1__order_count, COUNT(oi.order_item_id) AS s1__item_count FROM Orders o INNER JOIN Order_Items oi ON o.order_id = oi.order_id GROUP BY o.customer_id HAVING COUNT(DISTINCT o.order_id) > 2 AND COUNT(oi.order_item_id) >= 3",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_id",
+                    "source": "Orders.customer_id"
+                },
+                {
+                    "alias": "s1__order_count",
+                    "source": "Orders.order_id"
+                },
+                {
+                    "alias": "s1__item_count",
+                    "source": "Order_Items.order_item_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve id, first name and last name for customers identified in step 1.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customers.customer_id AS s2__customer_id, customers.customer_first_name AS s2__first_name, customers.customer_last_name AS s2__last_name FROM customers WHERE customers.customer_id IN ($step1.s1__customer_id)",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__customer_id",
+                    "source": "customers.customer_id"
+                },
+                {
+                    "alias": "s2__first_name",
+                    "source": "customers.customer_first_name"
+                },
+                {
+                    "alias": "s2__last_name",
+                    "source": "customers.customer_last_name"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__customer_id",
+                    "dependency_step_column": "s1__customer_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__customer_id",
+        "s2__first_name",
+        "s2__last_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

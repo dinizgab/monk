@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select ids of goods whose price is greater than twice the average price of all goods.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE price > 2 * (SELECT AVG(price) FROM goods);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

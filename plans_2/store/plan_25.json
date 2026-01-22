@@ -1,0 +1,42 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select products with their category names by joining products to categories in the store_main database.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT products.id AS s1__product_id, products.name AS s1__product_name, products.category_id AS s1__category_id, categories.name AS s1__category_name FROM products INNER JOIN categories ON products.category_id = categories.id;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__product_id",
+                    "source": "products.id"
+                },
+                {
+                    "alias": "s1__product_name",
+                    "source": "products.name"
+                },
+                {
+                    "alias": "s1__category_id",
+                    "source": "products.category_id"
+                },
+                {
+                    "alias": "s1__category_name",
+                    "source": "categories.name"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__product_id",
+        "s1__product_name",
+        "s1__category_id",
+        "s1__category_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count products per order by joining Orders with Order_Items and grouping by order_id and order_status_code (returns only orders that have items).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Orders.order_id AS s1__order_id, Orders.order_status_code AS s1__order_status_code, COUNT(Order_Items.product_id) AS s1__product_count FROM Orders JOIN Order_Items ON Orders.order_id = Order_Items.order_id GROUP BY Orders.order_id, Orders.order_status_code;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_id",
+                    "source": "Orders.order_id"
+                },
+                {
+                    "alias": "s1__order_status_code",
+                    "source": "Orders.order_status_code"
+                },
+                {
+                    "alias": "s1__product_count",
+                    "source": "Order_Items.product_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__order_id",
+        "s1__order_status_code",
+        "s1__product_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

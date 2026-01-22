@@ -1,0 +1,517 @@
+[
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3307,
+        "database": "products_db",
+        "tables": {
+            "Products": [
+                {
+                    "name": "product_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "parent_product_id",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "product_name",
+                    "type": "VARCHAR(80) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "product_price",
+                    "type": "DECIMAL(19, 4)",
+                    "nullable": true,
+                    "default": "'0.0000'",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "product_color",
+                    "type": "VARCHAR(50) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "product_size",
+                    "type": "VARCHAR(50) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "product_description",
+                    "type": "VARCHAR(255) COLLATE utf8mb4_unicode_ci",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3308,
+        "database": "orders_db",
+        "tables": {
+            "Invoices": [
+                {
+                    "name": "invoice_number",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "invoice_status_code",
+                    "type": "VARCHAR(10) COLLATE utf8mb4_unicode_ci",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "invoice_date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "Order_Items": [
+                {
+                    "name": "order_item_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "product_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "Orders",
+                            "column": "order_id"
+                        }
+                    ]
+                },
+                {
+                    "name": "order_item_status_code",
+                    "type": "VARCHAR(20) COLLATE utf8mb4_unicode_ci",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "Orders": [
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "order_status_code",
+                    "type": "VARCHAR(20) COLLATE utf8mb4_unicode_ci",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "date_order_placed",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5433,
+        "database": "users_db",
+        "tables": {
+            "customers": [
+                {
+                    "name": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "gender_code",
+                    "type": "VARCHAR(10)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "customer_first_name",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "customer_middle_initial",
+                    "type": "VARCHAR(1)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "customer_last_name",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "email_address",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "login_name",
+                    "type": "VARCHAR(80)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "login_password",
+                    "type": "VARCHAR(20)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "phone_number",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "address_line_1",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "town_city",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "county",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "country",
+                    "type": "VARCHAR(50)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "customer_payment_methods": [
+                {
+                    "name": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "customers",
+                            "column": "customer_id"
+                        }
+                    ]
+                },
+                {
+                    "name": "payment_method_code",
+                    "type": "VARCHAR(50)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5434,
+        "database": "shipments_db",
+        "tables": {
+            "shipments": [
+                {
+                    "name": "shipment_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "invoice_number",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "shipment_tracking_number",
+                    "type": "VARCHAR(80)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "shipment_date",
+                    "type": "TIMESTAMP WITHOUT TIME ZONE",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "shipment_items": [
+                {
+                    "name": "shipment_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "shipments",
+                            "column": "shipment_id"
+                        }
+                    ]
+                },
+                {
+                    "name": "order_item_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    }
+]

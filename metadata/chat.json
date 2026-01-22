@@ -1,0 +1,292 @@
+[
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "app_user",
+        "password": "app_pass",
+        "host": "localhost",
+        "port": 5440,
+        "database": "app",
+        "tables": {
+            "users": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "username",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "email",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "posts": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "content",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "user_id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "users",
+                            "column": "id"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "app_chat_user",
+        "password": "app_chat_pass",
+        "host": "localhost",
+        "port": 5439,
+        "database": "app_chat",
+        "tables": {
+            "users": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "username",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "full_name",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "chat_members": [
+                {
+                    "name": "user_id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "users",
+                            "column": "id"
+                        }
+                    ]
+                },
+                {
+                    "name": "chat_id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "chats",
+                            "column": "id"
+                        }
+                    ]
+                },
+                {
+                    "name": "joined_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "chats": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "messages": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "content",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "sended_by",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "users",
+                            "column": "id"
+                        }
+                    ]
+                },
+                {
+                    "name": "chat_id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "chats",
+                            "column": "id"
+                        }
+                    ]
+                },
+                {
+                    "name": "sended_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    }
+]

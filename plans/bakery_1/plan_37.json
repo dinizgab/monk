@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve ids of goods that have flavor 'Apricot' and price less than 5 from the goods database.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE flavor = 'Apricot' AND price < 5;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select item titles and their product group names from the store_alt database by joining items to product_groups on group_ref = gid.",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT items.title AS s1__title, product_groups.group_name AS s1__group_name FROM items LEFT JOIN product_groups ON items.group_ref = product_groups.gid;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__title",
+                    "source": "items.title"
+                },
+                {
+                    "alias": "s1__group_name",
+                    "source": "product_groups.group_name"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__title",
+        "s1__group_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

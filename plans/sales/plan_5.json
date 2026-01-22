@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count customers grouped by country in the central users database.",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT country AS country, COUNT(*) AS customer_count FROM customers WHERE country IS NOT NULL GROUP BY country;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count customers grouped by country in the EU sales database.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT country AS country, COUNT(*) AS customer_count FROM customers WHERE country IS NOT NULL GROUP BY country;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Count customers grouped by country in the US sales database.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT country AS country, COUNT(*) AS customer_count FROM customers WHERE country IS NOT NULL GROUP BY country;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "country",
+        "customer_count"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "customer_count"
+    }
+}

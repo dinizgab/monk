@@ -1,0 +1,49 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Read usernames from the primary app database.",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.username AS s1__username FROM users;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Read usernames from the chat database, keeping only those that appear in step 1 (intersection).",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT users.username AS s2__username FROM users WHERE users.username IN ($step1.s1__username);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__username",
+                    "source": "users.username"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__username",
+                    "dependency_step_column": "s1__username"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__username"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

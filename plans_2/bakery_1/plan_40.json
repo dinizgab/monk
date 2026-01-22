@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select flavors of goods that are cakes and have price > 10",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.flavor AS s1__flavor FROM goods WHERE goods.food = 'cake' AND goods.price > 10",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__flavor",
+                    "source": "goods.flavor"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__flavor"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

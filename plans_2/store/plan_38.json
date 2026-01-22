@@ -1,0 +1,42 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute, per category, the number of inactive products and total products; keep only categories where inactive > active.",
+            "database": "postgresql+psycopg://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT categories.id AS s1__category_id, categories.name AS s1__category_name, COUNT(*) FILTER (WHERE products.is_active = false) AS s1__inactive_count, COUNT(products.id) AS s1__total_count FROM products JOIN categories ON products.category_id = categories.id GROUP BY categories.id, categories.name HAVING COUNT(*) FILTER (WHERE products.is_active = false) > COUNT(*) FILTER (WHERE products.is_active = true)",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__category_id",
+                    "source": "categories.id"
+                },
+                {
+                    "alias": "s1__category_name",
+                    "source": "categories.name"
+                },
+                {
+                    "alias": "s1__inactive_count",
+                    "source": "products.is_active"
+                },
+                {
+                    "alias": "s1__total_count",
+                    "source": "products.id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__category_id",
+        "s1__category_name",
+        "s1__inactive_count",
+        "s1__total_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

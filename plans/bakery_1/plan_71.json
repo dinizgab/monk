@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all flavor and price values from the goods table. The application will compute highest, lowest and average prices grouped by flavor.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT flavor, price FROM goods WHERE price IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "flavor",
+        "highest_price",
+        "lowest_price",
+        "average_price"
+    ],
+    "final_aggregation": {
+        "type": "MIN_MAX_AVG",
+        "column": "price"
+    }
+}

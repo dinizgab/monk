@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select items that are marked active in the store_alt.items table",
+            "database": "postgresql+psycopg://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT items.code AS s1__code, items.title AS s1__title, items.active AS s1__active FROM items WHERE items.active = 'Y';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__code",
+                    "source": "items.code"
+                },
+                {
+                    "alias": "s1__title",
+                    "source": "items.title"
+                },
+                {
+                    "alias": "s1__active",
+                    "source": "items.active"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__code",
+        "s1__title",
+        "s1__active"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

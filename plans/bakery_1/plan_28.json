@@ -1,0 +1,44 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find the customer id(s) for customers whose last name is 'Logan'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5435/customers_db",
+            "query": "SELECT id FROM customers WHERE lastname = 'Logan';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get all receipt IDs that include an item named 'croissant'.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT DISTINCT Receipt FROM items WHERE LOWER(Item) = 'croissant';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Retrieve receipt numbers for receipts that belong to the customer(s) from step 1 and are in the receipts that include a croissant from step 2.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber FROM receipts WHERE CustomerId IN ($step1.id) AND ReceiptNumber IN ($step2.Receipt);",
+            "depends_on": [
+                1,
+                2
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "ReceiptNumber",
+                    "dependency_step_column": "Receipt"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "ReceiptNumber"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

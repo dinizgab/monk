@@ -1,0 +1,31 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all products with their id, name and price from the main store database, and tag rows as 'product'.",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id AS source_id, name AS title, price::numeric AS price, 'product' AS source, created_at AS created_at FROM products;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all items with their code, title and price (converted from cents) from the alternate store database, and tag rows as 'item'.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code AS source_id, title AS title, (amount_in_cents::numeric / 100.0) AS price, 'item' AS source, created_on AS created_at FROM items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "source",
+        "source_id",
+        "title",
+        "price",
+        "created_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

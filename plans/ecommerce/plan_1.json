@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find customer_ids that have placed more than 2 orders and have purchased at least 3 order items. Aggregation is performed in the orders database by joining Orders with Order_Items.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT o.customer_id, COUNT(DISTINCT o.order_id) AS orders_count, COUNT(oi.order_item_id) AS items_count FROM Orders AS o JOIN Order_Items AS oi ON o.order_id = oi.order_id GROUP BY o.customer_id HAVING COUNT(DISTINCT o.order_id) > 2 AND COUNT(oi.order_item_id) >= 3;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve id, first name and last name for the customers identified in step 1 from the users database.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, customer_first_name, customer_last_name FROM customers WHERE customer_id IN ($step1.customer_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "customer_id",
+                    "dependency_step_column": "customer_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "customer_id",
+        "customer_first_name",
+        "customer_last_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

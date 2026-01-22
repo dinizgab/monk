@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all customer — payment method associations so the application can count distinct customers per payment method and determine the most-used method.",
+            "database": "postgresql://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customer_id, payment_method_code FROM customer_payment_methods;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "payment_method_code",
+        "customer_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "customer_id"
+    }
+}

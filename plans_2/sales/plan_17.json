@@ -1,0 +1,116 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch the 20 most recently updated orders from the EU orders table.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT orders.id AS s1__id, orders.customer_id AS s1__customer_id, orders.total_eur AS s1__total_eur, orders.updated_at AS s1__updated_at, orders.coupon_code AS s1__coupon_code FROM orders ORDER BY orders.updated_at DESC LIMIT 20",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "orders.id"
+                },
+                {
+                    "alias": "s1__customer_id",
+                    "source": "orders.customer_id"
+                },
+                {
+                    "alias": "s1__total_eur",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s1__updated_at",
+                    "source": "orders.updated_at"
+                },
+                {
+                    "alias": "s1__coupon_code",
+                    "source": "orders.coupon_code"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch the 20 most recently updated orders from the US orders table.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT orders.id AS s2__id, orders.customer_id AS s2__customer_id, orders.total_eur AS s2__total_eur, orders.updated_at AS s2__updated_at, orders.coupon_code AS s2__coupon_code FROM orders ORDER BY orders.updated_at DESC LIMIT 20",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "orders.id"
+                },
+                {
+                    "alias": "s2__customer_id",
+                    "source": "orders.customer_id"
+                },
+                {
+                    "alias": "s2__total_eur",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s2__updated_at",
+                    "source": "orders.updated_at"
+                },
+                {
+                    "alias": "s2__coupon_code",
+                    "source": "orders.coupon_code"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Merge the results from EU and US, sort by updated_at and keep the top 20 across all regions.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT t.s3__id AS s3__id, t.s3__customer_id AS s3__customer_id, t.s3__total_eur AS s3__total_eur, t.s3__updated_at AS s3__updated_at, t.s3__coupon_code AS s3__coupon_code FROM (  SELECT UNNEST($step1.s1__id)    AS s3__id, UNNEST($step1.s1__customer_id) AS s3__customer_id, UNNEST($step1.s1__total_eur) AS s3__total_eur, UNNEST($step1.s1__updated_at) AS s3__updated_at, UNNEST($step1.s1__coupon_code) AS s3__coupon_code  UNION ALL  SELECT UNNEST($step2.s2__id)    AS s3__id, UNNEST($step2.s2__customer_id) AS s3__customer_id, UNNEST($step2.s2__total_eur) AS s3__total_eur, UNNEST($step2.s2__updated_at) AS s3__updated_at, UNNEST($step2.s2__coupon_code) AS s3__coupon_code) AS t ORDER BY t.s3__updated_at DESC LIMIT 20",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__id",
+                    "source": "orders.id"
+                },
+                {
+                    "alias": "s3__customer_id",
+                    "source": "orders.customer_id"
+                },
+                {
+                    "alias": "s3__total_eur",
+                    "source": "orders.total_eur"
+                },
+                {
+                    "alias": "s3__updated_at",
+                    "source": "orders.updated_at"
+                },
+                {
+                    "alias": "s3__coupon_code",
+                    "source": "orders.coupon_code"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s3__id",
+                    "dependency_step_column": "s1__id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__id",
+        "s3__customer_id",
+        "s3__total_eur",
+        "s3__updated_at",
+        "s3__coupon_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

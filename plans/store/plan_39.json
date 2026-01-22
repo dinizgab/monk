@@ -1,0 +1,24 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute per-group item counts (active vs inactive) from the items table, join to product_groups and return groups where inactive items outnumber active items.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT pg.gid,\n       pg.group_name,\n       s.inactive_count,\n       s.active_count,\n       s.total_count,\n       ROUND((s.inactive_count::numeric / NULLIF(s.total_count,0))::numeric, 4) AS inactive_ratio\nFROM product_groups pg\nJOIN (\n  SELECT group_ref AS gid,\n         SUM(CASE WHEN active = 'Y' THEN 1 ELSE 0 END) AS active_count,\n         SUM(CASE WHEN active <> 'Y' THEN 1 ELSE 0 END) AS inactive_count,\n         COUNT(*) AS total_count\n  FROM items\n  WHERE group_ref IS NOT NULL\n  GROUP BY group_ref\n) s ON pg.gid = s.gid\nWHERE s.inactive_count > s.active_count\nORDER BY s.inactive_count DESC;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "gid",
+        "group_name",
+        "inactive_count",
+        "active_count",
+        "total_count",
+        "inactive_ratio"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count distinct customers by payment method to determine each method's popularity.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT payment_method_code, COUNT(DISTINCT customer_id) AS usage_count FROM customer_payment_methods GROUP BY payment_method_code;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "payment_method_code",
+        "usage_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

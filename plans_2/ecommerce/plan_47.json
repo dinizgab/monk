@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Filter Products for names containing 'Dell' and return their sizes",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT Products.product_size AS s1__product_size FROM Products WHERE Products.product_name LIKE '%Dell%';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__product_size",
+                    "source": "Products.product_size"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__product_size"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve distinct flavors for goods whose food is Croissant (case-insensitive) from the goods database.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT flavor FROM goods WHERE food ILIKE 'Croissant' AND flavor IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "flavor"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

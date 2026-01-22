@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all customer records from the EU sales system. The metadata does not include an explicit account creation timestamp, so use updated_at as a proxy for account creation when ranking newest accounts. Include a source marker so results from different systems can be distinguished at the application level.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS customer_id, email, full_name, country, updated_at, 'sales_eu' AS source FROM customers;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve all customer records from the US sales system. As above, use updated_at as a proxy for account creation and mark the source.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS customer_id, email, full_name, country, updated_at, 'sales_us' AS source FROM customers;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "source",
+        "customer_id",
+        "email",
+        "full_name",
+        "country",
+        "updated_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

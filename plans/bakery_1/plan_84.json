@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select ids of goods that are cookies and whose price is strictly less than the minimum price of any croissant.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE food = 'cookie' AND price < (SELECT MIN(price) FROM goods WHERE food = 'croissant' AND price IS NOT NULL);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

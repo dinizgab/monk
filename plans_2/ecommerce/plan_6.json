@@ -1,0 +1,46 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the earliest order date from Orders",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT MIN(Orders.date_order_placed) AS s1__earliest_date FROM Orders",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__earliest_date",
+                    "source": "Orders.date_order_placed"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find orders that have more than 1 item and return their order_id and order date",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Orders.order_id AS s2__order_id, Orders.date_order_placed AS s2__date_order_placed FROM Order_Items INNER JOIN Orders ON Order_Items.order_id = Orders.order_id GROUP BY Orders.order_id, Orders.date_order_placed HAVING COUNT(Order_Items.order_item_id) > 1",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__order_id",
+                    "source": "Orders.order_id"
+                },
+                {
+                    "alias": "s2__date_order_placed",
+                    "source": "Orders.date_order_placed"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__earliest_date",
+        "s2__date_order_placed"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

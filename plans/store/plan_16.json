@@ -1,0 +1,40 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve inactive products from the store_main.products table (is_active = false) and tag results with the source database.",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id, name, sku, price, category_id, is_active, created_at, 'store_main' AS source_database FROM products WHERE is_active = false;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve inactive items from the store_alt.items table (active <> 'Y') and tag results with the source database.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code, title, amount_in_cents, group_ref, active, created_on, 'store_alt' AS source_database FROM items WHERE active <> 'Y';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "source_database",
+        "id",
+        "name",
+        "sku",
+        "price",
+        "category_id",
+        "is_active",
+        "created_at",
+        "code",
+        "title",
+        "amount_in_cents",
+        "group_ref",
+        "active",
+        "created_on"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

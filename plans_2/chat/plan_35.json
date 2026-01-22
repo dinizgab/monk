@@ -1,0 +1,59 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get all usernames from the app database",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.username AS s1__username FROM users;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select users present in the chat database whose username is not in the app usernames",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT users.id AS s2__id, users.username AS s2__username, users.full_name AS s2__full_name FROM users WHERE users.username NOT IN ($step1.s1__username);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "users.id"
+                },
+                {
+                    "alias": "s2__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "users.full_name"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s2__username",
+                    "dependency_step_column": "s1__username"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__id",
+        "s2__username",
+        "s2__full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

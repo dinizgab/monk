@@ -1,0 +1,31 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find users in the application DB who have at least one post (active by posts). Returns user id, username and email from app.users for users referenced in app.posts.",
+            "database": "postgresql://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT u.id, u.username, u.email FROM users u WHERE u.id IN (SELECT DISTINCT user_id FROM posts);",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find users in the chat DB who have sent at least one message (active by messages). Returns user id, username and full_name from app_chat.users for users referenced in app_chat.messages.",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT u.id, u.username, u.full_name FROM users u WHERE u.id IN (SELECT DISTINCT sended_by FROM messages);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "username",
+        "email",
+        "full_name",
+        "source_database"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

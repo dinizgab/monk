@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select the ids of goods that are cakes and whose price is at least the average price of all tarts in the goods table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id FROM goods WHERE LOWER(food) = 'cake' AND price >= (SELECT AVG(price) FROM goods WHERE LOWER(food) = 'tart');",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

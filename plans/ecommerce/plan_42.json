@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the distinct order item status codes from the Order_Items table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT DISTINCT order_item_status_code FROM Order_Items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "distinct_status_count"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "order_item_status_code"
+    }
+}

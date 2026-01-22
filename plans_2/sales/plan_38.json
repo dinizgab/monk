@@ -1,0 +1,52 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate order counts per customer country in the EU database (sales_eu).",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.country AS s1__country, COUNT(orders.id) AS s1__order_count FROM orders JOIN customers ON orders.customer_id = customers.id GROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Aggregate order counts per customer country in the US database (sales_us).",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.country AS s2__country, COUNT(orders.id) AS s2__order_count FROM orders JOIN customers ON orders.customer_id = customers.id GROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__country",
+        "s1__order_count",
+        "s2__country",
+        "s2__order_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

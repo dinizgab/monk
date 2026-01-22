@@ -1,0 +1,30 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get active products from the store_main database and normalize columns (mark source, id as text, name, active boolean).",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT 'store_main' AS source_database, id::text AS id_or_code, name, is_active AS active FROM products WHERE is_active = true;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get active items from the store_alt database and normalize columns (mark source, id/code as text, name, active boolean).",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT 'store_alt' AS source_database, code::text AS id_or_code, title AS name, (active = 'Y') AS active FROM items WHERE active = 'Y';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "source_database",
+        "id_or_code",
+        "name",
+        "active"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

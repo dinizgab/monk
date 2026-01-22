@@ -1,0 +1,92 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select customers from EU whose updated_at is older than one year",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.id AS s1__id, customers.email AS s1__email, customers.full_name AS s1__full_name, customers.country AS s1__country, customers.marketing_ok AS s1__marketing_ok, customers.updated_at AS s1__updated_at FROM customers WHERE customers.updated_at < now() - INTERVAL '1 year';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s1__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__marketing_ok",
+                    "source": "customers.marketing_ok"
+                },
+                {
+                    "alias": "s1__updated_at",
+                    "source": "customers.updated_at"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select customers from US whose updated_at is older than one year",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.id AS s2__id, customers.email AS s2__email, customers.full_name AS s2__full_name, customers.country AS s2__country, customers.marketing_ok AS s2__marketing_ok, customers.updated_at AS s2__updated_at FROM customers WHERE customers.updated_at < now() - INTERVAL '1 year';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                },
+                {
+                    "alias": "s2__full_name",
+                    "source": "customers.full_name"
+                },
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__marketing_ok",
+                    "source": "customers.marketing_ok"
+                },
+                {
+                    "alias": "s2__updated_at",
+                    "source": "customers.updated_at"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__id",
+        "s1__email",
+        "s1__full_name",
+        "s1__country",
+        "s1__marketing_ok",
+        "s1__updated_at",
+        "s2__id",
+        "s2__email",
+        "s2__full_name",
+        "s2__country",
+        "s2__marketing_ok",
+        "s2__updated_at"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

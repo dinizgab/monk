@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count orders grouped by order_status_code to determine frequency of each order status.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT order_status_code, COUNT(*) AS cnt FROM Orders GROUP BY order_status_code;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "order_status_code",
+        "cnt"
+    ],
+    "final_aggregation": {
+        "type": "MIN",
+        "column": "cnt"
+    }
+}

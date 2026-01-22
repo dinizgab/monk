@@ -1,0 +1,197 @@
+[
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3309,
+        "database": "receipts_db",
+        "tables": {
+            "receipts": [
+                {
+                    "name": "ReceiptNumber",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "Date",
+                    "type": "DATE",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "CustomerId",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "mysql",
+        "drivername": "pymysql",
+        "username": "appuser",
+        "password": "apppass",
+        "host": "localhost",
+        "port": 3310,
+        "database": "items_db",
+        "tables": {
+            "items": [
+                {
+                    "name": "Receipt",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "Ordinal",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "Item",
+                    "type": "VARCHAR(255)",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5435,
+        "database": "customers_db",
+        "tables": {
+            "customers": [
+                {
+                    "name": "id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "nextval('customers_id_seq'::regclass)",
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "lastname",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "firstname",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "appuser",
+        "password": "root",
+        "host": "localhost",
+        "port": 5436,
+        "database": "goods_db",
+        "tables": {
+            "goods": [
+                {
+                    "name": "id",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "flavor",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "food",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "price",
+                    "type": "REAL",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    }
+]

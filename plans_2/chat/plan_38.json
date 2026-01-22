@@ -1,0 +1,77 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Aggregate post counts per username from the app database (posts -> users).",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT users.username AS s1__username, COUNT(posts.id) AS s1__posts_count FROM posts JOIN users ON posts.user_id = users.id GROUP BY users.username;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s1__posts_count",
+                    "source": "posts.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Aggregate message counts per username from the app_chat database (messages -> users).",
+            "database": "postgresql+psycopg://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT users.username AS s2__username, COUNT(messages.id) AS s2__messages_count FROM messages JOIN users ON messages.sended_by = users.id GROUP BY users.username;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s2__messages_count",
+                    "source": "messages.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Combine post and message aggregates by username (full outer join on username) and compute total activity, ordering by total activity descending.",
+            "database": "postgresql+psycopg://app_user:app_pass@localhost:5440/app",
+            "query": "SELECT COALESCE(s1.s1__username, s2.s2__username) AS s3__username, COALESCE(s1.s1__posts_count, 0) + COALESCE(s2.s2__messages_count, 0) AS s3__total_activity FROM (SELECT $step1.s1__username AS s1__username, $step1.s1__posts_count AS s1__posts_count) AS s1 FULL JOIN (SELECT $step2.s2__username AS s2__username, $step2.s2__messages_count AS s2__messages_count) AS s2 ON s1.s1__username = s2.s2__username ORDER BY s3__total_activity DESC;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__username",
+                    "source": "users.username"
+                },
+                {
+                    "alias": "s3__total_activity",
+                    "source": "posts.id"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s3__username",
+                    "dependency_step_column": "s1__username"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__username",
+        "s3__total_activity"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the mean (average) product price across all products.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT AVG(product_price) AS mean_price FROM Products;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve the prices and sizes of products whose price is greater than the mean price computed in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT product_price, product_size FROM Products WHERE product_price > $step1.mean_price;",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "product_price",
+                    "dependency_step_column": "mean_price"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "product_price",
+        "product_size"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

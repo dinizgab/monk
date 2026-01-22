@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all receipts that have the most recent (maximum) Date and include their receipt number, date, and customer id.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT ReceiptNumber, Date, CustomerId FROM receipts WHERE Date = (SELECT MAX(Date) FROM receipts);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "ReceiptNumber",
+        "Date",
+        "CustomerId"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

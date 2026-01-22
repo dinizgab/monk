@@ -1,0 +1,59 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select customer ids and emails from EU customers.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.id AS s1__id, customers.email AS s1__email FROM customers;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s1__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select customer ids and emails from US customers that match emails from EU customers.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.id AS s2__id, customers.email AS s2__email FROM customers WHERE customers.email IN ($step1.s1__email);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "customers.id"
+                },
+                {
+                    "alias": "s2__email",
+                    "source": "customers.email"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__email",
+                    "dependency_step_column": "s1__email"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s1__email",
+        "s1__id",
+        "s2__id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

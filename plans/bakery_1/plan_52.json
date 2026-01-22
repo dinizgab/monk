@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve id and price for goods whose id contains '70'.",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, price FROM goods WHERE id LIKE '%70%';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "price"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

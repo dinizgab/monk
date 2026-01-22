@@ -1,0 +1,3 @@
+product_id,product_name,sku_or_code,price_dollars,amount_in_cents,active_flag,created_at,category_id,group_ref,source_database
+d7a72495-5252-4090-84b5-a1c880128919,Carregador USB-C 20W,d7a72495-5252-4090-84b5-a1c880128919,,7990,Y,2026-01-01,,2,store_alt
+868b8d67-7b7d-48f4-a3e0-3836514699fc,Cabo USB-C 2m,868b8d67-7b7d-48f4-a3e0-3836514699fc,,4990,Y,2026-01-01,,2,store_alt

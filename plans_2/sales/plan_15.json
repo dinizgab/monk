@@ -1,0 +1,69 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count orders in the EU database from customers who updated in the last 30 days.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT COUNT(o.id) AS s1__order_count FROM customers c INNER JOIN orders o ON c.id = o.customer_id WHERE c.updated_at >= now() - INTERVAL '30 days';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count orders in the US database from customers who updated in the last 30 days.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT COUNT(o.id) AS s2__order_count FROM customers c INNER JOIN orders o ON c.id = o.customer_id WHERE c.updated_at >= now() - INTERVAL '30 days';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__order_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Bring the two counts together so we can determine which region has more recent-customer orders.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT $step1.s1__order_count AS s3__eu_count, $step2.s2__order_count AS s3__us_count;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__eu_count",
+                    "source": "orders.id"
+                },
+                {
+                    "alias": "s3__us_count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s3__eu_count",
+                    "dependency_step_column": "s1__order_count"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__eu_count",
+        "s3__us_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

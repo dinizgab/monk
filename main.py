@@ -7,12 +7,6 @@ from pathlib import Path
 from src.utils.sort import sort_execution_plan
 from src.utils.metadata_extraction import extract_db_info
 from src.query_translation import translate_query
-from src.plan_execution import execute_plan
-
-# oracle://user:password@host:1521/dbname
-# postgresql://user:password@host:5432/dbname
-# mysql://user:password@host:3306/dbname
-# mssql://user:password@host:1433/dbname
 
 app = typer.Typer()
 
@@ -45,15 +39,17 @@ def translate(
     data = translate_query(metadata_path, query)
 
     if not output_path:
+        Path("./plans").mkdir(parents=True, exist_ok=True)
+
         ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-        output_path = f"execution_plan_{ts}.json"
+        output_path = f"/plans/execution_plan_{ts}.json"
 
     print("-" * 40)
     data.execution_plan = sort_execution_plan(data.execution_plan)
     print("Execution Plan Steps:")
     for step in data.execution_plan:
         print(f" - {step.id}: {step.description}")
-    
+
     print("-" * 40)
     out = Path(output_path)
     out.write_text(
@@ -61,15 +57,6 @@ def translate(
     )
     print(f"Execution plan saved to {out.resolve()}")
     print("-" * 40)
-
-    print(f"Executing plan...")
-    result_df = execute_plan(data)
-
-    result_df.to_csv("result.csv", index=False)
-    print("Final result saved to result.csv")
-    print(result_df.head())
-    print("-" * 40)
-
 
 if __name__ == "__main__":
     app()

@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find receipt numbers that include at least one item matching 'cake' and at least one item matching 'cookie' (case-insensitive, handles plural forms) from the items table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Receipt AS ReceiptNumber\nFROM items\nWHERE Item IS NOT NULL\nGROUP BY Receipt\nHAVING SUM(CASE WHEN LOWER(Item) LIKE '%cake%' THEN 1 ELSE 0 END) > 0\n   AND SUM(CASE WHEN LOWER(Item) LIKE '%cookie%' THEN 1 ELSE 0 END) > 0;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "ReceiptNumber"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

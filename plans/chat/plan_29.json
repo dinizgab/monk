@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get distinct IDs of users who are members of any chat (users who joined chats).",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT DISTINCT user_id FROM chat_members;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Get user details for users returned by step 1 but exclude any users who have sent messages (i.e., users who joined chats but never sent messages in them).",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT id, username, full_name FROM users WHERE id IN ($step1.user_id) AND id NOT IN (SELECT DISTINCT sended_by FROM messages);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "id",
+                    "dependency_step_column": "user_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "username",
+        "full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

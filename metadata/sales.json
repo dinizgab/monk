@@ -1,0 +1,284 @@
+[
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "eu_user",
+        "password": "eu_pass",
+        "host": "localhost",
+        "port": 5437,
+        "database": "sales_eu",
+        "tables": {
+            "customers": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": "nextval('customers_id_seq'::regclass)",
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "email",
+                    "type": "CITEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "full_name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "country",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "'DE'::text",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "marketing_ok",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "false",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "orders": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": "nextval('orders_id_seq'::regclass)",
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "customer_id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "customers",
+                            "column": "id"
+                        }
+                    ]
+                },
+                {
+                    "name": "total_eur",
+                    "type": "NUMERIC(12, 2)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "coupon_code",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    },
+    {
+        "dialect": "postgresql",
+        "drivername": "psycopg",
+        "username": "us_user",
+        "password": "us_pass",
+        "host": "localhost",
+        "port": 5438,
+        "database": "sales_us",
+        "tables": {
+            "customers": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": "nextval('customers_id_seq'::regclass)",
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "email",
+                    "type": "CITEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "full_name",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "country",
+                    "type": "TEXT",
+                    "nullable": false,
+                    "default": "'DE'::text",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "marketing_ok",
+                    "type": "BOOLEAN",
+                    "nullable": false,
+                    "default": "false",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ],
+            "orders": [
+                {
+                    "name": "id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": "nextval('orders_id_seq'::regclass)",
+                    "comment": null,
+                    "autoincrement": true,
+                    "is_primary_key": true,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "customer_id",
+                    "type": "BIGINT",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": true,
+                    "foreign_key_references": [
+                        {
+                            "table": "customers",
+                            "column": "id"
+                        }
+                    ]
+                },
+                {
+                    "name": "total_eur",
+                    "type": "NUMERIC(12, 2)",
+                    "nullable": false,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP WITH TIME ZONE",
+                    "nullable": false,
+                    "default": "now()",
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                },
+                {
+                    "name": "coupon_code",
+                    "type": "TEXT",
+                    "nullable": true,
+                    "default": null,
+                    "comment": null,
+                    "autoincrement": false,
+                    "is_primary_key": false,
+                    "is_foreign_key": false,
+                    "foreign_key_references": []
+                }
+            ]
+        }
+    }
+]

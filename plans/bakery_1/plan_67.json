@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve id, flavor, and price for all goods whose flavor is 'blackberry' or 'blueberry' (exclude NULL prices).",
+            "database": "postgresql://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, flavor, price FROM goods WHERE flavor IN ('blackberry', 'blueberry') AND price IS NOT NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "average_price"
+    ],
+    "final_aggregation": {
+        "type": "AVG",
+        "column": "price"
+    }
+}

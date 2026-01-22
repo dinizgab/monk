@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count purchases per customer and return the customer id with the highest number of purchases.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT CustomerId AS s1__CustomerId, COUNT(ReceiptNumber) AS s1__purchase_count FROM receipts GROUP BY CustomerId ORDER BY s1__purchase_count DESC LIMIT 1",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__CustomerId",
+                    "source": "receipts.CustomerId"
+                },
+                {
+                    "alias": "s1__purchase_count",
+                    "source": "receipts.ReceiptNumber"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__CustomerId",
+        "s1__purchase_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

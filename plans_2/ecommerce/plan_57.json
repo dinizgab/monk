@@ -1,0 +1,37 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select address, town/city and county for customers whose country is USA from the users database.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customers.address_line_1 AS s1__address_line_1, customers.town_city AS s1__town_city, customers.county AS s1__county FROM customers WHERE customers.country = 'USA';",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__address_line_1",
+                    "source": "customers.address_line_1"
+                },
+                {
+                    "alias": "s1__town_city",
+                    "source": "customers.town_city"
+                },
+                {
+                    "alias": "s1__county",
+                    "source": "customers.county"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__address_line_1",
+        "s1__town_city",
+        "s1__county"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

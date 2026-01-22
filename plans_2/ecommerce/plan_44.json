@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select all payment method codes available in the customer_payment_methods table.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT payment_method_code AS s1__payment_method_code FROM customer_payment_methods",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__payment_method_code",
+                    "source": "customer_payment_methods.payment_method_code"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__payment_method_code"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s1__payment_method_code",
+        "distinct": true,
+        "group_by": []
+    }
+}

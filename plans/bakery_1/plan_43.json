@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve distinct ids of goods whose price is less than the price of at least one good of type 'Tart'.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT DISTINCT g1.id FROM goods g1 WHERE g1.price IS NOT NULL AND EXISTS (SELECT 1 FROM goods g2 WHERE g2.food = 'Tart' AND g2.price IS NOT NULL AND g1.price < g2.price);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

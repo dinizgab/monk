@@ -1,0 +1,89 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute per-country average profile-update turnaround (seconds) in the EU database for cases where the customer profile was updated after the order.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT customers.country AS s1__country, AVG(EXTRACT(EPOCH FROM (customers.updated_at - orders.updated_at))) AS s1__avg_seconds, COUNT(orders.id) AS s1__count FROM customers JOIN orders ON orders.customer_id = customers.id WHERE customers.updated_at > orders.updated_at GROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s1__avg_seconds",
+                    "source": "customers.updated_at"
+                },
+                {
+                    "alias": "s1__count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute per-country average profile-update turnaround (seconds) in the US database for cases where the customer profile was updated after the order.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT customers.country AS s2__country, AVG(EXTRACT(EPOCH FROM (customers.updated_at - orders.updated_at))) AS s2__avg_seconds, COUNT(orders.id) AS s2__count FROM customers JOIN orders ON orders.customer_id = customers.id WHERE customers.updated_at > orders.updated_at GROUP BY customers.country;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s2__avg_seconds",
+                    "source": "customers.updated_at"
+                },
+                {
+                    "alias": "s2__count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Combine per-country averages from EU and US into a single dataset (one row per country per region source). The combined dataset will be used to determine the minimum average turnaround.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT $step1.s1__country AS s3__country, $step1.s1__avg_seconds AS s3__avg_seconds, $step1.s1__count AS s3__count UNION ALL SELECT $step2.s2__country AS s3__country, $step2.s2__avg_seconds AS s3__avg_seconds, $step2.s2__count AS s3__count;",
+            "depends_on": [
+                1,
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__country",
+                    "source": "customers.country"
+                },
+                {
+                    "alias": "s3__avg_seconds",
+                    "source": "customers.updated_at"
+                },
+                {
+                    "alias": "s3__count",
+                    "source": "orders.id"
+                }
+            ],
+            "join_info": {
+                "type": "FULL",
+                "on": {
+                    "current_step_column": "s3__country",
+                    "dependency_step_column": "s1__country"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__country",
+        "s3__avg_seconds"
+    ],
+    "final_aggregation": {
+        "type": "MIN",
+        "column": "s3__avg_seconds",
+        "distinct": false,
+        "group_by": []
+    }
+}

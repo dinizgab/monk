@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find orders in the EU sales database whose customer_id does not exist in the EU customers table.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT 'EU' AS region, o.id AS order_id, o.customer_id, o.total_eur, o.updated_at, o.coupon_code FROM orders o LEFT JOIN customers c ON o.customer_id = c.id WHERE c.id IS NULL;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find orders in the US sales database whose customer_id does not exist in the US customers table.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT 'US' AS region, o.id AS order_id, o.customer_id, o.total_eur, o.updated_at, o.coupon_code FROM orders o LEFT JOIN customers c ON o.customer_id = c.id WHERE c.id IS NULL;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "order_id",
+        "customer_id",
+        "total_eur",
+        "updated_at",
+        "coupon_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

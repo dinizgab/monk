@@ -1,0 +1,78 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve receipts with their dates.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3309/receipts_db",
+            "query": "SELECT receipts.ReceiptNumber AS s1__ReceiptNumber, receipts.Date AS s1__Date FROM receipts;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__ReceiptNumber",
+                    "source": "receipts.ReceiptNumber"
+                },
+                {
+                    "alias": "s1__Date",
+                    "source": "receipts.Date"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve goods ids with their prices.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT goods.id AS s2__id, goods.price AS s2__price FROM goods;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s2__id",
+                    "source": "goods.id"
+                },
+                {
+                    "alias": "s2__price",
+                    "source": "goods.price"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 3,
+            "description": "Retrieve items (which reference goods) with their receipt numbers. This step declares dependencies so the application can join items to goods and receipts.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT items.Receipt AS s3__Receipt, items.Item AS s3__Item FROM items;",
+            "depends_on": [
+                2,
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__Receipt",
+                    "source": "items.Receipt"
+                },
+                {
+                    "alias": "s3__Item",
+                    "source": "items.Item"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__Item",
+                    "dependency_step_column": "s2__id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s1__Date"
+    ],
+    "final_aggregation": {
+        "type": "SUM",
+        "column": "s2__price",
+        "distinct": false,
+        "group_by": [
+            "s1__Date"
+        ]
+    }
+}

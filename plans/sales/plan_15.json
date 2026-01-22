@@ -1,0 +1,28 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count orders placed by customers in the EU who updated their customer record in the last 30 days (region = EU).",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT 'EU' AS region, COUNT(o.id) AS orders_count\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE c.updated_at >= now() - interval '30 days';",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count orders placed by customers in the US who updated their customer record in the last 30 days (region = US).",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT 'US' AS region, COUNT(o.id) AS orders_count\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE c.updated_at >= now() - interval '30 days';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "orders_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

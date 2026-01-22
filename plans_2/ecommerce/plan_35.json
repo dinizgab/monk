@@ -1,0 +1,53 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get all invoice_number values that have been used in shipments (from shipments_db).",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT DISTINCT invoice_number AS s1__invoice_number FROM shipments",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__invoice_number",
+                    "source": "shipments.invoice_number"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Select invoice numbers and their status from Orders DB for invoices that are NOT present in shipments (i.e., invoices not shipped).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT invoice_number AS s2__invoice_number, invoice_status_code AS s2__invoice_status_code FROM Invoices WHERE invoice_number NOT IN ($step1.s1__invoice_number)",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__invoice_number",
+                    "source": "Invoices.invoice_number"
+                },
+                {
+                    "alias": "s2__invoice_status_code",
+                    "source": "Invoices.invoice_status_code"
+                }
+            ],
+            "join_info": {
+                "type": "LEFT",
+                "on": {
+                    "current_step_column": "s2__invoice_number",
+                    "dependency_step_column": "s1__invoice_number"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s2__invoice_status_code"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

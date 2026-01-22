@@ -1,0 +1,29 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute total revenue (in EUR) from all orders in the EU dataset.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT SUM(total_eur) AS total_revenue FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Compute total revenue (in EUR) from all orders in the US dataset.",
+            "database": "postgresql+psycopg://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT SUM(total_eur) AS total_revenue FROM orders;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "region",
+        "total_revenue",
+        "percentage_of_total"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

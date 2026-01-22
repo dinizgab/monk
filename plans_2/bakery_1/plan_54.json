@@ -1,0 +1,27 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Select customer last names and order them alphabetically.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5435/customers_db",
+            "query": "SELECT lastname AS s1__lastname FROM customers ORDER BY s1__lastname ASC;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__lastname",
+                    "source": "customers.lastname"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__lastname"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

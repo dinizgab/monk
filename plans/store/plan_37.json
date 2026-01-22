@@ -1,0 +1,29 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Count number of products per category name in the store_main database (include categories with zero products).",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT c.name AS name, COUNT(p.id) AS categories_count\nFROM categories c\nLEFT JOIN products p ON p.category_id = c.id\nGROUP BY c.name;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Count number of items per product group name in the store_alt database (include groups with zero items).",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT pg.group_name AS name, COUNT(i.code) AS groups_count\nFROM product_groups pg\nLEFT JOIN items i ON i.group_ref = pg.gid\nGROUP BY pg.group_name;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "name",
+        "categories_count",
+        "groups_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

@@ -1,0 +1,84 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Get all shipped order_item_id values from shipment_items.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT shipment_items.order_item_id AS s1__order_item_id FROM shipment_items",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_item_id",
+                    "source": "shipment_items.order_item_id"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Find product_id for shipped order items by linking Order_Items to shipped order_item_id values.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Order_Items.order_item_id AS s2__order_item_id, Order_Items.product_id AS s2__product_id FROM Order_Items WHERE Order_Items.order_item_id IN ($step1.s1__order_item_id)",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__order_item_id",
+                    "source": "Order_Items.order_item_id"
+                },
+                {
+                    "alias": "s2__product_id",
+                    "source": "Order_Items.product_id"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__order_item_id",
+                    "dependency_step_column": "s1__order_item_id"
+                }
+            }
+        },
+        {
+            "id": 3,
+            "description": "Retrieve product names and colors for the shipped products.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3307/products_db",
+            "query": "SELECT Products.product_id AS s3__product_id, Products.product_name AS s3__product_name, Products.product_color AS s3__product_color FROM Products WHERE Products.product_id IN ($step2.s2__product_id)",
+            "depends_on": [
+                2
+            ],
+            "output_columns": [
+                {
+                    "alias": "s3__product_id",
+                    "source": "Products.product_id"
+                },
+                {
+                    "alias": "s3__product_name",
+                    "source": "Products.product_name"
+                },
+                {
+                    "alias": "s3__product_color",
+                    "source": "Products.product_color"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s3__product_id",
+                    "dependency_step_column": "s2__product_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s3__product_name",
+        "s3__product_color"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

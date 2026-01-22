@@ -1,0 +1,33 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Fetch the top 10 most recently updated customers from the EU region (sales_eu). This retrieves the most-recent rows local to this shard to minimize transferred data; final global top-10 will be computed in the application by merging results from all regions.",
+            "database": "postgresql://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT id AS customer_id, email, full_name, country, marketing_ok, updated_at, 'sales_eu' AS source_db FROM customers ORDER BY updated_at DESC LIMIT 10;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Fetch the top 10 most recently updated customers from the US region (sales_us). Same rationale as step 1: retrieve top local rows and let the application compute the global top-10.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT id AS customer_id, email, full_name, country, marketing_ok, updated_at, 'sales_us' AS source_db FROM customers ORDER BY updated_at DESC LIMIT 10;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "customer_id",
+        "email",
+        "full_name",
+        "country",
+        "marketing_ok",
+        "updated_at",
+        "source_db"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

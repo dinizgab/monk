@@ -1,0 +1,32 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find order_status_code(s) that have the minimum number of orders (least common order status) by counting orders grouped by status and filtering to the minimum count.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Orders.order_status_code AS s1__order_status_code, COUNT(Orders.order_id) AS s1__order_count\nFROM Orders\nGROUP BY Orders.order_status_code\nHAVING COUNT(Orders.order_id) = (\n  SELECT MIN(c) FROM (\n    SELECT COUNT(order_id) AS c FROM Orders GROUP BY order_status_code\n  ) AS counts\n);",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__order_status_code",
+                    "source": "Orders.order_status_code"
+                },
+                {
+                    "alias": "s1__order_count",
+                    "source": "Orders.order_id"
+                }
+            ],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "s1__order_status_code",
+        "s1__order_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": "",
+        "distinct": false,
+        "group_by": []
+    }
+}

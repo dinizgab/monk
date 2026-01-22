@@ -1,0 +1,21 @@
+order_id,order_status_code,product_count
+1,Cancelled,1
+2,Part Completed,0
+3,Cancelled,2
+4,Delivered,1
+5,Delivered,0
+6,Delivered,1
+7,Part Completed,1
+8,Part Completed,1
+9,Part Completed,0
+10,Part Completed,2
+11,Cancelled,0
+12,Cancelled,0
+13,Part Completed,0
+14,Delivered,0
+15,Cancelled,0
+16,Cancelled,0
+17,Delivered,1
+18,Cancelled,2
+19,Part Completed,2
+20,Cancelled,1

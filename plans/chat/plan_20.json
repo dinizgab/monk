@@ -1,0 +1,21 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve users from the app_chat database who have sent at least one message (user rows joined to messages by messages.sended_by = users.id).",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT u.id, u.username, u.full_name FROM users u WHERE EXISTS (SELECT 1 FROM messages m WHERE m.sended_by = u.id);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "username",
+        "full_name"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

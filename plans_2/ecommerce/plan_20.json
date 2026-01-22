@@ -1,0 +1,60 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve customer IDs with their gender codes from the users database.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5433/users_db",
+            "query": "SELECT customers.customer_id AS s1__customer_id, customers.gender_code AS s1__gender_code FROM customers;",
+            "depends_on": [],
+            "output_columns": [
+                {
+                    "alias": "s1__customer_id",
+                    "source": "customers.customer_id"
+                },
+                {
+                    "alias": "s1__gender_code",
+                    "source": "customers.gender_code"
+                }
+            ],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve purchased product IDs and the purchasing customer_id from orders DB for customers returned in step 1.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3308/orders_db",
+            "query": "SELECT Order_Items.product_id AS s2__product_id, Orders.customer_id AS s2__customer_id FROM Order_Items INNER JOIN Orders ON Order_Items.order_id = Orders.order_id WHERE Orders.customer_id IN ($step1.s1__customer_id);",
+            "depends_on": [
+                1
+            ],
+            "output_columns": [
+                {
+                    "alias": "s2__product_id",
+                    "source": "Order_Items.product_id"
+                },
+                {
+                    "alias": "s2__customer_id",
+                    "source": "Orders.customer_id"
+                }
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "s2__customer_id",
+                    "dependency_step_column": "s1__customer_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "s1__gender_code",
+        "s2__product_id"
+    ],
+    "final_aggregation": {
+        "type": "COUNT",
+        "column": "s2__product_id",
+        "distinct": false,
+        "group_by": [
+            "s1__gender_code"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Find all chat users whose message count is greater than the average messages per user (average computed across all users in the chat database). Returns user id, username, full_name and their message_count.",
+            "database": "postgresql://app_chat_user:app_chat_pass@localhost:5439/app_chat",
+            "query": "SELECT u.id, u.username, u.full_name, COALESCE(m.msg_count, 0) AS message_count\nFROM users u\nLEFT JOIN (\n  SELECT sended_by, COUNT(*) AS msg_count\n  FROM messages\n  GROUP BY sended_by\n) m ON u.id = m.sended_by\nWHERE COALESCE(m.msg_count, 0) > (\n  SELECT CASE WHEN totals.total_users = 0 THEN 0 ELSE totals.total_messages::double precision / totals.total_users END\n  FROM (\n    SELECT (SELECT COUNT(*) FROM messages) AS total_messages,\n           (SELECT COUNT(*) FROM users) AS total_users\n  ) totals\n);",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "username",
+        "full_name",
+        "message_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

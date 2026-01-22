@@ -1,0 +1,23 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve product id, name, price, sku and category_id from store_main.products and order results by price ascending (lowest to highest).",
+            "database": "postgres://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id, name, price, sku, category_id FROM products ORDER BY price ASC;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "name",
+        "price",
+        "sku",
+        "category_id"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

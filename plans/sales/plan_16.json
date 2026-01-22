@@ -1,0 +1,26 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all orders from the EU sales database with total_eur > 100 that were updated/placed during the previous calendar month, including customer contact and country information by joining to the customers table.",
+            "database": "postgresql+psycopg://eu_user:eu_pass@localhost:5437/sales_eu",
+            "query": "SELECT o.id AS order_id, o.customer_id, o.total_eur, o.updated_at AS order_timestamp, o.coupon_code, c.email AS customer_email, c.full_name AS customer_name, c.country AS customer_country FROM orders o INNER JOIN customers c ON o.customer_id = c.id WHERE o.total_eur > 100 AND o.updated_at >= date_trunc('month', now()) - interval '1 month' AND o.updated_at < date_trunc('month', now());",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "order_id",
+        "customer_id",
+        "total_eur",
+        "order_timestamp",
+        "coupon_code",
+        "customer_email",
+        "customer_name",
+        "customer_country"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

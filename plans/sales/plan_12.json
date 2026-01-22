@@ -1,0 +1,26 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve orders from the US that used a coupon by joining orders to customers in the sales_us database and filtering customers in country = 'US' and orders with a non-empty coupon_code.",
+            "database": "postgresql://us_user:us_pass@localhost:5438/sales_us",
+            "query": "SELECT o.id AS order_id, o.customer_id, o.total_eur, o.updated_at, o.coupon_code, c.full_name, c.email, c.country\nFROM orders o\nINNER JOIN customers c ON o.customer_id = c.id\nWHERE o.coupon_code IS NOT NULL AND o.coupon_code <> ''\n  AND c.country = 'US';",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "order_id",
+        "customer_id",
+        "total_eur",
+        "updated_at",
+        "coupon_code",
+        "full_name",
+        "email",
+        "country"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

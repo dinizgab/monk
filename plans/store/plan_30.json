@@ -1,0 +1,39 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve the 10 most recently created products from the main store ordered by created_at descending.",
+            "database": "postgresql://store_main_user:store_main_pass@localhost:5441/store_main",
+            "query": "SELECT id AS product_id, name AS product_name, sku, price, is_active, created_at, category_id FROM products ORDER BY created_at DESC LIMIT 10;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve the 10 most recently created items from the alternate store ordered by created_on descending.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT code AS item_code, title AS item_title, amount_in_cents, active, created_on, group_ref FROM items ORDER BY created_on DESC LIMIT 10;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "product_id",
+        "product_name",
+        "sku",
+        "price",
+        "is_active",
+        "created_at",
+        "category_id",
+        "item_code",
+        "item_title",
+        "amount_in_cents",
+        "active",
+        "created_on",
+        "group_ref"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}

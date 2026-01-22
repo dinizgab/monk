@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve all amount_in_cents values from the items table so the application can determine the highest amount.",
+            "database": "postgresql://store_alt_user:store_alt_pass@localhost:5442/store_alt",
+            "query": "SELECT amount_in_cents FROM items;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "amount_in_cents"
+    ],
+    "final_aggregation": {
+        "type": "MAX",
+        "column": "amount_in_cents"
+    }
+}

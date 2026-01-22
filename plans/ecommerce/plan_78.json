@@ -1,0 +1,19 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Retrieve shipment tracking numbers and shipment dates for all shipments.",
+            "database": "postgresql://appuser:root@localhost:5434/shipments_db",
+            "query": "SELECT shipment_tracking_number, shipment_date FROM shipments;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "shipment_tracking_number",
+        "shipment_date"
+    ],
+    "final_aggregation": {
+        "type": "NONE"
+    }
+}

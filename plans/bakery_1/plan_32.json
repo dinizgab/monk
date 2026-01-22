@@ -1,0 +1,20 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the number of times each item was purchased by counting item occurrences in the items table.",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Item, COUNT(*) AS purchase_count FROM items GROUP BY Item;",
+            "depends_on": [],
+            "join_info": null
+        }
+    ],
+    "final_output_columns": [
+        "Item",
+        "purchase_count"
+    ],
+    "final_aggregation": {
+        "type": "MIN",
+        "column": "purchase_count"
+    }
+}

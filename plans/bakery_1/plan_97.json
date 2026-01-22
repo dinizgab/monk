@@ -1,0 +1,39 @@
+{
+    "execution_plan": [
+        {
+            "id": 1,
+            "description": "Compute the total number of times each good (Item) was sold by counting rows in the items table; return the top 3 most-sold goods (by Item identifier).",
+            "database": "mysql+pymysql://appuser:apppass@localhost:3310/items_db",
+            "query": "SELECT Item AS goods_id, COUNT(*) AS sold_count FROM items GROUP BY Item ORDER BY sold_count DESC LIMIT 3;",
+            "depends_on": [],
+            "join_info": null
+        },
+        {
+            "id": 2,
+            "description": "Retrieve goods metadata (food, flavor, price) for the top 3 goods identified in step 1.",
+            "database": "postgresql+psycopg://appuser:root@localhost:5436/goods_db",
+            "query": "SELECT id, food, flavor, price FROM goods WHERE id IN ($step1.goods_id);",
+            "depends_on": [
+                1
+            ],
+            "join_info": {
+                "type": "INNER",
+                "on": {
+                    "current_step_column": "id",
+                    "dependency_step_column": "goods_id"
+                }
+            }
+        }
+    ],
+    "final_output_columns": [
+        "id",
+        "food",
+        "flavor",
+        "price",
+        "sold_count"
+    ],
+    "final_aggregation": {
+        "type": "NONE",
+        "column": ""
+    }
+}
