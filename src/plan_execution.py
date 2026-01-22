@@ -55,6 +55,7 @@ def _execute_query(step, query: str, db_engines: Dict[str, Engine]) -> pd.DataFr
     try:
         with engine.connect() as conn:
             df = pd.read_sql(text(query), conn)
+            df = _enforce_step_schema(df, step)
         print(f"✅ Step executed successfully - Returned {len(df)} rows.")
         return df
     except Exception as e:
@@ -260,3 +261,24 @@ def _grouped_aggregation(
     result_series = grouped.apply(agg_functions[agg_type])
     result_df = result_series.reset_index(name=agg_column)
     return result_df
+
+def _enforce_step_schema(df: pd.DataFrame, step) -> pd.DataFrame:
+    if not step.output_columns:
+        return df
+
+    expected = [c["alias"] if isinstance(c, dict) else c.alias for c in step.output_columns]
+    missing = [c for c in expected if c not in df.columns]
+    extra = [c for c in df.columns if c not in expected]
+
+    if missing:
+        raise ExecutionError(
+            f"Step {step.id} returned unexpected schema. Missing columns: {missing}. "
+            f"Got: {list(df.columns)}"
+        )
+
+    df = df[expected]
+
+    if extra:
+        print(f"ℹ️ Step {step.id}: ignoring extra columns: {extra}")
+
+    return df
