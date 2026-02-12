@@ -5,6 +5,7 @@ Supported commands:
 - extract_metadata: generate metadata JSON by listing database container names instead of full URLs.
 - translate: translate the test suite questions into SQL execution plans using the metadata file.
 """
+
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -39,50 +40,106 @@ class ContainerConfig:
 _BASE_CONTAINERS: Dict[str, ContainerConfig] = {
     # Store
     "store_alt": ContainerConfig(
-        dialect="postgresql", username="store_alt_user", password="store_alt_pass", database="store_alt", port=5442
+        dialect="postgresql",
+        username="store_alt_user",
+        password="store_alt_pass",
+        database="store_alt",
+        port=5442,
     ),
     "store_main": ContainerConfig(
-        dialect="postgresql", username="store_main_user", password="store_main_pass", database="store_main", port=5441
+        dialect="postgresql",
+        username="store_main_user",
+        password="store_main_pass",
+        database="store_main",
+        port=5441,
     ),
     # Chat
     "app": ContainerConfig(
-        dialect="postgresql", username="app_user", password="app_pass", database="app", port=5440
+        dialect="postgresql",
+        username="app_user",
+        password="app_pass",
+        database="app",
+        port=5440,
     ),
     "app_chat": ContainerConfig(
-        dialect="postgresql", username="app_chat_user", password="app_chat_pass", database="app_chat", port=5439
+        dialect="postgresql",
+        username="app_chat_user",
+        password="app_chat_pass",
+        database="app_chat",
+        port=5439,
     ),
     # Sales
     "sales_eu": ContainerConfig(
-        dialect="postgresql", username="eu_user", password="eu_pass", database="sales_eu", port=5437
+        dialect="postgresql",
+        username="eu_user",
+        password="eu_pass",
+        database="sales_eu",
+        port=5437,
     ),
     "sales_us": ContainerConfig(
-        dialect="postgresql", username="us_user", password="us_pass", database="sales_us", port=5438
+        dialect="postgresql",
+        username="us_user",
+        password="us_pass",
+        database="sales_us",
+        port=5438,
     ),
     # Ecommerce
     "ecommerce_mysql_products": ContainerConfig(
-        dialect="mysql", username="appuser", password="apppass", database="products_db", port=3307
+        dialect="mysql",
+        username="appuser",
+        password="apppass",
+        database="products_db",
+        port=3307,
     ),
     "ecommerce_mysql_orders": ContainerConfig(
-        dialect="mysql", username="appuser", password="apppass", database="orders_db", port=3308
+        dialect="mysql",
+        username="appuser",
+        password="apppass",
+        database="orders_db",
+        port=3308,
     ),
     "ecommerce_pg_users": ContainerConfig(
-        dialect="postgresql", username="appuser", password="root", database="users_db", port=5433
+        dialect="postgresql",
+        username="appuser",
+        password="root",
+        database="users_db",
+        port=5433,
     ),
     "ecommerce_pg_shipments": ContainerConfig(
-        dialect="postgresql", username="appuser", password="root", database="shipments_db", port=5434
+        dialect="postgresql",
+        username="appuser",
+        password="root",
+        database="shipments_db",
+        port=5434,
     ),
     # Bakery 1
     "bakery_1_mysql_receipts": ContainerConfig(
-        dialect="mysql", username="appuser", password="apppass", database="receipts_db", port=3309
+        dialect="mysql",
+        username="appuser",
+        password="apppass",
+        database="receipts_db",
+        port=3309,
     ),
     "bakery_1_mysql_items": ContainerConfig(
-        dialect="mysql", username="appuser", password="apppass", database="items_db", port=3310
+        dialect="mysql",
+        username="appuser",
+        password="apppass",
+        database="items_db",
+        port=3310,
     ),
     "bakery_1_pg_customers": ContainerConfig(
-        dialect="postgresql", username="appuser", password="root", database="customers_db", port=5435
+        dialect="postgresql",
+        username="appuser",
+        password="root",
+        database="customers_db",
+        port=5435,
     ),
     "bakery_1_pg_goods": ContainerConfig(
-        dialect="postgresql", username="appuser", password="root", database="goods_db", port=5436
+        dialect="postgresql",
+        username="appuser",
+        password="root",
+        database="goods_db",
+        port=5436,
     ),
 }
 
@@ -100,7 +157,9 @@ CONTAINER_CONFIGS: Dict[str, ContainerConfig] = {
 }
 
 QUESTIONS_ROOT = Path("test/schemas")
-app = typer.Typer(help="Helper commands for extracting metadata and translating test questions.")
+app = typer.Typer(
+    help="Helper commands for extracting metadata and translating test questions."
+)
 
 
 def _available_containers() -> str:
@@ -140,7 +199,13 @@ def _append_error_jsonl(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-        
+
+
+def _append_execution_jsonl(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
 
 def _plan_number(path: Path) -> int:
     m = re.search(r"plan_(\d+)\.json$", path.name)
@@ -151,8 +216,12 @@ def _plan_number(path: Path) -> int:
 
 @app.command("extract_metadata")
 def extract_metadata(
-    containers: List[str] = typer.Argument(..., help="Container names or database URLs"),
-    output_path: Path = typer.Option(Path("./metadata.json"), help="Where to save the metadata JSON"),
+    containers: List[str] = typer.Argument(
+        ..., help="Container names or database URLs"
+    ),
+    output_path: Path = typer.Option(
+        Path("./metadata.json"), help="Where to save the metadata JSON"
+    ),
 ):
     """Extract database metadata using container names instead of full URLs."""
 
@@ -160,14 +229,20 @@ def extract_metadata(
     metadata = extract_db_info(urls)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(metadata, indent=4, ensure_ascii=False), encoding="utf-8")
+    output_path.write_text(
+        json.dumps(metadata, indent=4, ensure_ascii=False), encoding="utf-8"
+    )
     typer.echo(f"Metadata saved to {output_path.resolve()}")
 
 
 @app.command("translate")
 def translate(
-    suite_name: str = typer.Argument(..., help="Name of the test suite (folder under test/schema)"),
-    metadata_path: Path = typer.Option(Path("./metadata.json"), help="Path to the metadata JSON"),
+    suite_name: str = typer.Argument(
+        ..., help="Name of the test suite (folder under test/schema)"
+    ),
+    metadata_path: Path = typer.Option(
+        Path("./metadata.json"), help="Path to the metadata JSON"
+    ),
 ):
     """Translate all questions in a suite into SQL execution plans."""
 
@@ -191,14 +266,18 @@ def translate(
 
         output_path = plans_dir / f"plan_{question_id}.json"
         output_path.write_text(
-            json.dumps(translation.model_dump(), indent=4, ensure_ascii=False), encoding="utf-8"
+            json.dumps(translation.model_dump(), indent=4, ensure_ascii=False),
+            encoding="utf-8",
         )
         typer.echo(f"Saved plan to {output_path}")
 
 
 @app.command("run_plans")
 def run_plans(
-    suite_name: List[str] = typer.Argument(help="Name of the test suite (folder under test/schemas)", default=["bakery_1", "chat", "ecommerce", "sales", "store"] ),
+    suite_name: List[str] = typer.Argument(
+        help="Name of the test suite (folder under test/schemas)",
+        default=["bakery_1", "chat", "ecommerce", "sales", "store"],
+    ),
 ):
     """Run all translation plans for the specified test suites."""
 
@@ -208,21 +287,30 @@ def run_plans(
             typer.echo(f"Plans directory not found for suite '{suite}': {plans_dir}")
             continue
 
+        questions = _load_questions(suite)
+        questions_by_id = {
+            item.get("id"): item.get("question")
+            for item in questions
+            if item.get("id") is not None and item.get("question")
+        }
+
         plan_files = sorted(plans_dir.glob("plan_*.json"), key=_plan_number)
 
         typer.echo("============================================")
         typer.echo(f"Found {len(plan_files)} plan(s) in {plans_dir}")
         typer.echo(f"Running plans for suite '{suite}'...")
         typer.echo("============================================")
-        
+
         errors_out_path = Path(f"./test_data/errors/{suite}.jsonl")
+        execution_out_path = Path(f"./test_data/execution_logs/{suite}.jsonl")
         for i, plan_file in enumerate(plan_files):
             plan_num = _plan_number(plan_file)
             typer.echo(f"Processing plan file: {plan_num}")
-            
+
             with open(plan_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 data = TranslationReturn(**data)
+                question = questions_by_id.get(plan_num, "")
                 try:
                     result_df = execute_plan(data)
                 except Exception as e:
@@ -236,17 +324,42 @@ def run_plans(
                         "traceback": traceback.format_exc(),
                     }
                     _append_error_jsonl(errors_out_path, err_payload)
-                    typer.echo(f"[ERROR] suite={suite} plan_num={plan_num} {type(e).__name__}: {e}")
+
+                    execution_payload = {
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "suite": suite,
+                        "plan_num": plan_num,
+                        "question": question,
+                        "execution_plan_path": str(plan_file),
+                        "status": "FAILED",
+                        "failure_type": type(e).__name__,
+                    }
+                    _append_execution_jsonl(execution_out_path, execution_payload)
+                    typer.echo(
+                        f"[ERROR] suite={suite} plan_num={plan_num} {type(e).__name__}: {e}"
+                    )
                     continue
+
+            execution_payload = {
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "suite": suite,
+                "plan_num": plan_num,
+                "question": question,
+                "execution_plan_path": str(plan_file),
+                "status": "SUCCESS",
+                "failure_type": None,
+            }
+            _append_execution_jsonl(execution_out_path, execution_payload)
 
             res_out_path = Path(f"./test_data/results/{suite}/result_{plan_num}.csv")
             res_out_path.parent.mkdir(parents=True, exist_ok=True)
             result_df.to_csv(res_out_path, index=False)
             print(f"Final result saved to {res_out_path.resolve()}")
-            
+
         typer.echo("============================================")
         typer.echo(f"Completed running plans for suite '{suite}'.")
         typer.echo("============================================")
+
 
 @app.command("debug_plan")
 def debug_plan(
