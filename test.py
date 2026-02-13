@@ -223,8 +223,6 @@ def extract_metadata(
         Path("./metadata.json"), help="Where to save the metadata JSON"
     ),
 ):
-    """Extract database metadata using container names instead of full URLs."""
-
     urls = [_resolve_connection(name) for name in containers]
     metadata = extract_db_info(urls)
 
@@ -244,8 +242,6 @@ def translate(
         Path("./metadata.json"), help="Path to the metadata JSON"
     ),
 ):
-    """Translate all questions in a suite into SQL execution plans."""
-
     if not metadata_path.exists():
         raise typer.BadParameter(f"Metadata file not found: {metadata_path}")
 
@@ -279,10 +275,8 @@ def run_plans(
         default=["bakery_1", "chat", "ecommerce", "sales", "store"],
     ),
 ):
-    """Run all translation plans for the specified test suites."""
-
     for suite in suite_name:
-        plans_dir = Path("plans") / suite
+        plans_dir = Path("plans_v2") / suite
         if not plans_dir.exists():
             typer.echo(f"Plans directory not found for suite '{suite}': {plans_dir}")
             continue
@@ -365,8 +359,6 @@ def run_plans(
 def debug_plan(
     plan_path: Path = typer.Argument(..., help="Path to the plan JSON file"),
 ):
-    """Debug a single execution plan."""
-
     if not plan_path.exists():
         raise typer.BadParameter(f"Plan file not found: {plan_path}")
 
