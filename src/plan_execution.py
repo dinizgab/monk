@@ -224,43 +224,22 @@ def _global_aggregation(
     return pd.DataFrame({col_name: [result_val]})
 
 
-def _grouped_aggregation(
-    df: pd.DataFrame,
-    agg_type: str,
-    agg_column: str,
-    group_by_cols: list[str],
-    distinct: bool = False
-) -> pd.DataFrame:
+def _grouped_aggregation(df, agg_type, agg_column, group_by_cols, distinct=False):
     grouped = df.groupby(group_by_cols, dropna=False)[agg_column]
-    if agg_type == "COUNT":
-        if distinct:
-            result_df = grouped.nunique(dropna=True).reset_index(name=agg_column)
-        else:
-            result_df = grouped.count().reset_index(name=agg_column)
-            
-        return result_df
-    
+
     if distinct:
         grouped = grouped.apply(lambda s: s.dropna().drop_duplicates())
 
-    agg_functions = {
-        "SUM": lambda s: s.sum(),
-        "AVG": lambda s: s.mean(),
-        "MAX": lambda s: s.max(),
-        "MIN": lambda s: s.min(),
-    }
-    
-    if agg_type not in agg_functions:
-        raise ExecutionError(f"Unsupported grouped aggregation type: {agg_type}")
-    
-    result_df = agg_functions[agg_type](grouped[agg_column]).reset_index()
-    
-    if agg_type not in agg_functions:
+    agg_map = {"SUM": "sum", "AVG": "mean", "MAX": "max", "MIN": "min"}
+    if agg_type == "COUNT":
+        result = grouped.nunique(dropna=True) if distinct else grouped.count()
+        return result.reset_index(name=agg_column)
+
+    if agg_type not in agg_map:
         raise ExecutionError(f"Unsupported grouped aggregation type: {agg_type}")
 
-    result_series = grouped.apply(agg_functions[agg_type])
-    result_df = result_series.reset_index(name=agg_column)
-    return result_df
+    return grouped.agg(agg_map[agg_type]).reset_index(name=agg_column)
+
 
 def _enforce_step_schema(df: pd.DataFrame, step) -> pd.DataFrame:
     if not step.output_columns:
