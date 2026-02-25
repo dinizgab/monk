@@ -1,12 +1,6 @@
-from openai import OpenAI
-from pydantic import BaseModel
-from dotenv import load_dotenv
+from typing import Callable
 
-from src.models.execution_plan import ExecutionPlan
-from src.utils import extract_json
-
-
-load_dotenv()
+PromptBuilder = Callable[[str, str], str]
 
 
 def prompt(query: str, metadata: str) -> str:
@@ -183,38 +177,3 @@ def prompt_2(query: str, metadata: str) -> str:
       [CURRENT TASK]
       Question: {query}
     """.strip()
-
-
-class FinalAggregationModel(BaseModel):
-    type: str
-    column: str = ""
-    distinct: bool = False
-    group_by: list[str] = []
-
-
-class TranslationReturn(BaseModel):
-    execution_plan: list[ExecutionPlan]
-    final_output_columns: list[str]
-    final_aggregation: FinalAggregationModel
-    
-def translate_query(
-    metadata_file_path: str,
-    query: str,
-) -> TranslationReturn:
-    client = OpenAI()
-    metadata = ""
-    with open(metadata_file_path, "rb") as f:
-        metadata = f.read().decode("utf-8")
-
-    response = client.responses.create(
-        model="gpt-5-mini",
-        input=[
-            {
-                "role": "user",
-                "content": prompt_2(query, metadata),
-            }
-        ],
-    )
-
-    data = extract_json(response.output_text)
-    return TranslationReturn(**data)

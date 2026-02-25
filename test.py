@@ -20,7 +20,9 @@ import pandas as pd
 import typer
 
 from src.plan_execution import execute_plan
-from src.query_translation import TranslationReturn, translate_query
+from src.models.execution_plan import TranslationReturn
+from src.prompts.registry import PROMPTS
+from src.translator import Translator
 from src.utils.metadata_extraction import extract_db_info
 from src.utils.sort import sort_execution_plan
 
@@ -389,7 +391,8 @@ def translate(
             continue
 
         typer.echo(f"Translating question {question_id}: {question_text}")
-        translation = translate_query(str(metadata_path), question_text)
+        translator = Translator(metadata_path, prompt_builder=PROMPTS["v2"])
+        translation = translator.translate(question_text)
         translation.execution_plan = sort_execution_plan(translation.execution_plan)
 
         output_path = plans_dir / f"plan_{question_id}.json"

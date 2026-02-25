@@ -1,12 +1,15 @@
-from datetime import datetime
 import typer
 import json
+from datetime import datetime
+from dotenv import load_dotenv
 from typing import List
 from pathlib import Path
 
 from src.utils.sort import sort_execution_plan
 from src.utils.metadata_extraction import extract_db_info
-from src.query_translation import translate_query
+from src.translator import Translator
+from src.prompts.registry import PROMPTS
+
 
 app = typer.Typer()
 
@@ -35,14 +38,21 @@ def translate(
     output_path: str = typer.Option(
         None, help="Onde salvar o plano (padrão: execution_plan_YYYYmmdd-HHMMSS.json)"
     ),
+    prompt_name: str = typer.Option(
+        "v2", help="Prompt version to use (options: v1, v2)", show_default=True
+    ),
 ):
-    data = translate_query(metadata_path, query)
+    if prompt_name not in PROMPTS:
+        raise typer.BadParameter(f"Invalid prompt_name '{prompt_name}'. Options: {', '.join(PROMPTS)}")
 
+    translator = Translator(metadata_path, prompt_builder=PROMPTS[prompt_name])
+    data = translator.translate(query)
+    
     if not output_path:
         Path("./plans").mkdir(parents=True, exist_ok=True)
 
         ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-        output_path = f"/plans/execution_plan_{ts}.json"
+        output_path = str(Path("plans") / f"execution_plan_{ts}.json")
 
     print("-" * 40)
     data.execution_plan = sort_execution_plan(data.execution_plan)
@@ -58,5 +68,7 @@ def translate(
     print(f"Execution plan saved to {out.resolve()}")
     print("-" * 40)
 
+
 if __name__ == "__main__":
+    load_dotenv()
     app()

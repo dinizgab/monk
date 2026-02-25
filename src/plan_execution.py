@@ -5,8 +5,7 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 
-from src.models.execution_plan import ExecutionPlan
-from src.query_translation import FinalAggregationModel
+from src.models.execution_plan import ExecutionPlan, FinalAggregationModel
 from src.utils.metadata_extraction import add_url_driver
 
 class ExecutionError(Exception):
