@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from typing import List
 from pathlib import Path
 
+from src.cli.formatters import CLIPrinter
 from src.utils.sort import sort_execution_plan
 from src.utils.metadata_extraction import extract_db_info
 from src.translator import Translator
@@ -12,6 +13,7 @@ from src.prompts.registry import PROMPTS
 
 
 app = typer.Typer()
+printer = CLIPrinter()
 
 
 @app.command("extract_metadata")
@@ -47,6 +49,7 @@ def translate(
 
     translator = Translator(metadata_path, prompt_builder=PROMPTS[prompt_name])
     data = translator.translate(query)
+    data.execution_plan = sort_execution_plan(data.execution_plan)
     
     if not output_path:
         Path("./plans").mkdir(parents=True, exist_ok=True)
@@ -54,19 +57,15 @@ def translate(
         ts = datetime.now().strftime("%Y%m%d-%H%M%S")
         output_path = str(Path("plans") / f"execution_plan_{ts}.json")
 
-    print("-" * 40)
-    data.execution_plan = sort_execution_plan(data.execution_plan)
-    print("Execution Plan Steps:")
-    for step in data.execution_plan:
-        print(f" - {step.id}: {step.description}")
-
-    print("-" * 40)
     out = Path(output_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+
     out.write_text(
         json.dumps(data.model_dump(), indent=4, ensure_ascii=False), encoding="utf-8"
     )
-    print(f"Execution plan saved to {out.resolve()}")
-    print("-" * 40)
+    
+    printer.print_execution_plan(data)
+    printer.saved_to(out, label="Execution plan saved to")
 
 
 if __name__ == "__main__":
