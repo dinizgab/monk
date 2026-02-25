@@ -1,0 +1,6 @@
+suite,n,tcsp_mean,tcsp_pass_all_pct
+bakery_1,98,0.8298,52.04
+ecommerce,75,0.9607,86.67
+chat,36,0.9792,91.67
+sales,11,0.9,54.55
+store,38,0.9868,94.74

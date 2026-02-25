@@ -1,0 +1,8 @@
+31	O8_non_empty_for_list
+22	O7_result_shape_for_agg
+19	O5_final_cols_produced
+8	O9_numeric_type_for_agg
+4	O6_aggregation_declared_ok
+3	O10_distinct
+2	O4_sales_scope
+1	O2_list_no_agg

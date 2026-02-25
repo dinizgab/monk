@@ -14,8 +14,9 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import traceback
-from typing import Dict, Iterable, List
+from typing import Dict, List
 
+import pandas as pd
 import typer
 
 from src.plan_execution import execute_plan
@@ -156,10 +157,141 @@ CONTAINER_CONFIGS: Dict[str, ContainerConfig] = {
     **{alias: _BASE_CONTAINERS[target] for alias, target in _CONTAINER_ALIASES.items()},
 }
 
-QUESTIONS_ROOT = Path("test/schemas")
+QUESTIONS_ROOT = Path("test/suites/schemas")
+RESULTS_ROOT = Path("test/results")
 app = typer.Typer(
     help="Helper commands for extracting metadata and translating test questions."
 )
+
+
+def _canonical_column_name(column_name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", str(column_name).strip().lower())
+
+
+def _normalize_value_series(series: pd.Series) -> pd.Series:
+    numeric = pd.to_numeric(series, errors="coerce")
+    numeric_ratio = float(numeric.notna().mean()) if len(series) else 0.0
+    if numeric_ratio >= 0.8:
+        return numeric
+    return (
+        series.astype(str)
+        .str.strip()
+        .str.replace(r"\s+", " ", regex=True)
+        .str.lower()
+    )
+
+
+def _normalize_projection(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+    projected = df[columns].copy()
+    projected = projected.rename(columns={col: _canonical_column_name(col) for col in columns})
+
+    normalized_columns: dict[str, pd.Series] = {}
+    for col in projected.columns:
+        normalized_columns[col] = _normalize_value_series(projected[col])
+
+    normalized_df = pd.DataFrame(normalized_columns)
+    normalized_df = normalized_df.sort_index(axis=1)
+
+    sort_view = normalized_df.copy()
+    for col in sort_view.columns:
+        if pd.api.types.is_numeric_dtype(sort_view[col]):
+            sort_view[col] = sort_view[col].map(lambda v: "" if pd.isna(v) else f"{float(v):.12g}")
+        else:
+            sort_view[col] = sort_view[col].fillna("").astype(str)
+
+    sorted_index = sort_view.sort_values(by=list(sort_view.columns), kind="mergesort").index
+    return normalized_df.loc[sorted_index].reset_index(drop=True)
+
+
+def _compare_series(a: pd.Series, b: pd.Series) -> bool:
+    if pd.api.types.is_numeric_dtype(a) and pd.api.types.is_numeric_dtype(b):
+        for av, bv in zip(a.tolist(), b.tolist()):
+            if pd.isna(av) and pd.isna(bv):
+                continue
+            if pd.isna(av) != pd.isna(bv):
+                return False
+            if abs(float(av) - float(bv)) > 1e-4:
+                return False
+        return True
+
+    for av, bv in zip(a.tolist(), b.tolist()):
+        if pd.isna(av) and pd.isna(bv):
+            continue
+        if str(av) != str(bv):
+            return False
+    return True
+
+
+def _compare_csv_files(a: Path, b: Path) -> bool:
+    try:
+        da = pd.read_csv(a)
+        db = pd.read_csv(b)
+
+        left_map = {_canonical_column_name(col): col for col in da.columns}
+        right_map = {_canonical_column_name(col): col for col in db.columns}
+        common_keys = [key for key in left_map.keys() if key in right_map]
+
+        if not common_keys:
+            return False
+
+        left_projected = _normalize_projection(da, [left_map[key] for key in common_keys])
+        right_projected = _normalize_projection(db, [right_map[key] for key in common_keys])
+
+        if len(left_projected) != len(right_projected):
+            return False
+
+        for col in left_projected.columns:
+            if col not in right_projected.columns:
+                return False
+            if not _compare_series(left_projected[col], right_projected[col]):
+                return False
+        return True
+    except Exception:
+        return a.read_bytes() == b.read_bytes()
+
+
+def _classify_execution_failure(exception_type: str, message: str) -> str:
+    msg = f"{exception_type} {message}".lower()
+
+    hallucination_patterns = [
+        "unknown column",
+        "no such column",
+        "column '",
+        "does not exist",
+        "no such table",
+        "returned unexpected schema",
+    ]
+    if any(pattern in msg for pattern in hallucination_patterns):
+        return "ERRO_ALUCINACAO"
+
+    aggregation_patterns = [
+        "aggregation column",
+        "unsupported global aggregation",
+        "unsupported grouped aggregation",
+        "final results",
+    ]
+    if any(pattern in msg for pattern in aggregation_patterns):
+        return "ERRO_AGREGACAO"
+
+    integration_patterns = [
+        "join",
+        "depends on step",
+        "referenced step",
+        "placeholder",
+    ]
+    if any(pattern in msg for pattern in integration_patterns):
+        return "ERRO_JUNCAO_INTEGRACAO"
+
+    query_patterns = [
+        "syntax error",
+        "programmingerror",
+        "sql",
+        "failed to execute step",
+    ]
+    if any(pattern in msg for pattern in query_patterns):
+        return "ERRO_QUERY"
+
+    return "ERRO_EXECUCAO_NAO_CLASSIFICADO"
 
 
 def _available_containers() -> str:
@@ -295,8 +427,16 @@ def run_plans(
         typer.echo(f"Running plans for suite '{suite}'...")
         typer.echo("============================================")
 
-        errors_out_path = Path(f"./test_data/errors/{suite}.jsonl")
-        execution_out_path = Path(f"./test_data/execution_logs/{suite}.jsonl")
+        errors_out_path = RESULTS_ROOT / "errors" / f"{suite}.jsonl"
+        execution_out_path = RESULTS_ROOT / "execution_logs" / f"{suite}.jsonl"
+        crossing_dir = RESULTS_ROOT / "crossing_data" / suite
+        suite_results_dir = RESULTS_ROOT / "results" / suite
+
+        errors_out_path = Path(f"./test/errors/{suite}.jsonl")
+        execution_out_path = Path(f"./test/execution_logs/{suite}.jsonl")
+        
+        errors_out_path.unlink(missing_ok=True)
+        execution_out_path.unlink(missing_ok=True)
         for i, plan_file in enumerate(plan_files):
             plan_num = _plan_number(plan_file)
             typer.echo(f"Processing plan file: {plan_num}")
@@ -326,7 +466,9 @@ def run_plans(
                         "question": question,
                         "execution_plan_path": str(plan_file),
                         "status": "FAILED",
-                        "failure_type": type(e).__name__,
+                        "failure_group": "FALHA_EXECUCAO",
+                        "raw_exception_type": type(e).__name__,
+                        "raw_exception_message": str(e),
                     }
                     _append_execution_jsonl(execution_out_path, execution_payload)
                     typer.echo(
@@ -334,25 +476,85 @@ def run_plans(
                     )
                     continue
 
+
+            res_out_path = suite_results_dir / f"result_plan_{plan_num}.csv"
+            res_out_path.parent.mkdir(parents=True, exist_ok=True)
+            result_df.to_csv(res_out_path, index=False)
+
+            status = "SUCCESS"
+            failure_group = None
             execution_payload = {
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "suite": suite,
                 "plan_num": plan_num,
                 "question": question,
                 "execution_plan_path": str(plan_file),
-                "status": "SUCCESS",
-                "failure_type": None,
+                "result_path": str(res_out_path),
+                "status": status,
+                "failure_group": failure_group,
+                "rows_count": int(len(result_df)),
+                "empty_result": bool(result_df.empty),
             }
             _append_execution_jsonl(execution_out_path, execution_payload)
 
-            res_out_path = Path(f"./test_data/results/{suite}/result_{plan_num}.csv")
-            res_out_path.parent.mkdir(parents=True, exist_ok=True)
-            result_df.to_csv(res_out_path, index=False)
             print(f"Final result saved to {res_out_path.resolve()}")
 
         typer.echo("============================================")
         typer.echo(f"Completed running plans for suite '{suite}'.")
         typer.echo("============================================")
+
+
+@app.command("analyze_execution_logs")
+def analyze_execution_logs(
+    suite_name: List[str] = typer.Argument(
+        default=["bakery_1", "chat", "ecommerce", "sales", "store"],
+        help="Suites to analyze from test/results/execution_logs",
+    ),
+):
+    summary = {}
+    for suite in suite_name:
+        log_path = Path(f"test/execution_logs/{suite}.jsonl")
+        if not log_path.exists():
+            typer.echo(f"Execution log not found for suite '{suite}': {log_path}")
+            continue
+
+        rows = [
+            json.loads(line)
+            for line in log_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+
+        status_count: Dict[str, int] = {}
+        group_count: Dict[str, int] = {}
+        type_count: Dict[str, int] = {}
+        empty_success = 0
+        for row in rows:
+            status = row.get("status", "UNKNOWN")
+            status_count[status] = status_count.get(status, 0) + 1
+
+            failure_group = row.get("failure_group")
+            if failure_group:
+                group_count[failure_group] = group_count.get(failure_group, 0) + 1
+
+            failure_type = row.get("failure_type")
+            if failure_type:
+                type_count[failure_type] = type_count.get(failure_type, 0) + 1
+
+            if row.get("status") == "SUCCESS" and row.get("empty_result") is True:
+                empty_success += 1
+
+        summary[suite] = {
+            "total_execucoes": len(rows),
+            "status": status_count,
+            "falhas_por_grupo": group_count,
+            "falhas_por_tipo": type_count,
+            "resultados_vazios_com_execucao_valida": empty_success,
+        }
+
+    out_path = RESULTS_ROOT / "execution_analysis_summary.json"
+    out_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    typer.echo(f"Execution analysis summary saved to {out_path.resolve()}")
+
 
 
 @app.command("debug_plan")
