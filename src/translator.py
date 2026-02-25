@@ -1,8 +1,10 @@
+import json
+import re
+
 from openai import OpenAI
-from typing import Callable
+from typing import Any, Callable
 
 from src.models.execution_plan import TranslationReturn
-from src.utils import extract_json
   
 
 class Translator():
@@ -26,10 +28,24 @@ class Translator():
 			],
 		)
   
-		data = extract_json(response.output_text)
+		data = self._extract_json(response.output_text)
 		return TranslationReturn(**data)
+  
   
 	def _load_metadata(self) -> str:
 		with open(self.metadata_path, "rb") as f:
 			return f.read().decode("utf-8")
     
+    
+	def _extract_json(self, text: str) -> dict[str, Any]:
+		cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", text.strip(), flags=re.IGNORECASE)
+
+		start = cleaned.find("{")
+		end = cleaned.rfind("}")
+		if start == -1 or end == -1 or end <= start:
+			raise ValueError(
+				"Não foi possível localizar um objeto JSON no retorno do modelo."
+			)
+
+		snippet = cleaned[start : end + 1]
+		return json.loads(snippet)
