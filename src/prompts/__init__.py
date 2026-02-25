@@ -3,7 +3,7 @@ from typing import Callable
 PromptBuilder = Callable[[str, str], str]
 
 
-def prompt(query: str, metadata: str) -> str:
+def prompt_v1(query: str, metadata: str) -> str:
     return f"""
     You are an expert in federated database query optimization. Taking into account the metadata file of my databases, which contains tables, columns, and their types, translate the following question in natural language into an SQL execution plan.
 
@@ -92,7 +92,7 @@ def prompt(query: str, metadata: str) -> str:
 """
 
 
-def prompt_2(query: str, metadata: str) -> str:
+def prompt_v2(query: str, metadata: str) -> str:
     return f"""
       You are an expert in federated database query planning.
 

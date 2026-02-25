@@ -1,9 +1,9 @@
 from collections import deque
 
-from src.models.execution_plan import ExecutionPlan
+from src.models.execution_plan import ExecutionStep
 
 
-def sort_execution_plan(steps: list[ExecutionPlan]) -> list[ExecutionPlan]:
+def sort_execution_plan(steps: list[ExecutionStep]) -> list[ExecutionStep]:
     in_degrees = {step.id: len(step.depends_on) for step in steps}
     dependents = {step.id: [] for step in steps}
 
