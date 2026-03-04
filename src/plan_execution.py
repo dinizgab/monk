@@ -67,7 +67,6 @@ def _handle_joins(
     current_df: pd.DataFrame, 
     partial_results: Dict[int, pd.DataFrame]
 ) -> pd.DataFrame:
-    """Handle joining current results with dependencies."""
     if not (step.depends_on and step.join_info):
         return current_df
     

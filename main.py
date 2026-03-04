@@ -6,6 +6,7 @@ from typing import List
 from pathlib import Path
 
 from src.cli.formatters import CLIPrinter
+from src.embedder import Embedder
 from src.utils.sort import sort_execution_plan
 from src.utils.metadata_extraction import extract_db_info
 from src.translator import Translator
@@ -14,6 +15,7 @@ from src.prompts.registry import PROMPTS
 
 app = typer.Typer()
 printer = CLIPrinter()
+embedder = Embedder()
 
 
 @app.command("extract_metadata")
@@ -27,6 +29,7 @@ def extract_metadata(
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump(info, f, indent=4, ensure_ascii=False)
+    
 
     printer.saved_to(output_path, label="Metadata saved to")
 
